@@ -1,5 +1,5 @@
 create table iug_iri2012 {
-       glat real not null,
+       glat real not null, 
        glon real not null,
        yyyy int not null, -- year 
        mm int not null, -- month
@@ -19,19 +19,18 @@ create table iug_iri2012 {
        icl int not null, -- O2+
        tec int not null, -- NO+
        topp int not null, -- Clust
-                         -- TEC
-                         -- t/%
--- Peak Densities/cm-3: NmF2 
--- NmF1
--- NmE
--- Peak heights/km: hmF2,
--- hmF1
--- hmE
-
-       -- Solar Zenith Angle/degree
-       -- Dip (Magnetic inclination)/degree
-       -- Modip (Modified Dip)/degree
-       -- Solar Sunsplot Number (12-months running mean) Rz12
-       -- Ionospheric-Effective Solar Index IG12
-       -- TEC
+       tec int not null,  -- TEC
+       hoge int not null, -- t/%
+       hoge2 int not null, -- Peak Densities/cm-3: NmF2 
+       hoge3 int not null, -- NmF1
+       noge4 int not null, -- NmE
+       hoge5 int not null, -- Peak heights/km: hmF2,
+       hoge6 int not null, -- hmF1
+       hoge7 int not null, -- hmE
+       hoge8 int not null, -- Solar Zenith Angle/degree
+       hoge9 int not null, -- Dip (Magnetic inclination)/degree
+       hoge10 int not null, -- Modip (Modified Dip)/degree
+       hoge11 int not null, -- Solar Sunsplot Number (12-months running mean) Rz12
+       hoge12 int not null, -- Ionospheric-Effective Solar Index IG12
+       hoge13 int not null, -- TEC
 }
