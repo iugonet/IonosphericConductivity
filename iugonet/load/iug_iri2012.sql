@@ -1,6 +1,7 @@
 create table iug_iri2012 {
-       glat real not null, 
-       glon real not null,
+       jmag int not null, -- 0:geog, 1:geom
+       lat real not null, -- latitude
+       lon real not null, -- longitude
        yyyy int not null, -- year 
        mm int not null, -- month
        dd int not null, -- day
@@ -10,27 +11,26 @@ create table iug_iri2012 {
        ne  int not null, -- Ne/cm-3
        ner real not null, -- Ne/NmF2
        tn int not null, -- Tn/K
-       te int not null, -- Ti/K
-       io int not null, -- Te/K
-       ih int not null, -- O+
+       ti int not null, -- Ti/K
+       te int not null, -- Te/K
+       io int not null, -- O+
+       ih int not null, -- H+
        ihe int not null, -- N+
-       ino int not null, -- H+
        io2 int not null, -- He+
+       ino int not null, -- H+
        icl int not null, -- O2+
-       tec int not null, -- NO+
-       topp int not null, -- Clust
-       tec int not null,  -- TEC
-       hoge int not null, -- t/%
-       hoge2 int not null, -- Peak Densities/cm-3: NmF2 
-       hoge3 int not null, -- NmF1
-       noge4 int not null, -- NmE
-       hoge5 int not null, -- Peak heights/km: hmF2,
-       hoge6 int not null, -- hmF1
-       hoge7 int not null, -- hmE
-       hoge8 int not null, -- Solar Zenith Angle/degree
-       hoge9 int not null, -- Dip (Magnetic inclination)/degree
-       hoge10 int not null, -- Modip (Modified Dip)/degree
-       hoge11 int not null, -- Solar Sunsplot Number (12-months running mean) Rz12
-       hoge12 int not null, -- Ionospheric-Effective Solar Index IG12
-       hoge13 int not null, -- TEC
+       tec real not null,  -- TEC
+       t int not null, -- t/%
+       NmF2 real not null, -- Peak Densities/cm-3: NmF2 
+       NmF1 real not null, -- NmF1
+       hmE real not null, -- NmE
+       hmF2 real not null, -- Peak heights/km: hmF2,
+       hmF1 real not null, -- hmF1
+       hmE real not null, -- hmE
+       sza real not null, -- Solar Zenith Angle/degree
+       dip real not null, -- Dip (Magnetic inclination)/degree
+       modip real not null, -- Modip (Modified Dip)/degree
+       rz12 real not null, -- Solar Sunsplot Number (12-months running mean) Rz12
+       ig12 real not null, -- Ionospheric-Effective Solar Index IG12
+       primary key(jmag,lat,lon,yyyy,mm,dd,iut,atime,height)
 }
