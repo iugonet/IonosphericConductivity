@@ -23,7 +23,7 @@
 ;
 ;-
 
-pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_step=height_step,yyyy=yyyy,glat=glat, glon=glon,result_d=result_d,result_i=result_i,result_h=result_h,result_x=result_x,result_y=result_y,result_z=result_z,result_f=result_f
+pro iug_load_igrf11_db,height_bottom=height_bottom,height_top=height_top,height_step=height_step,yyyy=yyyy,glat=glat,glon=glon,result_d=result_d,result_i=result_i,result_h=result_h,result_x=result_x,result_y=result_y,result_z=result_z,result_f=result_f
 
   if height_top ne height_bottom then begin
      num_height = (height_top-height_bottom)/height_step+1
@@ -41,7 +41,8 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
 
   for i=0L,num_height-1 do begin
 ;;;
-     iug_create_query_igrf11,1,yyyy,glat,glon,height_bottom+height_step*i
+     height=height_bottom+height_step*i
+     iug_create_query_igrf11,1,yyyy,glat,glon,height
      spawn,'sqlite3 -separator " " iug_igrf11.db < /tmp/iug_igrf11_query.sql > /tmp/tmp.txt'
      result=file_info('/tmp/tmp.txt')
 
@@ -64,18 +65,22 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
         free_lun, unit
 
         spawn,'cd ${HOME}/IAGA/vmod; rm result.txt ; rm result2.txt; ./a.out < /tmp/input_igrf11.txt'
-        spawn,"cat ${HOME}/IAGA/vmod/result.txt | awk '{if( NR>1 && NR<4){printf(""%6d%6d\n"",$3,$5)}else if( NR>3 && NR<9){printf(""%6d\n"",$3)}}' > ${HOME}/IAGA/vmod/result2.txt"
+        spawn,"cat ${HOME}/IAGA/vmod/result.txt | awk '{if( NR>1 && NR<4){printf(""%6d%6d%6d\n"",$3,$5,$9)}else if( NR>3 && NR<9){printf(""%6d%6d\n"",$3,$7)}}' > ${HOME}/IAGA/vmod/result2.txt"
 
         openr,unit, '${HOME}/IAGA/vmod/result2.txt', /GET_LUN
-        temp0='' & temp1='' & temp2='' & temp3='' & temp4='' & temp5='' & temp6=''
+        temp0_0='' & temp0_1=''
+        temp1_0='' & temp1_1=''
+        temp2='' & temp3='' & temp4='' & temp5='' & temp6=''
+        temp7='' & temp8='' & temp9='' & temp10='' & temp11=''
+        temp12='' & temp13=''
 
-        readf,unit,format='(a6,a6)',temp0_0,temp0_1
-        readf,unit,format='(a6,a6)',temp1_0,temp1_1
-        readf,unit,format='(a6)',temp2
-        readf,unit,format='(a6)',temp3
-        readf,unit,format='(a6)',temp4
-        readf,unit,format='(a6)',temp5
-        readf,unit,format='(a6)',temp6
+        readf,unit,format='(a6,a6,a6)',temp0_0,temp0_1,temp7
+        readf,unit,format='(a6,a6,a6)',temp1_0,temp1_1,temp8
+        readf,unit,format='(a6,a6)',temp2,temp9
+        readf,unit,format='(a6,a6)',temp3,temp10
+        readf,unit,format='(a6,a6)',temp4,temp11
+        readf,unit,format='(a6,a6)',temp5,temp12
+        readf,unit,format='(a6,a6)',temp6,temp13
         if( temp0_0>0 ) then begin
            result_d[i]=temp0_0+temp0_1/60. ; D
         endif
@@ -95,17 +100,12 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
         result_f[i]=temp6       ; F
         free_lun, unit
 ;
-;
-;
-        iug_insert_igrf11(1,yyyy,glat,glon,height,temp0_0,temp0_1,temp1_0,temp1_1,result_h[i],result_x[i],result_y[i],result_z[i],result_f[i],0,0,0,0,0,0,0)
-;
-;
+        iug_insert_igrf11,1,yyyy,glat,glon,height,temp0_0,temp0_1,temp1_0,temp1_1,result_h[i],result_x[i],result_y[i],result_z[i],result_f[i],temp7,temp8,temp9,temp10,temp11,temp12,temp13
 ;
      endif else begin           ; retrieve from DB                             
         openr, unit, '/tmp/tmp.txt', /GET_LUN
         array=fltarr(21)
         readf,unit,array
-        print,array
 
         temp0_0 = array(5)
         temp0_1 = array(6)
@@ -129,7 +129,7 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
         result_y[i] = array(11)
         result_z[i] = array(12)
         result_f[i] = array(13)
-        close, unit
+        free_lun, unit
      endelse
   endfor
 

@@ -3,10 +3,10 @@
 ;+
 ;
 ;Name:
-;IUG_CREATE_QUERY_IGRF11
+;IUG_INSERT_IGRF11
 ;
 ;Purpose:
-;To create query for iug_igrf11.db
+;To insert record iug_igrf11 in iug_igrf11.db
 ;
 ;Keywords:
 ;
@@ -16,7 +16,7 @@
 ;Acknowledgment:
 ;
 ;EXAMPLE:
-;  iug_create_query_igrf11,1,2000,0,0,100
+;  iug_insert_igrf11
 ;-
 pro iug_insert_igrf11,coordinate_system,yyyy,glat,glon,height,d_ec,d_ecm,i_nc,i_ncm,h,x,y,z,f,d_sv,i_sv,h_sv,x_sv,y_sv,z_sv,f_sv
   openw,unit,'/tmp/iug_insert_igrf11.sql',/get_lun ; create query file
