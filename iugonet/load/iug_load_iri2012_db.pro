@@ -25,7 +25,7 @@
 ;
 ;-
 
-pro iug_load_iri2012,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon,height_bottom=height_bottom,height_top=height_top,height_step=height_step,result=result
+pro iug_load_iri2012_db,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon,height_bottom=height_bottom,height_top=height_top,height_step=height_step,result=result
 
   if height_top ne height_bottom then begin
      num_height = (height_top-height_bottom)/height_step+1
@@ -47,7 +47,7 @@ pro iug_load_iri2012,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon
   free_lun, unit
 
   spawn,'cd ${HOME}/models/ionospheric/iri/iri2012;./iritest < /tmp/input_iri2012.txt'
-  spawn,"cat ${HOME}/models/ionospheric/iri/iri2012/fort.7 | awk '{if( NR>27 ) print $0}' > /tmp/tmp.txt"
+  spawn,"cat ${HOME}/models/ionospheric/iri/iri2012/fort.7 | awk '{if( NR>16 && NR<17){print $3,$4,$5,$6,$7,$8}else if( NR>19 && NR<21 ){print $4}else if( NR==22 ){print $8}else if( NR==23 ){print $5}else if( NR>27 ) print $0}' > /tmp/tmp.txt"
 
   result = fltarr(15,num_height)
 
@@ -74,6 +74,20 @@ pro iug_load_iri2012,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon
      result[12,i]=temp12 ; Clust
      result[13,i]=temp13 ; TEC
      result[14,i]=temp14 ; t/%
+
+
+;;;
+     mm=01
+     dd=02
+     height=height_bottom+height_step*i
+     iug_create_query_iri2012,1,glat,glon,yyyy,mm,dd,ltut,time,height
+     spawn,'sqlite3 -separator " " iug_iri2012.db < /tmp/iug_iri2012_query.sql > /tmp/tmp.txt'
+     result=file_info('/tmp/tmp.txt')
+
+     if result.size eq 0 then begin ; to store
+        iug_insert_iri2012,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+     endif
+;;;
   endfor
 
   free_lun, unit
