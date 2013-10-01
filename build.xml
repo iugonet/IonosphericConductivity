@@ -84,7 +84,7 @@
     <get src="${SRC_MODELS}/00readme.txt" dest="${DST_MODELS}/00readme.txt" />
   </target>
 
-  <target name="atmospheric">
+  <target name="atmospheric" description="Install atmospheric">
     <antcall target="cira"/>
     <antcall target="h_exos"/> 
     <antcall target="hwm07"/> 
@@ -94,35 +94,35 @@
     <antcall target="msis"/>
   </target>
   
-  <target name="cira">
+  <target name="cira" description="Install cira">
     <antcall target="cira86"/> 
     <antcall target="cira86ascii"/> 
   </target>
 
-  <target name="msis">
+  <target name="msis" description="Install msis">
     <antcall target="msis86"/>
     <antcall target="msise90"/>
     <antcall target="nrlmsise00"/>
   </target>
 
-  <target name="cosmic_rays">
+  <target name="cosmic_rays" description="Install cosmic_rays">
     <antcall target="cutoff_rigidity_sw"/>
   </target>
 
-  <target name="geomagnetic">
+  <target name="geomagnetic" description="Install geomagnetic">
     <antcall target="gsfc"/>
     <antcall target="igrf"/>
     <antcall target="jensen_cain"/>
     <antcall target="mgst"/>
   </target>
 
-  <target name="igrf">
+  <target name="igrf" description="Install igrf">
     <antcall target="igrf/fortran_code"/>
     <antcall target="old_coefficients"/>
     <antcall target="old_matlab_igrf"/>
   </target>
 
-  <target name="old_coefficients">
+  <target name="old_coefficients" description="Install old_coefficients">
     <mkdir dir="${DST_OLD_COEFFICIENTS}"/>
     <antcall target="7th-generation"/>
     <antcall target="8th-generation"/>
@@ -131,7 +131,7 @@
     <get src="${SRC_OLD_COEFFICIENTS}/update.txt" dest="${DST_OLD_COEFFICIENTS}/update.txt" />
   </target>
 
-  <target name="ionospheric">
+  <target name="ionospheric" description="Install ionospheric">
     <antcall target="auroral_oval"/>
     <antcall target="chiu"/>
     <antcall target="convection_Efield"/>
@@ -140,11 +140,11 @@
     <antcall target="photoelectron_code"/>
   </target>
   
-  <target name="auroral_oval">
+  <target name="auroral_oval" description="Install auroral_oval">
     <antcall target="feldstein_holzworth"/>
   </target>
 
-  <target name="convection_Efield">
+  <target name="convection_Efield" description="Install convection_Efield">
     <antcall target="HMR"/>
   </target>
 
@@ -156,52 +156,57 @@
     <antcall target="iri2012"/>
   </target>
 
-  <target name="magnetospheric">
+  <target name="magnetospheric" description="Install magnetospheric">
     <antcall target="tsyganenko"/>
     <antcall target="xu"/>
   </target>
 
-  <target name="planets">
+  <target name="planets" description="Install planets">
     <antcall target="venus"/>
   </target>
-  <target name="venus">
+
+  <target name="venus" description="Install venus">
     <antcall target="pv_atmos"/>
     <antcall target="pv_ionos"/>
   </target>
-  <target name="radiation_belt">
+
+  <target name="radiation_belt" description="Install radiation_belt">
     <antcall target="radbelt"/>
     <antcall target="shieldose"/>
     <antcall target="sofip"/>
   </target>
-  <target name="radbelt">
+
+  <target name="radbelt" description="Install radbelt">
     <antcall target="radbelt/c_code"/>
     <antcall target="radbelt/fortran_code"/>
   </target>
-  <target name="sofip">
+
+  <target name="sofip" description="Install sofip">
     <antcall target="guzik_version"/>
     <antcall target="original"/> 
   </target>
-  <target name="solar">
+
+  <target name="solar" description="Install solar">
     <antcall target="euv"/>
     <antcall target="proton_flux"/>
   </target>
 
-  <target name="euv">
+  <target name="euv" description="Install euv">
     <antcall target="ae-euv"/>
     <antcall target="euv91"/>
     <antcall target="euvac"/>
     <antcall target="solar2000"/>
   </target>
 
-  <target name="proton_flux">
+  <target name="proton_flux" description="Install proton_flux">
     <antcall target="solpro"/>
   </target>
 
-  <target name="clean">
+  <target name="clean" description="clean">
     <delete dir="${DST}/models"/>
   </target>
 
-  <target name="cira86">
+  <target name="cira86" description="Install cira86">
     <mkdir dir="${DST_CIRA86}"/>
     
 <!--
@@ -235,7 +240,7 @@
 -->
   </target>
 
-  <target name="cira86ascii">
+  <target name="cira86ascii" description="Install cira86ascii">
     <mkdir dir="${DST_CIRA86ASCII}"/>
 
     <get src="${SRC_CIRA86ASCII}/../Please_read.txt" dest="${DST_CIRA86ASCII}/../Please_read.txt" />
@@ -254,20 +259,20 @@
     <get src="${SRC_CIRA86ASCII}/twp.lsn" dest="${DST_CIRA86ASCII}/twp.lsn" />
   </target>
 
-  <target name="h_exos">
+  <target name="h_exos" description="Install h_exos">
     <mkdir dir="${DST_H_EXOS}"/>
     <get src="${SRC_H_EXOS}/AAREADME.TXT" dest="${DST_H_EXOS}/AAREADME.TXT" />
     <get src="${SRC_H_EXOS}/h_exos.dat" dest="${DST_H_EXOS}/h_exos.dat" />
   </target>
 
-  <target name="hwm07">
+  <target name="hwm07" description="Install hwm07">
     <mkdir dir="${DST_HWM07}"/>
     <get src="${SRC_HWM07}/HWM07_all_files.zip" dest="${DST_HWM07}/HWM07_all_files.zip" />
     <get src="${SRC_HWM07}/readme.txt" dest="${DST_HWM07}/readme.txt" />
     <antcall target="hwm07_all_files"/>
   </target>
 
-  <target name="hwm07_all_files">
+  <target name="hwm07_all_files" description="Install hwm07_all_files">
     <mkdir dir="${DST_HWM07_ALL_FILES}"/>
     <get src="${SRC_HWM07_ALL_FILES}/apexcord.f90" dest="${DST_HWM07_ALL_FILES}/apexcord.f90" />
     <get src="${SRC_HWM07_ALL_FILES}/apexgrid.dat" dest="${DST_HWM07_ALL_FILES}/apexgrid.dat" />
@@ -281,18 +286,17 @@
     <get src="${SRC_HWM07_ALL_FILES}/readme.txt" dest="${DST_HWM07_ALL_FILES}/readme.txt" />
   </target>
 
-
-  <target name="hwm93">
+  <target name="hwm93" description="Install hwm93">
     <mkdir dir="${DST_HWM93}"/>
     <get src="${SRC_HWM93}/AAREADME.TXT" dest="${DST_HWM93}/AAREADME.TXT" />
     <get src="${SRC_HWM93}/hwm93.txt" dest="${DST_HWM93}/hwm93.txt" />
   </target>
 
-  <target name="jacchia">
+  <target name="jacchia" description="Install jacchia">
     <antcall target="jacchia-77"/>
   </target>
 
-  <target name="jacchia-77">
+  <target name="jacchia-77" description="Install jacchia-77">
     <mkdir dir="${DST_JACCHIA-77}"/>
     <get src="${SRC_JACCHIA-77}/aareadme.doc" dest="${DST_JACCHIA-77}/aareadme.doc" />
     <get src="${SRC_JACCHIA-77}/j77sri.for" dest="${DST_JACCHIA-77}/j77sri.for" />
@@ -305,13 +309,13 @@
     </exec>
   </target>
 
-  <target name="met">
+  <target name="met" description="Install met">
     <mkdir dir="${DST_MET}"/>
     <get src="${SRC_MET}/AAREADME.TXT" dest="${DST_MET}/AAREADME.TXT" />
     <get src="${SRC_MET}/met.for" dest="${DST_MET}/met.for" />
   </target>
 
-  <target name="msis86">
+  <target name="msis86" description="Install msis86">
     <mkdir dir="${DST_MSIS86}"/>
     <get src="${SRC_MSIS86}/AAREADME.TXT" dest="${DST_MSIS86}/AAREADME.TXT" />
     <get src="${SRC_MSIS86}/m86dri.doc" dest="${DST_MSIS86}/m86dri.doc" />
@@ -323,7 +327,7 @@
     <get src="${SRC_MSIS86}/msis86.for" dest="${DST_MSIS86}/msis86.for" />
   </target>
 
-  <target name="msise90">
+  <target name="msise90" description="Install msise90">
     <mkdir dir="${DST_MSISE90}"/>
     <get src="${SRC_MSISE90}/AAREADME.TXT" dest="${DST_MSISE90}/AAREADME.TXT" />
     <get src="${SRC_MSISE90}/msise90_driver.for" dest="${DST_MSISE90}/msise90_driver.for" />
@@ -331,7 +335,7 @@
     <get src="${SRC_MSISE90}/msise90_sub.for" dest="${DST_MSISE90}/msise90_sub.for" />
   </target>
 
-  <target name="nrlmsise00">
+  <target name="nrlmsise00" description="Install nrlmsise00">
     <mkdir dir="${DST_NRLMSISE00}"/>
     <get src="${SRC_NRLMSISE00}/nrlmsise00_driver.for" dest="${DST_NRLMSISE00}/nrlmsise00_driver.for" />
     <get src="${SRC_NRLMSISE00}/nrlmsise00_output.txt" dest="${DST_NRLMSISE00}/nrlmsise00_output.txt" />
@@ -350,7 +354,7 @@
     </exec>
   </target>
 
-  <target name="nrlmsis00_c_version">
+  <target name="nrlmsis00_c_version" description="Install nrlmsis00_c_version">
     <mkdir dir="${DST_NRLMSISE00}/nrlmsis00_c_version"/>
     <get src="${SRC_NRLMSISE00}/nrlmsis00_c_version/DOCUMENTATION" dest="${DST_NRLMSISE00}/nrlmsis00_c_version/DOCUMENTATION" />
     <get src="${SRC_NRLMSISE00}/nrlmsis00_c_version/makefile" dest="${DST_NRLMSISE00}/nrlmsis00_c_version/makefile" />
@@ -360,7 +364,7 @@
     <get src="${SRC_NRLMSISE00}/nrlmsis00_c_version/nrlmsise-00_test.c" dest="${DST_NRLMSISE00}/nrlmsis00_c_version/nrlmsise-00_test.c" />
   </target>
 
-  <target name="cutoff_rigidity_sw">
+  <target name="cutoff_rigidity_sw" description="Install cutoff_rigidity_sw">
     <mkdir dir="${DST_CUTOFF_RIGIDITY_SW}"/>
     <get src="${SRC_CUTOFF_RIGIDITY_SW}/00readme.txt" dest="${DST_CUTOFF_RIGIDITY_SW}/00readme.txt" />
     <get src="${SRC_CUTOFF_RIGIDITY_SW}/SHEA-SMART2000_GEOMAGNETIC-CUTOFF-RIGIDITY-COMPUTER-PROGRAM_DOCUMENTATION.PDF" dest="${DST_CUTOFF_RIGIDITY_SW}/SHEA-SMART2000_GEOMAGNETIC-CUTOFF-RIGIDITY-COMPUTER-PROGRAM_DOCUMENTATION.PDF" />
@@ -374,7 +378,7 @@
     <antcall target="cutoff_rigidity_sw/Word Document"/>
   </target>
 
-  <target name="cutoff_rigidity_sw/PC_Version">
+  <target name="cutoff_rigidity_sw/PC_Version" description="Install cutoff_rigidity_sw/PC_Version">
     <mkdir dir="${DST_CUTOFF_RIGIDITY_SW}/PC_Version"/>
     <get src="${SRC_CUTOFF_RIGIDITY_SW}/PC_Version/00readme_pc.txt" dest="${DST_CUTOFF_RIGIDITY_SW}/PC_Version/00readme_pc.txt" />
     <get src="${SRC_CUTOFF_RIGIDITY_SW}/PC_Version/Shea-Smart2000_Geomagnetic-Cutoff-Rigidity-Computer-Program_Documentation.pdf" dest="${DST_CUTOFF_RIGIDITY_SW}/PC_Version/Shea-Smart2000_Geomagnetic-Cutoff-Rigidity-Computer-Program_Documentation.pdf" />
@@ -387,7 +391,7 @@
     <get src="${SRC_CUTOFF_RIGIDITY_SW}/PC_Version/tji95t_du2.for" dest="${DST_CUTOFF_RIGIDITY_SW}/PC_Version/tji95t_du2.for" />
   </target>
 
-  <target name="cutoff_rigidity_sw/Word Document">
+  <target name="cutoff_rigidity_sw/Word Document" description="Install cutoff_rigidity_sw_Word Document">
     <mkdir dir="${DST_CUTOFF_RIGIDITY_SW}/Word&#160;Document"/>
     <get src="${SRC_CUTOFF_RIGIDITY_SW/Word%20Document/lblz.doc" dest="${DST_CUTOFF_RIGIDITY_SW/Word%20Document}/lblz.doc" />
 <!--
@@ -406,7 +410,7 @@
 -->
   </target>
 
-  <target name="gsfc">
+  <target name="gsfc" description="Install gsfc">
     <mkdir dir="${DST_GSFC}"/>
     <get src="${SRC_GSFC}/gsfc65.dat" dest="${DST_GSFC}/gsfc65.dat" />
     <get src="${SRC_GSFC}/gsfc66.dat" dest="${DST_GSFC}/gsfc66.dat" />
@@ -417,7 +421,7 @@
     <get src="${SRC_GSFC}/gsfctest.for" dest="${DST_GSFC}/gsfctest.for" />
   </target>
 
-  <target name="7th-generation">
+  <target name="7th-generation" description="Install 7th-generation">
     <mkdir dir="${DST_7TH-GENERATION}"/>
     <get src="${SRC_7TH-GENERATION}/dgrf45.dat" dest="${DST_7TH-GENERATION}/dgrf45.dat" />
     <get src="${SRC_7TH-GENERATION}/dgrf50.dat" dest="${DST_7TH-GENERATION}/dgrf50.dat" />
@@ -433,7 +437,7 @@
     <get src="${SRC_7TH-GENERATION}/igrf95s.dat" dest="${DST_7TH-GENERATION}/igrf95s.dat" />
   </target>
 
-  <target name="8th-generation">
+  <target name="8th-generation" description="Install 8th-generation">
     <mkdir dir="${DST_8TH-GENERATION}"/>
     <get src="${SRC_8TH-GENERATION}/dgrf45.dat" dest="${DST_8TH-GENERATION}/dgrf45.dat" />
     <get src="${SRC_8TH-GENERATION}/dgrf50.dat" dest="${DST_8TH-GENERATION}/dgrf50.dat" />
@@ -450,7 +454,7 @@
     <get src="${SRC_8TH-GENERATION}/igrf00s.dat" dest="${DST_8TH-GENERATION}/igrf00s.dat" />
   </target>
 
-  <target name="9th-generation">
+  <target name="9th-generation" description="Install 9th-generation">
     <mkdir dir="${DST_9TH-GENERATION}"/>
     <get src="${SRC_9TH-GENERATION}/dgrf45.dat" dest="${DST_9TH-GENERATION}/dgrf45.dat" />
     <get src="${SRC_9TH-GENERATION}/dgrf50.dat" dest="${DST_9TH-GENERATION}/dgrf50.dat" />
@@ -467,7 +471,7 @@
     <get src="${SRC_9TH-GENERATION}/igrf00s.dat" dest="${DST_9TH-GENERATION}/igrf00s.dat" />
   </target>
 
-  <target name="10th-generation">
+  <target name="10th-generation" description="Install 10th-generation">
     <mkdir dir="${DST_10TH-GENERATION}"/>
     <get src="${SRC_10TH-GENERATION}/dgrf00.dat" dest="${DST_10TH-GENERATION}/dgrf00.dat" />
     <get src="${SRC_10TH-GENERATION}/dgrf45.dat" dest="${DST_10TH-GENERATION}/dgrf45.dat" />
@@ -485,7 +489,7 @@
     <get src="${SRC_10TH-GENERATION}/igrf05s.dat" dest="${DST_10TH-GENERATION}/igrf05s.dat" />
   </target>
 
-  <target name="igrf11">
+  <target name="igrf11" description="Install igrf11">
     <mkdir dir="${DST_IGRF_NGDC}"/>
     <get src="${SRC_IGRF_NGDC}/igrf11.f" dest="${DST_IGRF_NGDC}/igrf11.f" />
     <exec executable="${FC}" dir="${DST_IGRF_NGDC}">
@@ -494,7 +498,7 @@
     </exec>
   </target>
 
-  <target name="ETOPO5">
+  <target name="ETOPO5" description="Install ETOPO5">
     <mkdir dir="${DST_ETOPO5}"/>
     <get src="${SRC_ETOPO5}/readme.txt" dest="${DST_ETOPO5}/readme.txt" />
     <mkdir dir="${DST_ETOPO5}/BOUNDARY"/>
@@ -697,7 +701,7 @@
     <get src="${SRC_ETOPO5}/TOPO/USGS/TOPO30.DOC" dest="${DST_ETOPO5}/TOPO/USGS/TOPO30.DOC" />
   </target>
 
-  <target name="igrf/fortran_code">
+  <target name="igrf/fortran_code" description="Install igrf/fortran_code">
     <mkdir dir="${DST_IGRF/FORTRAN_CODE}"/>
     <get src="${SRC_IGRF/FORTRAN_CODE}/00_readme.txt" dest="${DST_IGRF/FORTRAN_CODE}/00_readme.txt" />
     <get src="${SRC_IGRF/FORTRAN_CODE}/bilcal.for" dest="${DST_IGRF/FORTRAN_CODE}/bilcal.for" />
@@ -731,7 +735,7 @@
     <get src="${SRC_IGRF/FORTRAN_CODE}/shellig.for" dest="${DST_IGRF/FORTRAN_CODE}/shellig.for" />
   </target>
 
-  <target name="old_matlab_igrf">
+  <target name="old_matlab_igrf" description="Install old_matlab_igrf">
     <mkdir dir="${DST_OLD_MATLAB_IGRF}"/>
     <get src="${SRC_OLD_MATLAB_IGRF}/Contributions.pdf" dest="${DST_OLD_MATLAB_IGRF}/Contributions.pdf" />
     <get src="${SRC_OLD_MATLAB_IGRF}/IGRF95.m" dest="${DST_OLD_MATLAB_IGRF}/IGRF95.m" />
@@ -743,19 +747,19 @@
     <get src="${SRC_OLD_MATLAB_IGRF}/schmidt.m" dest="${DST_OLD_MATLAB_IGRF}/schmidt.m" />
   </target>
 
-  <target name="jensen_cain">
+  <target name="jensen_cain" description="Install jensen_cain">
     <mkdir dir="${DST_JENSEN_CAIN}"/>
     <get src="${SRC_JENSEN_CAIN}/fieldg.for" dest="${DST_JENSEN_CAIN}/fieldg.for" />
     <get src="${SRC_JENSEN_CAIN}/jensen_cain_62.dat" dest="${DST_JENSEN_CAIN}/jensen_cain_62.dat" />
   </target>
 
-  <target name="mgst">
+  <target name="mgst" description="Install mgst">
     <mkdir dir="${DST_MGST}"/>
     <get src="${SRC_MGST}/mgst380.dat" dest="${DST_MGST}/mgst380.dat" />
     <get src="${SRC_MGST}/mgst481.dat" dest="${DST_MGST}/mgst481.dat" />
   </target>
 
-  <target name="feldstein_holzworth">
+  <target name="feldstein_holzworth" description="Install feldstein_holzworth">
     <mkdir dir="${DST_FELDSTEIN_HOLZWORTH}"/>
     <get src="${SRC_FELDSTEIN_HOLZWORTH}/AAREADME.TXT" dest="${DST_FELDSTEIN_HOLZWORTH}/AAREADME.TXT" />
     <get src="${SRC_FELDSTEIN_HOLZWORTH}/AAREADME.TXT.bak" dest="${DST_FELDSTEIN_HOLZWORTH}/AAREADME.TXT.bak" />
@@ -766,7 +770,7 @@
     </exec>
   </target>
 
-  <target name="chiu">
+  <target name="chiu" description="Install chiu">
     <mkdir dir="${DST_CHIU}"/>
     <get src="${SRC_CHIU}/aareadme.doc" dest="${DST_CHIU}/aareadme.doc" />
     <get src="${SRC_CHIU}/chiu.for" dest="${DST_CHIU}/chiu.for" />
@@ -776,7 +780,7 @@
     </exec>
   </target>
 
-  <target name="HMR">
+  <target name="HMR" description="Install HMR">
     <mkdir dir="${DST_HMR}"/>
     <get src="${SRC_HMR}/aareadme.doc" dest="${DST_HMR}/aareadme.doc" />
     <get src="${SRC_HMR}/hm_main.for" dest="${DST_HMR}/hm_main.for" />
@@ -794,7 +798,7 @@
     </exec>
   </target>
 
-  <target name="drift">
+  <target name="drift" description="Install drift">
     <mkdir dir="${DST_DRIFT}"/>
     <get src="${SRC_DRIFT}/isr_drift.for" dest="${DST_DRIFT}/isr_drift.for" />
     <exec executable="${FC}" dir="${DST_DRIFT}">
@@ -803,7 +807,7 @@
     </exec>
   </target>
 
-  <target name="iri90">
+  <target name="iri90" description="Install iri90">
     <mkdir dir="${DST_IRI90}"/>
     <get src="${SRC_IRI90}/aareadme.doc" dest="${DST_IRI90}/aareadme.doc" />
     <get src="${SRC_IRI90}/binccir.for" dest="${DST_IRI90}/binccir.for" /> 
@@ -847,7 +851,7 @@
     </exec>
   </target>
 
-  <target name="iri90_storm">
+  <target name="iri90_storm" description="Install iri90_storm">
     <mkdir dir="${DST_IRI90_STORM}"/>
     <get src="${SRC_IRI90_STORM}/ccir11.bin" dest="${DST_IRI90_STORM}/ccir11.bin" /> 
     <get src="${SRC_IRI90_STORM}/ccir12.bin" dest="${DST_IRI90_STORM}/ccir12.bin" />
@@ -882,7 +886,7 @@
     </exec>
   </target>
 
-  <target name="iri95">
+  <target name="iri95" description="Install iri95">
     <mkdir dir="${DST_IRI95}"/>
     <get src="${SRC_IRI95}/../AAREADME.TXT" dest="${DST_IRI95}/../AAREADME.TXT" /> 
     <get src="${SRC_IRI95}/AAREADME.TXT" dest="${DST_IRI95}/AAREADME.TXT" /> 
@@ -930,7 +934,7 @@
     </exec>
   </target>
 
-  <target name="iri2001">
+  <target name="iri2001" description="Install iri2001">
     <mkdir dir="${DST_IRI2001}"/>
     <get src="${SRC_IRI2001}/00README.TXT" dest="${DST_IRI2001}/00README.TXT" /> 
     <get src="${SRC_IRI2001}/ap.dat" dest="${DST_IRI2001}/ap.dat" /> 
@@ -1005,7 +1009,7 @@
     </exec>
   </target>
 
-  <target name="iri2007">
+  <target name="iri2007" description="Install iri2007">
     <mkdir dir="${DST_IRI2007}"/>
     <get src="${SRC_IRI2007}/00_iri2007.tar" dest="/tmp/00_iri2007.tar" />
     <untar src="/tmp/00_iri2007.tar" dest="${DST_IRI2007}" />
@@ -1023,7 +1027,7 @@
     </exec>
   </target>
 
-  <target name="iri2012">
+  <target name="iri2012" description="Install iri2012">
     <mkdir dir="${DST_IRI2012}"/>
     <get src="${SRC_IRI2012}/00_iri2012.tar" dest="/tmp/00_iri2012.tar" />
     <untar src="/tmp/00_iri2012.tar" dest="${DST_IRI2012}" />
@@ -1041,12 +1045,12 @@
     </exec>
   </target>
 
-  <target name="photoelectron_code">
+  <target name="photoelectron_code" description="Install photoelectron_code">
     <mkdir dir="${DST_PHOTOELECTRON_CODE}"/>
     <get src="${SRC_PHOTOELECTRON_CODE}/pesimp.for" dest="${DST_PHOTOELECTRON_CODE}/pesimp.for" /> 
   </target>
 
-  <target name="tsyganenko">
+  <target name="tsyganenko" description="Install tsyganenko">
     <mkdir dir="${DST_TSYGANENKO}"/>
     <mkdir dir="${DST_TSYGANENKO}/2001paper"/>
     <mkdir dir="${DST_TSYGANENKO}/2001paper/Paper2"/>
@@ -1077,22 +1081,22 @@
     </exec>
   </target>
   
-  <target name="2001paper">
+  <target name="2001paper" description="Install 2001paper">
     <antcall target="Paper1"/>
     <antcall target="Paper2"/>
   </target>
 
-  <target name="Paper1">
+  <target name="Paper1" description="Install Paper1">
     <mkdir dir="${DST_TSYGANENKO}/2001paper/Paper1"/>
     <get src="${SRC_TSYGANENKO}/2001paper/Paper1/2001ja000219.pdf" dest="${DST_TSYGANENKO}/2001paper/Paper1/2001ja000219.pdf" /> 
   </target>
 
-  <target name="Paper2">
+  <target name="Paper2" description="Install Paper2">
     <mkdir dir="${DST_TSYGANENKO}/2001paper/Paper2"/>
     <get src="${SRC_TSYGANENKO}/2001paper/Paper2/2001ja000220.pdf" dest="${DST_TSYGANENKO}/2001paper/Paper2/2001ja000220.pdf" /> 
   </target>
 
-  <target name="xu">
+  <target name="xu" description="Install xu"> 
     <mkdir dir="${DST_XU}"/>
     <get src="${SRC_XU}/aareadme.txt" dest="${DST_XU}/aareadme.txt" /> 
     <get src="${SRC_XU}/aen.for" dest="${DST_XU}/aen.for" /> 
@@ -1106,7 +1110,7 @@
     </exec>
   </target>
 
-  <target name="pv_atmos">
+  <target name="pv_atmos" description="Install pv_atmos">
     <mkdir dir="${DST_PV_ATMOS}"/>
     <get src="${SRC_PV_ATMOS}/aareadme.doc" dest="${DST_PV_ATMOS}/aareadme.doc" /> 
     <get src="${SRC_PV_ATMOS}/pvatmos.for" dest="${DST_PV_ATMOS}/pvatmos.for" /> 
@@ -1116,7 +1120,7 @@
     </exec>
   </target>
 
-  <target name="pv_ionos">
+  <target name="pv_ionos" description="Install pv_ionos">
     <mkdir dir="${DST_PV_IONOS}"/>
     <get src="${SRC_PV_IONOS}/aareadme.doc" dest="${DST_PV_IONOS}/aareadme.doc" /> 
     <get src="${SRC_PV_IONOS}/fsmod.dat" dest="${DST_PV_IONOS}/fsmod.dat" /> 
@@ -1130,7 +1134,7 @@
     </exec>
   </target>
 
-  <target name="radbelt/c_code">
+  <target name="radbelt/c_code" description="Install radbelt/c_code">
     <mkdir dir="${DST_RADBELT/C_CODE}"/>
     <get src="${SRC_RADBELT/C_CODE}/radbelt_trmfun.c" dest="${DST_RADBELT/C_CODE}/radbelt_trmfun.c" /> 
     <get src="${SRC_RADBELT/C_CODE}/readme.doc" dest="${DST_RADBELT/C_CODE}/readme.doc" /> 
@@ -1140,7 +1144,7 @@
     </exec>
   </target>
 
-  <target name="radbelt/fortran_code">
+  <target name="radbelt/fortran_code" description="Install radbelt/fortran_code">
     <mkdir dir="${DST_RADBELT/FORTRAN_CODE}/fortran_code"/>
     <get src="${SRC_RADBELT/FORTRAN_CODE}/aareadme.doc" dest="${DST_RADBELT/FORTRAN_CODE}/aareadme.doc" /> 
     <get src="${SRC_RADBELT/FORTRAN_CODE}/ae8max.asc" dest="${DST_RADBELT/FORTRAN_CODE}/ae8max.asc" /> 
@@ -1161,7 +1165,7 @@
     </exec>      
   </target>
 
-  <target name="shieldose">
+  <target name="shieldose" description="Install shieldose">
     <mkdir dir="${DST_SHIELDOSE}"/>
     <get src="${SRC_SHIELDOSE}/aareadme.doc" dest="${DST_SHIELDOSE}/aareadme.doc" /> 
     <get src="${SRC_SHIELDOSE}/shieldose.dan" dest="${DST_SHIELDOSE}/shieldose.dan" /> 
@@ -1173,7 +1177,7 @@
     </exec>
   </target>
 
-  <target name="guzik_version">
+  <target name="guzik_version" description="Install guzik_version">
     <mkdir dir="${DST_GUZIK_VERSION}"/>
     <get src="${SRC_GUZIK_VERSION}/aareadme.txt" dest="${DST_GUZIK_VERSION}/aareadme.txt" /> 
     <get src="${SRC_GUZIK_VERSION}/ae5min.for" dest="${DST_GUZIK_VERSION}/ae5min.for" /> 
@@ -1217,7 +1221,7 @@
     </exec>
   </target>
 
-  <target name="original">
+  <target name="original" description="Install original">
     <mkdir dir="${DST_ORIGINAL}"/>
     <get src="${SRC_ORIGINAL}/aareadme.doc" dest="${DST_ORIGINAL}/aareadme.doc" />
     <get src="${SRC_ORIGINAL}/ae5min.dat" dest="${DST_ORIGINAL}/ae5min.dat" />
@@ -1228,7 +1232,7 @@
     <get src="${SRC_ORIGINAL}/test.dat" dest="${DST_ORIGINAL}/test.dat" />
   </target>
 
-  <target name="ae-euv">
+  <target name="ae-euv" description="Install ae-euv">
     <mkdir dir="${DST_AE-EUV}"/>
     <get src="${SRC_AE-EUV}/aareadme.doc" dest="${DST_AE-EUV}/aareadme.doc" />
     <get src="${SRC_AE-EUV}/f76ref.dat" dest="${DST_AE-EUV}/f76ref.dat" />
@@ -1237,7 +1241,7 @@
     <get src="${SRC_AE-EUV}/sc21refw.dat" dest="${DST_AE-EUV}/sc21refw.dat" />
   </target>
 
-  <target name="euv91">
+  <target name="euv91" description="Install euv91">
     <mkdir dir="${DST_EUV91}"/>
     <get src="${SRC_EUV91}/aareadme.doc" dest="${DST_EUV91}/aareadme.doc" />
     <get src="${SRC_EUV91}/euv91.pro" dest="${DST_EUV91}/euv91.pro" />
@@ -1258,7 +1262,7 @@
     </exec>
   </target>
   
-  <target name="euvac">
+  <target name="euvac" description="Install euvac"> 
     <mkdir dir="${DST_EUVAC}"/>
     <get src="${SRC_EUVAC}/aareadme.doc" dest="${DST_EUVAC}/aareadme.doc" />
     <get src="${SRC_EUVAC}/euvac.for" dest="${DST_EUVAC}/euvac.for" />
@@ -1268,12 +1272,12 @@
     </exec>
   </target>
 
-  <target name="solar2000">
+  <target name="solar2000" description="Install solar2000">
     <mkdir dir="${DST_SOLAR2000}"/>
     <get src="${SRC_SOLAR2000}/aareadme.doc" dest="${DST_SOLAR2000}/aareadme.doc" />
   </target>
 
-  <target name="solpro">
+  <target name="solpro" description="Install solpro">
     <mkdir dir="${DST_SOLPRO}"/>
     <get src="${SRC_SOLPRO}/solpro.for" dest="${DST_SOLPRO}/solpro.for" />
     <exec executable="${FC}" dir="${DST_SOLPRO}">
