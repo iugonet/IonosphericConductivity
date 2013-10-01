@@ -1,4 +1,4 @@
-create table iug_iri2012 {
+create table iug_iri2012 (
        jmag int not null, -- 0:geog, 1:geom
        lat real not null, -- latitude
        lon real not null, -- longitude
@@ -23,7 +23,7 @@ create table iug_iri2012 {
        t int not null, -- t/%
        NmF2 real not null, -- Peak Densities/cm-3: NmF2 
        NmF1 real not null, -- NmF1
-       hmE real not null, -- NmE
+       NmE real not null, -- NmE
        hmF2 real not null, -- Peak heights/km: hmF2,
        hmF1 real not null, -- hmF1
        hmE real not null, -- hmE
@@ -32,5 +32,5 @@ create table iug_iri2012 {
        modip real not null, -- Modip (Modified Dip)/degree
        rz12 real not null, -- Solar Sunsplot Number (12-months running mean) Rz12
        ig12 real not null, -- Ionospheric-Effective Solar Index IG12
-       primary key(jmag,lat,lon,yyyy,mm,dd,iut,atime,height)
-}
+       primary key(jmag,lat,lon,yyyy,mm,dd,ltut,atime,height)
+);
