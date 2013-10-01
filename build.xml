@@ -1,0 +1,1287 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="iugonet" default="all">
+<!-- retrieve system environmental variables-->
+  <property environment="env"/>
+
+<!-- Check OS -->
+  <condition property="isWindows">
+    <os family="windows"/>
+  </condition>
+    
+  <condition property="isUnix">
+    <os family="unix"/>
+  </condition>
+    
+  <condition property="isMac">
+    <os family="mac"/>
+  </condition>
+
+<!-- set ${DST} -->
+  <condition property="DST" value="${set.TEMP}">
+    <os family="windows"/>
+  </condition>
+
+  <condition property="DST" value="${env.HOME}">
+    <os family="unix"/>
+  </condition>
+
+  <condition property="DST" value="${env.HOME}">
+    <os family="mac"/>
+  </condition>
+
+<!-- You have to set build.properties after set ${DST} -->
+  <property file="build.properties"/>
+
+<!-- Setting environmental variables which depend on OS-->
+  <target name="doWindows" if="isWindows">
+    <echo message="IUGONET: Configuration for Windows"/>
+    <property environment="set"/>
+    <get src="${SRC_G95_WIN}" dest="${DST_G95_WIN}"/>
+    <unzip src="${DST_G95_WIN}" dest="/tmp"/>
+    <property name="FC" value="${FC_WIN}"/>
+    <echo mesage="${FC}"/>
+  </target>
+
+  <target name="doUnix" if="isUnix">
+    <property name="FC" valule="${FC_UNIX}"/>
+    <echo message="IUGONET: Configuration for Unix"/>
+    <exec executable="sudo">
+      <arg value="apt-get"/>
+      <arg value="-y"/>
+      <arg value="install"/>
+      <arg value="gfortran"/>
+    </exec>
+  </target>
+
+  <target name="doMac" if="isMac">
+    <echo message="IUGONET: Configuration for Mac"/>
+    <property environment="env"/>
+    <get src="${SRC_G95_MAC}" dest="${DST_G95_MAC}"/>
+    <property name="FC" value="${FC_MAC}"/>
+  </target>
+
+<!-- Set fortran compiler-->
+  <condition property="FC" value="${FC_WINDOWS}">
+    <os family="windows"/>
+  </condition>
+
+  <condition property="FC" value="${FC_UNIX}">
+    <os family="unix"/>
+  </condition>
+
+  <condition property="FC" value="${FC_MAC}">
+    <os family="mac"/>
+  </condition>
+
+<!-- Tasks -->
+  <target name="all" depends="download"/>
+  <target name="download" depends="clean,nasa,noaa"/>
+  <target name="nasa" depends="models,atmospheric,geomagnetic,ionospheric,magnetospheric,planets,radiation_belt,solar"/>
+  <target name="noaa" depends="igrf11,ETOPO5"/>
+
+  <target name="models">
+    <mkdir dir="${DST_MODELS}"/>
+    <get src="${SRC_MODELS}/00readme.txt" dest="${DST_MODELS}/00readme.txt" />
+  </target>
+
+  <target name="atmospheric">
+    <antcall target="cira"/>
+    <antcall target="h_exos"/> 
+    <antcall target="hwm07"/> 
+    <antcall target="hwm93"/> 
+    <antcall target="jacchia"/>
+    <antcall target="met"/>
+    <antcall target="msis"/>
+  </target>
+  
+  <target name="cira">
+    <antcall target="cira86"/> 
+    <antcall target="cira86ascii"/> 
+  </target>
+
+  <target name="msis">
+    <antcall target="msis86"/>
+    <antcall target="msise90"/>
+    <antcall target="nrlmsise00"/>
+  </target>
+
+  <target name="cosmic_rays">
+    <antcall target="cutoff_rigidity_sw"/>
+  </target>
+
+  <target name="geomagnetic">
+    <antcall target="gsfc"/>
+    <antcall target="igrf"/>
+    <antcall target="jensen_cain"/>
+    <antcall target="mgst"/>
+  </target>
+
+  <target name="igrf">
+    <antcall target="igrf/fortran_code"/>
+    <antcall target="old_coefficients"/>
+    <antcall target="old_matlab_igrf"/>
+  </target>
+
+  <target name="old_coefficients">
+    <mkdir dir="${DST_OLD_COEFFICIENTS}"/>
+    <antcall target="7th-generation"/>
+    <antcall target="8th-generation"/>
+    <antcall target="9th-generation"/>
+    <antcall target="10th-generation"/>
+    <get src="${SRC_OLD_COEFFICIENTS}/update.txt" dest="${DST_OLD_COEFFICIENTS}/update.txt" />
+  </target>
+
+  <target name="ionospheric">
+    <antcall target="auroral_oval"/>
+    <antcall target="chiu"/>
+    <antcall target="convection_Efield"/>
+    <antcall target="drift"/>
+    <antcall target="iri"/>
+    <antcall target="photoelectron_code"/>
+  </target>
+  
+  <target name="auroral_oval">
+    <antcall target="feldstein_holzworth"/>
+  </target>
+
+  <target name="convection_Efield">
+    <antcall target="HMR"/>
+  </target>
+
+  <target name="iri">
+    <antcall target="iri90"/>
+    <antcall target="iri95"/>
+    <antcall target="iri2001"/>
+    <antcall target="iri2007"/>
+    <antcall target="iri2012"/>
+  </target>
+
+  <target name="magnetospheric">
+    <antcall target="tsyganenko"/>
+    <antcall target="xu"/>
+  </target>
+
+  <target name="planets">
+    <antcall target="venus"/>
+  </target>
+  <target name="venus">
+    <antcall target="pv_atmos"/>
+    <antcall target="pv_ionos"/>
+  </target>
+  <target name="radiation_belt">
+    <antcall target="radbelt"/>
+    <antcall target="shieldose"/>
+    <antcall target="sofip"/>
+  </target>
+  <target name="radbelt">
+    <antcall target="radbelt/c_code"/>
+    <antcall target="radbelt/fortran_code"/>
+  </target>
+  <target name="sofip">
+    <antcall target="guzik_version"/>
+    <antcall target="original"/> 
+  </target>
+  <target name="solar">
+    <antcall target="euv"/>
+    <antcall target="proton_flux"/>
+  </target>
+
+  <target name="euv">
+    <antcall target="ae-euv"/>
+    <antcall target="euv91"/>
+    <antcall target="euvac"/>
+    <antcall target="solar2000"/>
+  </target>
+
+  <target name="proton_flux">
+    <antcall target="solpro"/>
+  </target>
+
+  <target name="clean">
+    <delete dir="${DST}/models"/>
+  </target>
+
+  <target name="cira86">
+    <mkdir dir="${DST_CIRA86}"/>
+    
+<!--
+    <get src="${SRC_CIRA86}/../Please_read.txt" dest="${DST_CIRA86}/../Please_read.txt" />
+    <get src="${SRC_CIRA86}/aareadme.txt" dest="${DST_CIRA86}/aareadme.txt" />
+    <get src="${SRC_CIRA86}/ch11.dat" dest="${DST_CIRA86}/ch11.dat" />
+    <get src="${SRC_CIRA86}/ch12.dat" dest="${DST_CIRA86}/ch12.dat" />
+    <get src="${SRC_CIRA86}/ch13.dat" dest="${DST_CIRA86}/ch13.dat" />
+    <get src="${SRC_CIRA86}/ch14.dat" dest="${DST_CIRA86}/ch14.dat" />
+    <get src="${SRC_CIRA86}/ch15.dat" dest="${DST_CIRA86}/ch15.dat" />
+    <get src="${SRC_CIRA86}/ch16.dat" dest="${DST_CIRA86}/ch16.dat" />
+    <get src="${SRC_CIRA86}/ch17.dat" dest="${DST_CIRA86}/ch17.dat" />
+    <get src="${SRC_CIRA86}/ch18.dat" dest="${DST_CIRA86}/ch18.dat" />
+    <get src="${SRC_CIRA86}/ch19.dat" dest="${DST_CIRA86}/ch19.dat" />
+    <get src="${SRC_CIRA86}/ch20.dat" dest="${DST_CIRA86}/ch20.dat" />
+    <get src="${SRC_CIRA86}/ch21.dat" dest="${DST_CIRA86}/ch21.dat" />
+    <get src="${SRC_CIRA86}/ch22.dat" dest="${DST_CIRA86}/ch22.dat" />
+    <get src="${SRC_CIRA86}/cirat.for" dest="${DST_CIRA86}/cirat.for" />
+    <get src="${SRC_CIRA86}/cp11.dat" dest="${DST_CIRA86}/cp11.dat" />
+    <get src="${SRC_CIRA86}/cp12.dat" dest="${DST_CIRA86}/cp12.dat" />
+    <get src="${SRC_CIRA86}/cp13.dat" dest="${DST_CIRA86}/cp13.dat" />
+    <get src="${SRC_CIRA86}/cp14.dat" dest="${DST_CIRA86}/cp14.dat" />
+    <get src="${SRC_CIRA86}/cp15.dat" dest="${DST_CIRA86}/cp15.dat" />
+    <get src="${SRC_CIRA86}/cp16.dat" dest="${DST_CIRA86}/cp16.dat" />
+    <get src="${SRC_CIRA86}/cp17.dat" dest="${DST_CIRA86}/cp17.dat" />
+    <get src="${SRC_CIRA86}/cp18.dat" dest="${DST_CIRA86}/cp18.dat" />
+    <get src="${SRC_CIRA86}/cp19.dat" dest="${DST_CIRA86}/cp19.dat" />
+    <get src="${SRC_CIRA86}/cp20.dat" dest="${DST_CIRA86}/cp20.dat" />
+    <get src="${SRC_CIRA86}/cp21.dat" dest="${DST_CIRA86}/cp21.dat" />
+    <get src="${SRC_CIRA86}/cp22.dat" dest="${DST_CIRA86}/cp22.dat" />
+-->
+  </target>
+
+  <target name="cira86ascii">
+    <mkdir dir="${DST_CIRA86ASCII}"/>
+
+    <get src="${SRC_CIRA86ASCII}/../Please_read.txt" dest="${DST_CIRA86ASCII}/../Please_read.txt" />
+    <get src="${SRC_CIRA86ASCII}/AAREADME.TXT" dest="${DST_CIRA86ASCII}/AAREADME.TXT" />
+    <get src="${SRC_CIRA86ASCII}/nhant.lsn" dest="${DST_CIRA86ASCII}/nhant.lsn" />
+    <get src="${SRC_CIRA86ASCII}/nhanw.lsn" dest="${DST_CIRA86ASCII}/nhanw.lsn" />
+    <get src="${SRC_CIRA86ASCII}/nhanz.lsn" dest="${DST_CIRA86ASCII}/nhanz.lsn" />
+    <get src="${SRC_CIRA86ASCII}/nht.lsn" dest="${DST_CIRA86ASCII}/nht.lsn" />
+    <get src="${SRC_CIRA86ASCII}/nhw.lsn" dest="${DST_CIRA86ASCII}/nhw.lsn" />
+    <get src="${SRC_CIRA86ASCII}/nhz.lsn" dest="${DST_CIRA86ASCII}/nhz.lsn" />
+    <get src="${SRC_CIRA86ASCII}/shant.lsn" dest="${DST_CIRA86ASCII}/shant.lsn" />
+    <get src="${SRC_CIRA86ASCII}/shanw.lsn" dest="${DST_CIRA86ASCII}/shanw.lsn" />
+    <get src="${SRC_CIRA86ASCII}/sht.lsn" dest="${DST_CIRA86ASCII}/sht.lsn" />
+    <get src="${SRC_CIRA86ASCII}/shw.lsn" dest="${DST_CIRA86ASCII}/shw.lsn" />
+    <get src="${SRC_CIRA86ASCII}/shz.lsn" dest="${DST_CIRA86ASCII}/shz.lsn" />
+    <get src="${SRC_CIRA86ASCII}/twp.lsn" dest="${DST_CIRA86ASCII}/twp.lsn" />
+  </target>
+
+  <target name="h_exos">
+    <mkdir dir="${DST_H_EXOS}"/>
+    <get src="${SRC_H_EXOS}/AAREADME.TXT" dest="${DST_H_EXOS}/AAREADME.TXT" />
+    <get src="${SRC_H_EXOS}/h_exos.dat" dest="${DST_H_EXOS}/h_exos.dat" />
+  </target>
+
+  <target name="hwm07">
+    <mkdir dir="${DST_HWM07}"/>
+    <get src="${SRC_HWM07}/HWM07_all_files.zip" dest="${DST_HWM07}/HWM07_all_files.zip" />
+    <get src="${SRC_HWM07}/readme.txt" dest="${DST_HWM07}/readme.txt" />
+    <antcall target="hwm07_all_files"/>
+  </target>
+
+  <target name="hwm07_all_files">
+    <mkdir dir="${DST_HWM07_ALL_FILES}"/>
+    <get src="${SRC_HWM07_ALL_FILES}/apexcord.f90" dest="${DST_HWM07_ALL_FILES}/apexcord.f90" />
+    <get src="${SRC_HWM07_ALL_FILES}/apexgrid.dat" dest="${DST_HWM07_ALL_FILES}/apexgrid.dat" />
+    <get src="${SRC_HWM07_ALL_FILES}/checkhwm07.f90" dest="${DST_HWM07_ALL_FILES}/checkhwm07.f90" />
+    <get src="${SRC_HWM07_ALL_FILES}/dwm07b.f90" dest="${DST_HWM07_ALL_FILES}/dwm07b.f90" />
+    <get src="${SRC_HWM07_ALL_FILES}/dwm07b_104i.dat" dest="${DST_HWM07_ALL_FILES}/dwm07b_104i.dat" />
+    <get src="${SRC_HWM07_ALL_FILES}/hwm07e.f90" dest="${DST_HWM07_ALL_FILES}/hwm07e.f90" />
+    <get src="${SRC_HWM07_ALL_FILES}/hwm071308e.dat" dest="${DST_HWM07_ALL_FILES}/hwm071308e.dat" />
+    <get src="${SRC_HWM07_ALL_FILES}/makefile.g95" dest="${DST_HWM07_ALL_FILES}/makefile.g95" />
+    <get src="${SRC_HWM07_ALL_FILES}/makefile.ifort" dest="${DST_HWM07_ALL_FILES}/makefile.ifort" />
+    <get src="${SRC_HWM07_ALL_FILES}/readme.txt" dest="${DST_HWM07_ALL_FILES}/readme.txt" />
+  </target>
+
+
+  <target name="hwm93">
+    <mkdir dir="${DST_HWM93}"/>
+    <get src="${SRC_HWM93}/AAREADME.TXT" dest="${DST_HWM93}/AAREADME.TXT" />
+    <get src="${SRC_HWM93}/hwm93.txt" dest="${DST_HWM93}/hwm93.txt" />
+  </target>
+
+  <target name="jacchia">
+    <antcall target="jacchia-77"/>
+  </target>
+
+  <target name="jacchia-77">
+    <mkdir dir="${DST_JACCHIA-77}"/>
+    <get src="${SRC_JACCHIA-77}/aareadme.doc" dest="${DST_JACCHIA-77}/aareadme.doc" />
+    <get src="${SRC_JACCHIA-77}/j77sri.for" dest="${DST_JACCHIA-77}/j77sri.for" />
+    <get src="${SRC_JACCHIA-77}/t1000.out" dest="${DST_JACCHIA-77}/t1000.out" />
+    <get src="${SRC_JACCHIA-77}/testj77.for" dest="${DST_JACCHIA-77}/testj77.for" />
+    <exec executable="${FC}" dir="${DST_JACCHIA-77}">
+      <arg value="${FC_OPT}"/>
+      <arg value="j77sri.for"/>
+      <arg value="testj77.for"/>
+    </exec>
+  </target>
+
+  <target name="met">
+    <mkdir dir="${DST_MET}"/>
+    <get src="${SRC_MET}/AAREADME.TXT" dest="${DST_MET}/AAREADME.TXT" />
+    <get src="${SRC_MET}/met.for" dest="${DST_MET}/met.for" />
+  </target>
+
+  <target name="msis86">
+    <mkdir dir="${DST_MSIS86}"/>
+    <get src="${SRC_MSIS86}/AAREADME.TXT" dest="${DST_MSIS86}/AAREADME.TXT" />
+    <get src="${SRC_MSIS86}/m86dri.doc" dest="${DST_MSIS86}/m86dri.doc" />
+    <get src="${SRC_MSIS86}/m86dri.for" dest="${DST_MSIS86}/m86dri.for" />
+    <get src="${SRC_MSIS86}/m86dri.log" dest="${DST_MSIS86}/m86dri.log" />
+    <get src="${SRC_MSIS86}/m86tes.dat" dest="${DST_MSIS86}/m86tes.dat" />
+    <get src="${SRC_MSIS86}/m86tes.for" dest="${DST_MSIS86}/m86tes.for" />
+    <get src="${SRC_MSIS86}/msis86.dat" dest="${DST_MSIS86}/msis86.dat" />
+    <get src="${SRC_MSIS86}/msis86.for" dest="${DST_MSIS86}/msis86.for" />
+  </target>
+
+  <target name="msise90">
+    <mkdir dir="${DST_MSISE90}"/>
+    <get src="${SRC_MSISE90}/AAREADME.TXT" dest="${DST_MSISE90}/AAREADME.TXT" />
+    <get src="${SRC_MSISE90}/msise90_driver.for" dest="${DST_MSISE90}/msise90_driver.for" />
+    <get src="${SRC_MSISE90}/msise90_out.txt" dest="${DST_MSISE90}/msise90_out.txt" />
+    <get src="${SRC_MSISE90}/msise90_sub.for" dest="${DST_MSISE90}/msise90_sub.for" />
+  </target>
+
+  <target name="nrlmsise00">
+    <mkdir dir="${DST_NRLMSISE00}"/>
+    <get src="${SRC_NRLMSISE00}/nrlmsise00_driver.for" dest="${DST_NRLMSISE00}/nrlmsise00_driver.for" />
+    <get src="${SRC_NRLMSISE00}/nrlmsise00_output.txt" dest="${DST_NRLMSISE00}/nrlmsise00_output.txt" />
+    <get src="${SRC_NRLMSISE00}/nrlmsise00_sub.for" dest="${DST_NRLMSISE00}/nrlmsise00_sub.for" />
+    <get src="${SRC_NRLMSISE00}/readme.txt" dest="${DST_NRLMSISE00}/readme.txt" />
+    <copy todir="${DST_NRLMSISE00}">
+      <fileset dir="${env.HOME}/udas_plus/models/atmospheric/msis/nrlmsise00"/>
+    </copy>
+    <patch patchfile="${DST_NRLMSISE00}/nrlmsise00_sub.patch" dir="${DST_NRLMSISE00}"/>
+    <exec executable="${FC}" dir="${DST_NRLMSISE00}">
+      <arg value="${FC_OPT}"/>
+      <arg value="-o"/>
+      <arg value="nrlmsise00_driver_iugonet.out"/>
+      <arg value="nrlmsise00_driver_iugonet.f90"/>
+      <arg value="nrlmsise00_sub.for"/>
+    </exec>
+  </target>
+
+  <target name="nrlmsis00_c_version">
+    <mkdir dir="${DST_NRLMSISE00}/nrlmsis00_c_version"/>
+    <get src="${SRC_NRLMSISE00}/nrlmsis00_c_version/DOCUMENTATION" dest="${DST_NRLMSISE00}/nrlmsis00_c_version/DOCUMENTATION" />
+    <get src="${SRC_NRLMSISE00}/nrlmsis00_c_version/makefile" dest="${DST_NRLMSISE00}/nrlmsis00_c_version/makefile" />
+    <get src="${SRC_NRLMSISE00}/nrlmsis00_c_version/nrlmsise-00.c" dest="${DST_NRLMSISE00}/nrlmsis00_c_version/nrlmsise-00.c" />
+    <get src="${SRC_NRLMSISE00}/nrlmsis00_c_version/nrlmsise-00.h" dest="${DST_NRLMSISE00}/nrlmsis00_c_version/nrlmsis00.h" />
+    <get src="${SRC_NRLMSISE00}/nrlmsis00_c_version/nrlmsise-00_data.c" dest="${DST_NRLMSISE00}/nrlmsis00_c_version/nrlmsise-00_data.c" />
+    <get src="${SRC_NRLMSISE00}/nrlmsis00_c_version/nrlmsise-00_test.c" dest="${DST_NRLMSISE00}/nrlmsis00_c_version/nrlmsise-00_test.c" />
+  </target>
+
+  <target name="cutoff_rigidity_sw">
+    <mkdir dir="${DST_CUTOFF_RIGIDITY_SW}"/>
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/00readme.txt" dest="${DST_CUTOFF_RIGIDITY_SW}/00readme.txt" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/SHEA-SMART2000_GEOMAGNETIC-CUTOFF-RIGIDITY-COMPUTER-PROGRAM_DOCUMENTATION.PDF" dest="${DST_CUTOFF_RIGIDITY_SW}/SHEA-SMART2000_GEOMAGNETIC-CUTOFF-RIGIDITY-COMPUTER-PROGRAM_DOCUMENTATION.PDF" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/erg-rig.for" dest="${DST_CUTOFF_RIGIDITY_SW}/erg-rig.for" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/list.txt" dest="${DST_CUTOFF_RIGIDITY_SW}/list.txt" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/rig_erg.for" dest="${DST_CUTOFF_RIGIDITY_SW}/rig_erg.for" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/tjallmag.for" dest="${DST_CUTOFF_RIGIDITY_SW}/tjallmag.for" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/tji95.for" dest="${DST_CUTOFF_RIGIDITY_SW}/tji95.for" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/tji95t.for" dest="${DST_CUTOFF_RIGIDITY_SW}/tji95t.for" />
+    <antcall target="cutoff_rigidity_sw/PC_Version"/>
+    <antcall target="cutoff_rigidity_sw/Word Document"/>
+  </target>
+
+  <target name="cutoff_rigidity_sw/PC_Version">
+    <mkdir dir="${DST_CUTOFF_RIGIDITY_SW}/PC_Version"/>
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/PC_Version/00readme_pc.txt" dest="${DST_CUTOFF_RIGIDITY_SW}/PC_Version/00readme_pc.txt" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/PC_Version/Shea-Smart2000_Geomagnetic-Cutoff-Rigidity-Computer-Program_Documentation.pdf" dest="${DST_CUTOFF_RIGIDITY_SW}/PC_Version/Shea-Smart2000_Geomagnetic-Cutoff-Rigidity-Computer-Program_Documentation.pdf" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/PC_Version/tape1" dest="${DST_CUTOFF_RIGIDITY_SW}/PC_Version/tape1" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/PC_Version/tape7" dest="${DST_CUTOFF_RIGIDITY_SW}/PC_Version/tape7" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/PC_Version/tape8" dest="${DST_CUTOFF_RIGIDITY_SW}/PC_Version/tape8" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/PC_Version/tape16" dest="${DST_CUTOFF_RIGIDITY_SW}/PC_Version/tape16" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/PC_Version/tape17" dest="${DST_CUTOFF_RIGIDITY_SW}/PC_Version/tape17" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/PC_Version/tape21" dest="${DST_CUTOFF_RIGIDITY_SW}/PC_Version/tape21" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/PC_Version/tji95t_du2.for" dest="${DST_CUTOFF_RIGIDITY_SW}/PC_Version/tji95t_du2.for" />
+  </target>
+
+  <target name="cutoff_rigidity_sw/Word Document">
+    <mkdir dir="${DST_CUTOFF_RIGIDITY_SW}/Word&#160;Document"/>
+    <get src="${SRC_CUTOFF_RIGIDITY_SW/Word%20Document/lblz.doc" dest="${DST_CUTOFF_RIGIDITY_SW/Word%20Document}/lblz.doc" />
+<!--
+    <get src="'${SRC_CUTOFF_RIGIDITY_SW}/Word&#160;Document/rpt-1.doc'" dest="'${DST_CUTOFF_RIGIDITY_SW}/Word Document/rpt-1.doc'" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/Word Document/rpt-2.doc" dest="${DST_CUTOFF_RIGIDITY_SW}/Word Document/rpt-2.doc" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/Word Document/rpt-3.doc" dest="${DST_CUTOFF_RIGIDITY_SW}/Word Document/rpt-3.doc" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/Word Document/rpt-4.doc" dest="${DST_CUTOFF_RIGIDITY_SW}/Word Document/rpt-4.doc" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/Word Document/rpt-5.doc" dest="${DST_CUTOFF_RIGIDITY_SW}/Word Document/rpt-5.doc" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/Word Document/rpt-6.doc" dest="${DST_CUTOFF_RIGIDITY_SW}/Word Document/rpt-6.doc" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/Word Document/rpt-7.doc" dest="${DST_CUTOFF_RIGIDITY_SW}/Word Document/rpt-7.doc" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/Word Document/rpt-8.doc" dest="${DST_CUTOFF_RIGIDITY_SW}/Word Document/rpt-8.doc" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/Word Document/rpt-9.doc" dest="${DST_CUTOFF_RIGIDITY_SW}/Word Document/rpt-9.doc" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/Word Document/rpt-cvr.doc" dest="${DST_CUTOFF_RIGIDITY_SW}/Word Document/rpt-cvr.doc" />
+    <get src="${SRC_CUTOFF_RIGIDITY_SW}/Word Document/tblcnt.doc" dest="${DST_CUTOFF_RIGIDITY_SW}/Word Document/tblcnt.doc" />
+
+-->
+  </target>
+
+  <target name="gsfc">
+    <mkdir dir="${DST_GSFC}"/>
+    <get src="${SRC_GSFC}/gsfc65.dat" dest="${DST_GSFC}/gsfc65.dat" />
+    <get src="${SRC_GSFC}/gsfc66.dat" dest="${DST_GSFC}/gsfc66.dat" />
+    <get src="${SRC_GSFC}/gsfc80.dat" dest="${DST_GSFC}/gsfc80.dat" />
+    <get src="${SRC_GSFC}/gsfc83.dat" dest="${DST_GSFC}/gsfc83.dat" />
+    <get src="${SRC_GSFC}/gsfc87.dat" dest="${DST_GSFC}/gsfc87.dat" />
+    <get src="${SRC_GSFC}/gsfcsub.for" dest="${DST_GSFC}/gsfcsub.for" />
+    <get src="${SRC_GSFC}/gsfctest.for" dest="${DST_GSFC}/gsfctest.for" />
+  </target>
+
+  <target name="7th-generation">
+    <mkdir dir="${DST_7TH-GENERATION}"/>
+    <get src="${SRC_7TH-GENERATION}/dgrf45.dat" dest="${DST_7TH-GENERATION}/dgrf45.dat" />
+    <get src="${SRC_7TH-GENERATION}/dgrf50.dat" dest="${DST_7TH-GENERATION}/dgrf50.dat" />
+    <get src="${SRC_7TH-GENERATION}/dgrf55.dat" dest="${DST_7TH-GENERATION}/dgrf55.dat" />
+    <get src="${SRC_7TH-GENERATION}/dgrf60.dat" dest="${DST_7TH-GENERATION}/dgrf60.dat" />
+    <get src="${SRC_7TH-GENERATION}/dgrf65.dat" dest="${DST_7TH-GENERATION}/dgrf65.dat" />
+    <get src="${SRC_7TH-GENERATION}/dgrf70.dat" dest="${DST_7TH-GENERATION}/dgrf70.dat" />
+    <get src="${SRC_7TH-GENERATION}/dgrf75.dat" dest="${DST_7TH-GENERATION}/dgrf75.dat" />
+    <get src="${SRC_7TH-GENERATION}/dgrf80.dat" dest="${DST_7TH-GENERATION}/dgrf80.dat" />
+    <get src="${SRC_7TH-GENERATION}/dgrf85.dat" dest="${DST_7TH-GENERATION}/dgrf85.dat" />
+    <get src="${SRC_7TH-GENERATION}/dgrf90.dat" dest="${DST_7TH-GENERATION}/dgrf90.dat" />
+    <get src="${SRC_7TH-GENERATION}/igrf95.dat" dest="${DST_7TH-GENERATION}/igrf95.dat" />
+    <get src="${SRC_7TH-GENERATION}/igrf95s.dat" dest="${DST_7TH-GENERATION}/igrf95s.dat" />
+  </target>
+
+  <target name="8th-generation">
+    <mkdir dir="${DST_8TH-GENERATION}"/>
+    <get src="${SRC_8TH-GENERATION}/dgrf45.dat" dest="${DST_8TH-GENERATION}/dgrf45.dat" />
+    <get src="${SRC_8TH-GENERATION}/dgrf50.dat" dest="${DST_8TH-GENERATION}/dgrf50.dat" />
+    <get src="${SRC_8TH-GENERATION}/dgrf55.dat" dest="${DST_8TH-GENERATION}/dgrf55.dat" />
+    <get src="${SRC_8TH-GENERATION}/dgrf60.dat" dest="${DST_8TH-GENERATION}/dgrf60.dat" />
+    <get src="${SRC_8TH-GENERATION}/dgrf65.dat" dest="${DST_8TH-GENERATION}/dgrf65.dat" />
+    <get src="${SRC_8TH-GENERATION}/dgrf70.dat" dest="${DST_8TH-GENERATION}/dgrf70.dat" />
+    <get src="${SRC_8TH-GENERATION}/dgrf75.dat" dest="${DST_8TH-GENERATION}/dgrf75.dat" />
+    <get src="${SRC_8TH-GENERATION}/dgrf80.dat" dest="${DST_8TH-GENERATION}/dgrf80.dat" />
+    <get src="${SRC_8TH-GENERATION}/dgrf85.dat" dest="${DST_8TH-GENERATION}/dgrf85.dat" />
+    <get src="${SRC_8TH-GENERATION}/dgrf90.dat" dest="${DST_8TH-GENERATION}/dgrf90.dat" />
+    <get src="${SRC_8TH-GENERATION}/dgrf95.dat" dest="${DST_8TH-GENERATION}/dgrf95.dat" />
+    <get src="${SRC_8TH-GENERATION}/igrf00.dat" dest="${DST_8TH-GENERATION}/igrf00.dat" />
+    <get src="${SRC_8TH-GENERATION}/igrf00s.dat" dest="${DST_8TH-GENERATION}/igrf00s.dat" />
+  </target>
+
+  <target name="9th-generation">
+    <mkdir dir="${DST_9TH-GENERATION}"/>
+    <get src="${SRC_9TH-GENERATION}/dgrf45.dat" dest="${DST_9TH-GENERATION}/dgrf45.dat" />
+    <get src="${SRC_9TH-GENERATION}/dgrf50.dat" dest="${DST_9TH-GENERATION}/dgrf50.dat" />
+    <get src="${SRC_9TH-GENERATION}/dgrf55.dat" dest="${DST_9TH-GENERATION}/dgrf55.dat" />
+    <get src="${SRC_9TH-GENERATION}/dgrf60.dat" dest="${DST_9TH-GENERATION}/dgrf60.dat" />
+    <get src="${SRC_9TH-GENERATION}/dgrf65.dat" dest="${DST_9TH-GENERATION}/dgrf65.dat" />
+    <get src="${SRC_9TH-GENERATION}/dgrf70.dat" dest="${DST_9TH-GENERATION}/dgrf70.dat" />
+    <get src="${SRC_9TH-GENERATION}/dgrf75.dat" dest="${DST_9TH-GENERATION}/dgrf75.dat" />
+    <get src="${SRC_9TH-GENERATION}/dgrf80.dat" dest="${DST_9TH-GENERATION}/dgrf80.dat" />
+    <get src="${SRC_9TH-GENERATION}/dgrf85.dat" dest="${DST_9TH-GENERATION}/dgrf85.dat" />
+    <get src="${SRC_9TH-GENERATION}/dgrf90.dat" dest="${DST_9TH-GENERATION}/dgrf90.dat" />
+    <get src="${SRC_9TH-GENERATION}/dgrf95.dat" dest="${DST_9TH-GENERATION}/dgrf95.dat" />
+    <get src="${SRC_9TH-GENERATION}/igrf00.dat" dest="${DST_9TH-GENERATION}/igrf00.dat" />
+    <get src="${SRC_9TH-GENERATION}/igrf00s.dat" dest="${DST_9TH-GENERATION}/igrf00s.dat" />
+  </target>
+
+  <target name="10th-generation">
+    <mkdir dir="${DST_10TH-GENERATION}"/>
+    <get src="${SRC_10TH-GENERATION}/dgrf00.dat" dest="${DST_10TH-GENERATION}/dgrf00.dat" />
+    <get src="${SRC_10TH-GENERATION}/dgrf45.dat" dest="${DST_10TH-GENERATION}/dgrf45.dat" />
+    <get src="${SRC_10TH-GENERATION}/dgrf50.dat" dest="${DST_10TH-GENERATION}/dgrf50.dat" />
+    <get src="${SRC_10TH-GENERATION}/dgrf55.dat" dest="${DST_10TH-GENERATION}/dgrf55.dat" />
+    <get src="${SRC_10TH-GENERATION}/dgrf60.dat" dest="${DST_10TH-GENERATION}/dgrf60.dat" />
+    <get src="${SRC_10TH-GENERATION}/dgrf65.dat" dest="${DST_10TH-GENERATION}/dgrf65.dat" />
+    <get src="${SRC_10TH-GENERATION}/dgrf70.dat" dest="${DST_10TH-GENERATION}/dgrf70.dat" />
+    <get src="${SRC_10TH-GENERATION}/dgrf75.dat" dest="${DST_10TH-GENERATION}/dgrf75.dat" />
+    <get src="${SRC_10TH-GENERATION}/dgrf80.dat" dest="${DST_10TH-GENERATION}/dgrf80.dat" />
+    <get src="${SRC_10TH-GENERATION}/dgrf85.dat" dest="${DST_10TH-GENERATION}/dgrf85.dat" />
+    <get src="${SRC_10TH-GENERATION}/dgrf90.dat" dest="${DST_10TH-GENERATION}/dgrf90.dat" />
+    <get src="${SRC_10TH-GENERATION}/dgrf95.dat" dest="${DST_10TH-GENERATION}/dgrf95.dat" />
+    <get src="${SRC_10TH-GENERATION}/igrf05.dat" dest="${DST_10TH-GENERATION}/igrf05.dat" />
+    <get src="${SRC_10TH-GENERATION}/igrf05s.dat" dest="${DST_10TH-GENERATION}/igrf05s.dat" />
+  </target>
+
+  <target name="igrf11">
+    <mkdir dir="${DST_IGRF_NGDC}"/>
+    <get src="${SRC_IGRF_NGDC}/igrf11.f" dest="${DST_IGRF_NGDC}/igrf11.f" />
+    <exec executable="${FC}" dir="${DST_IGRF_NGDC}">
+      <arg value="${FC_OPT}"/>
+      <arg value="igrf11.f"/>
+    </exec>
+  </target>
+
+  <target name="ETOPO5">
+    <mkdir dir="${DST_ETOPO5}"/>
+    <get src="${SRC_ETOPO5}/readme.txt" dest="${DST_ETOPO5}/readme.txt" />
+    <mkdir dir="${DST_ETOPO5}/BOUNDARY"/>
+    <mkdir dir="${DST_ETOPO5}/BOUNDARY/LINEATIO"/>
+    <get src="${SRC_ETOPO5}/BOUNDARY/LINEATIO/AGE.LIS" dest="${DST_ETOPO5}/BOUNDARY/LINEATIO/AGE.LIS" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/LINEATIO/FEATURE.LIS" dest="${DST_ETOPO5}/BOUNDARY/LINEATIO/FEATURE.LIS" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/LINEATIO/LINEATIO.DOC" dest="${DST_ETOPO5}/BOUNDARY/LINEATIO/LINEATIO.DOC" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/LINEATIO/OCEAN.LIS" dest="${DST_ETOPO5}/BOUNDARY/LINEATIO/OCEAN.LIS" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/LINEATIO/PLATE.LIS" dest="${DST_ETOPO5}/BOUNDARY/LINEATIO/PLATE.LIS" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/LINEATIO/WFZ.DAT" dest="${DST_ETOPO5}/BOUNDARY/LINEATIO/WFZ.DAT" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/LINEATIO/WMAG.DAT" dest="${DST_ETOPO5}/BOUNDARY/LINEATIO/WMAG.DAT" />
+<!-- -->
+    <mkdir dir="${DST_ETOPO5}/BOUNDARY/PLATES"/>
+    <get src="${SRC_ETOPO5}/BOUNDARY/PLATES/BOUND.90" dest="${DST_ETOPO5}/BOUNDARY/PLATES/BOUND.90" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/PLATES/BOUND.DAT" dest="${DST_ETOPO5}/BOUNDARY/PLATES/BOUND.DAT" />
+    <mkdir dir="${DST_ETOPO5}/BOUNDARY/WDB"/>
+    <get src="${SRC_ETOPO5}/BOUNDARY/WDB/BOUNDS.DAT" dest="${DST_ETOPO5}/BOUNDARY/WDB/BOUNDS.DAT" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/WDB/COASTS.DAT" dest="${DST_ETOPO5}/BOUNDARY/WDB/COASTS.DAT" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/WDB/RIVERS.DAT" dest="${DST_ETOPO5}/BOUNDARY/WDB/RIVERS.DAT" />
+    <mkdir dir="${DST_ETOPO5}/BOUNDARY/WVS"/>
+    <get src="${SRC_ETOPO5}/BOUNDARY/WVS/WVS1.DAT" dest="${DST_ETOPO5}/BOUNDARY/WVS/WVS3.DAT" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/WVS/WVS12.DAT" dest="${DST_ETOPO5}/BOUNDARY/WVS/WVS12.DAT" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/WVS/WVS43.DAT" dest="${DST_ETOPO5}/BOUNDARY/WVS/WVS43.DAT" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/WVS/WVS250K.DAT" dest="${DST_ETOPO5}/BOUNDARY/WVS/WVS250K.DAT" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/WVS/WVSFULL.DAT" dest="${DST_ETOPO5}/BOUNDARY/WVS/WVSFULL.DAT" />
+    <mkdir dir="${DST_ETOPO5}/BOUNDARY/WVS/PCSOFT"/>
+    <get src="${SRC_ETOPO5}/BOUNDARY/WVS/PCSOFT/AREADME.TXT" dest="${DST_ETOPO5}/BOUNDARY/WVS/PCSOFT/AREADME.TXT" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/WVS/PCSOFT/CURVE.C" dest="${DST_ETOPO5}/BOUNDARY/WVS/PCSOFT/CURVE.C" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/WVS/PCSOFT/EGAVGA.BGI" dest="${DST_ETOPO5}/BOUNDARY/WVS/PCSOFT/EGAVGA.BGI" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/WVS/PCSOFT/GTCLIB.C" dest="${DST_ETOPO5}/BOUNDARY/WVS/PCSOFT/GTCLIB.C" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/WVS/PCSOFT/IPROJ.C" dest="${DST_ETOPO5}/BOUNDARY/WVS/PCSOFT/IPROJ.C" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/WVS/PCSOFT/PLOT.C" dest="${DST_ETOPO5}/BOUNDARY/WVS/PCSOFT/PLOT.C" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/WVS/PCSOFT/PLOT.EXE" dest="${DST_ETOPO5}/BOUNDARY/WVS/PCSOFT/PLOT.EXE" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/WVS/PCSOFT/UTIL.C" dest="${DST_ETOPO5}/BOUNDARY/WVS/PCSOFT/UTIL.C" />
+    <get src="${SRC_ETOPO5}/BOUNDARY/WVS/PCSOFT/WDBPLTC.C" dest="${DST_ETOPO5}/BOUNDARY/WVS/PCSOFT/WDBPLTC.C" />
+<!-- -->
+    <mkdir dir="${DST_ETOPO5}/GAZETEER"/>
+    <mkdir dir="${DST_ETOPO5}/GAZETEER/BGNGAZ"/>
+    <get src="${SRC_ETOPO5}/GAZETEER/BGNGAZ/BGNGAZ.DBF" dest="${DST_ETOPO5}/GAZETEER/BGNGAZ/BGNGAZ.DBF" />
+    <get src="${SRC_ETOPO5}/GAZETEER/BGNGAZ/BGNGAZ.DOC" dest="${DST_ETOPO5}/GAZETEER/BGNGAZ/BGNGAZ.DOC" />
+    <get src="${SRC_ETOPO5}/GAZETEER/BGNGAZ/BGNGAZ.TXT" dest="${DST_ETOPO5}/GAZETEER/BGNGAZ/BGNGAZ.TXT" />
+    <get src="${SRC_ETOPO5}/GAZETEER/BGNGAZ/BGNGAZ.XLS" dest="${DST_ETOPO5}/GAZETEER/BGNGAZ/BGNGAZ.XLS" />
+    <mkdir dir="${DST_ETOPO5}/GAZETEER/IHOGAZ"/>
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/ACCRED.DBF" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/ACCRED.DBF" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/ACCRED1.NTX" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/ACCRED1.NTX" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/ACRONY.DBF" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/ACRONY.DBF" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/ACRONY.NTX" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/ACRONY.NTX" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/CATEGO.DBF" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/CATEGO.DBF" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/CATEGO1.NTX" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/CATEGO1.NTX" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+    <get src="${SRC_ETOPO5}/GAZETEER/IHOGAZ/" dest="${DST_ETOPO5}/GAZETEER/IHOGAZ/" />
+
+    <mkdir dir="${DST_ETOPO5}/GAZETEER/IHOGAZ_O"/>
+
+    <mkdir dir="${DST_ETOPO5}/GRAVITY"/>
+    <mkdir dir="${DST_ETOPO5}/GRAVITY/GEOSAT"/>
+    <mkdir dir="${DST_ETOPO5}/GRAVITY/SEASAT"/>
+
+    <mkdir dir="${DST_ETOPO5}/IMAGES"/>
+    <mkdir dir="${DST_ETOPO5}/IMAGES/GIF"/>
+    <mkdir dir="${DST_ETOPO5}/IMAGES/QUICKTIME_STUFF"/>
+    <mkdir dir="${DST_ETOPO5}/IMAGES/TIF"/>
+
+    <mkdir dir="${DST_ETOPO5}/MACINTOSH_Classic_FILES"/>
+    <mkdir dir="${DST_ETOPO5}/MACINTOSH_Classic_FILES/ClassicSoftware"/>
+    <mkdir dir="${DST_ETOPO5}/MACINTOSH_Classic_FILES/MAC_READMES"/>
+    <mkdir dir="${DST_ETOPO5}/MACINTOSH_Classic_FILES/Pict_IMAGES"/>
+
+    <mkdir dir="${DST_ETOPO5}/PUBLICPC(old)"/>
+    <mkdir dir="${DST_ETOPO5}/PUBLICPC(old)/CARTER3"/>
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/CARTER3/MATT_CON.EXE" dest="${DST_ETOPO5}/PUBLICPC(old)/CARTER3/MATT_CON.EXE" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/CARTER3/MATT_CON.FOR" dest="${DST_ETOPO5}/PUBLICPC(old)/CARTER3/MATT_CON.FOR" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/CARTER3/MATT_RAN.EXE" dest="${DST_ETOPO5}/PUBLICPC(old)/CARTER3/MATT_RAN.EXE" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/CARTER3/MATT_RAN.FOR" dest="${DST_ETOPO5}/PUBLICPC(old)/CARTER3/MATT_RAN.FOR" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/CARTER3/MATT_TAB.AAA" dest="${DST_ETOPO5}/PUBLICPC(old)/CARTER3/MATT_TAB.AAA" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/CARTER3/MATT_TAB.ARE" dest="${DST_ETOPO5}/PUBLICPC(old)/CARTER3/MATT_TAB.ARE" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/CARTER3/MATT_TAB.DAT" dest="${DST_ETOPO5}/PUBLICPC(old)/CARTER3/MATT_TAB.DAT" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/CARTER3/MATT_TAB.DDD" dest="${DST_ETOPO5}/PUBLICPC(old)/CARTER3/MATT_TAB.DDD" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/CARTER3/READ_ME.TXT" dest="${DST_ETOPO5}/PUBLICPC(old)/CARTER3/READ_ME.TXT" />
+    <mkdir dir="${DST_ETOPO5}/PUBLICPC(old)/HYPSO"/>
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/HYPSO/HYPSO.DOC" dest="${DST_ETOPO5}/PUBLICPC(old)/HYPSO/HYPSO.DOC" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/HYPSO/HYPSO.EXE" dest="${DST_ETOPO5}/PUBLICPC(old)/HYPSO/HYPSO.EXE" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/HYPSO/HYPSO.FOR" dest="${DST_ETOPO5}/PUBLICPC(old)/HYPSO/HYPSO.FOR" />
+    <mkdir dir="${DST_ETOPO5}/PUBLICPC(old)/NCSA"/>
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/NCSA/IMAGE.EXE" dest="${DST_ETOPO5}/PUBLICPC(old)/NCSA/IMAGE.EXE" />
+    <mkdir dir="${DST_ETOPO5}/PUBLICPC(old)/VPIC"/>
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/AHEADB.CFG" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/AHEADB.CFG" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/ATIPRISM.CFG" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/ATIPRISM.CFG" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/ATIWONDR.CFG" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/ATIWONDR.CFG" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/CARDINAL.CFG" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/CARDINAL.CFG" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/CONFIG.EXE" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/CONFIG.EXE" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/CVPIC.EXE" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/CVPIC.EXE" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/EGA.CFG" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/EGA.CFG" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/EVERX673.CFG" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/EVERX673.CFG" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/EVERX678.CFG" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/EVERX678.CFG" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/GENO5400.CFG" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/GENO5400.CFG" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/GENO6400.CFG" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/GENO6400.CFG" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/HIRES.CFG" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/HIRES.CFG" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/IMTEC.CFG" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/IMTEC.CFG" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/LOGIX.CFG" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/LOGIX.CFG" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/MAXXON.CFG" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/MAXXON.CFG" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+    <get src="${SRC_ETOPO5}/PUBLICPC(old)/VPIC/" dest="${DST_ETOPO5}/PUBLICPC(old)/VPIC/" />
+
+    <mkdir dir="${DST_ETOPO5}/QUAKES"/>
+    <get src="${SRC_ETOPO5}/QUAKES/WORLDEQ.5" dest="${DST_ETOPO5}/QUAKES/WORLDEQ.5" />
+    <get src="${SRC_ETOPO5}/QUAKES/WORLDEQ.BIN" dest="${DST_ETOPO5}/QUAKES/WORLDEQ.BIN" />
+    <mkdir dir="${DST_ETOPO5}/RGB_IMAG"/>
+    <get src="${SRC_ETOPO5}/RGB_IMAG/BLUE.BAR" dest="${DST_ETOPO5}/RGB_IMAG/BLUE.BAR" />
+    <get src="${SRC_ETOPO5}/RGB_IMAG/B_WORLD" dest="${DST_ETOPO5}/RGB_IMAG/B_WORLD" />
+    <get src="${SRC_ETOPO5}/RGB_IMAG/GREEN.BAR" dest="${DST_ETOPO5}/RGB_IMAG/GREEN.BAR" />
+    <get src="${SRC_ETOPO5}/RGB_IMAG/G_WORLD" dest="${DST_ETOPO5}/RGB_IMAG/G_WORLD" />
+    <get src="${SRC_ETOPO5}/RGB_IMAG/RED.BAR" dest="${DST_ETOPO5}/RGB_IMAG/RED.BAR" />
+    <get src="${SRC_ETOPO5}/RGB_IMAG/R_WORLD" dest="${DST_ETOPO5}/RGB_IMAG/R_WORLD" />
+    <get src="${SRC_ETOPO5}/RGB_IMAG/readme.txt" dest="${DST_ETOPO5}/RGB_IMAG/readme.txt" />
+    <mkdir dir="${DST_ETOPO5}/TOPO"/>
+    <mkdir dir="${DST_ETOPO5}/TOPO/ETOPO5"/>
+    <get src="${SRC_ETOPO5}/TOPO/ETOPO5/ETOPO5.DAT" dest="${DST_ETOPO5}/TOPO/ETOPO5/ETOPO5.DAT" />
+    <get src="${SRC_ETOPO5}/TOPO/ETOPO5/ETOPO5.DOS" dest="${DST_ETOPO5}/TOPO/ETOPO5/ETOPO5.DOS" />
+    <get src="${SRC_ETOPO5}/TOPO/ETOPO5/ETOPO5.txt" dest="${DST_ETOPO5}/TOPO/ETOPO5/ETOPO5.txt" />
+    <get src="${SRC_ETOPO5}/TOPO/ETOPO5/seltopo.exe" dest="${DST_ETOPO5}/TOPO/ETOPO5/seltopo.exe" />
+    <mkdir dir="${DST_ETOPO5}/TOPO/FNOC"/>
+    <get src="${SRC_ETOPO5}/TOPO/FNOC/FNOC.BIN" dest="${DST_ETOPO5}/TOPO/FNOC/FNOC.BIN" />
+    <get src="${SRC_ETOPO5}/TOPO/FNOC/FNOC.C" dest="${DST_ETOPO5}/TOPO/FNOC/FNOC.C" />
+    <get src="${SRC_ETOPO5}/TOPO/FNOC/FNOC.DOC" dest="${DST_ETOPO5}/TOPO/FNOC/FNOC.DOC" />
+    <get src="${SRC_ETOPO5}/TOPO/FNOC/FNOC.EXE" dest="${DST_ETOPO5}/TOPO/FNOC/FNOC.EXE" />
+    <get src="${SRC_ETOPO5}/TOPO/FNOC/FNOC.FMT" dest="${DST_ETOPO5}/TOPO/FNOC/FNOC.FMT" />
+    <mkdir dir="${DST_ETOPO5}/TOPO/NOSEEZ"/>
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/FIG_1.TIF" dest="${DST_ETOPO5}/TOPO/NOSEEZ/FIG_1.TIF" />
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/FIG_2.TIF" dest="${DST_ETOPO5}/TOPO/NOSEEZ/FIG_2.TIF" />
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/FIG_3.TIF" dest="${DST_ETOPO5}/TOPO/NOSEEZ/FIG_3.TIF" />
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/INDEX.MAC" dest="${DST_ETOPO5}/TOPO/NOSEEZ/INDEX.MAC" />
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/INDEX.TXT" dest="${DST_ETOPO5}/TOPO/NOSEEZ/INDEX.TXT" />
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/INDEX.XLS" dest="${DST_ETOPO5}/TOPO/NOSEEZ/INDEX.XLS" />
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/NOSEEZ.DOC" dest="${DST_ETOPO5}/TOPO/NOSEEZ/NOSEEZ.DOC" />
+    <mkdir dir="${DST_ETOPO5}/TOPO/NOSEEZ/ALASKA"/>
+    <mkdir dir="${DST_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM116"/>
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM116/SAINTEG1.GRD" dest="${DST_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM116/SAINTEG1.GRD" />
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM116/SAINTEG1.PRG" dest="${DST_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM116/SAINTEG1.PRG" />
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM116/SAINTEU1.DAT" dest="${DST_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM116/SAINTEU1.DAT" />
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM116/SAINTEU1.PRU" dest="${DST_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM116/SAINTEU1.PRU" />
+    <mkdir dir="${DST_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM117"/>
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM117/FAIRWEG1.GRD" dest="${DST_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM117/FAIRWEG1.GRD" />
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM117/FAIRWEG1.PRG" dest="${DST_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM117/FAIRWEG1.PRG" />
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM117/FAIRWEU1.DAT" dest="${DST_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM117/FAIRWEU1.DAT" />
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM117/FAIRWEU1.PRU" dest="${DST_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM117/FAIRWEU1.PRU" />
+    <mkdir dir="${DST_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM118"/>
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM118/DALLNEG1.GRD" dest="${DST_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM118/DALLNEG1.GRD" />
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM118/DALLNEG1.DAT" dest="${DST_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM118/DALLNEG1.DAT" />
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM118/DALLNEU1.PRG" dest="${DST_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM118/DALLNEU1.PRG" />
+    <get src="${SRC_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM118/DALLNEU1.PRU" dest="${DST_ETOPO5}/TOPO/NOSEEZ/ALASKA/LM118/DALLNEU1.PRU" />
+    <mkdir dir="${DST_ETOPO5}/TOPO/NOSEEZ/ATLANTIC"/>
+    <mkdir dir="${DST_ETOPO5}/TOPO/NOSEEZ/GOMEX"/>
+    <mkdir dir="${DST_ETOPO5}/TOPO/NOSEEZ/PACIFIC"/>
+    <mkdir dir="${DST_ETOPO5}/TOPO/OLD_TOPO"/>
+    <get src="${SRC_ETOPO5}/TOPO/OLD_TOPO/RAND.ASC" dest="${DST_ETOPO5}/TOPO/OLD_TOPO/RAND.ASC" />
+    <get src="${SRC_ETOPO5}/TOPO/OLD_TOPO/SIO.ASC" dest="${DST_ETOPO5}/TOPO/OLD_TOPO/SIO.ASC" />
+    <mkdir dir="${DST_ETOPO5}/TOPO/USGS"/>
+    <get src="${SRC_ETOPO5}/TOPO/USGS/TOPO30" dest="${DST_ETOPO5}/TOPO/USGS/TOPO30" />
+    <get src="${SRC_ETOPO5}/TOPO/USGS/TOPO30.DOC" dest="${DST_ETOPO5}/TOPO/USGS/TOPO30.DOC" />
+  </target>
+
+  <target name="igrf/fortran_code">
+    <mkdir dir="${DST_IGRF/FORTRAN_CODE}"/>
+    <get src="${SRC_IGRF/FORTRAN_CODE}/00_readme.txt" dest="${DST_IGRF/FORTRAN_CODE}/00_readme.txt" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/bilcal.for" dest="${DST_IGRF/FORTRAN_CODE}/bilcal.for" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/bilcal_log.txt" dest="${DST_IGRF/FORTRAN_CODE}/bilcal_log.txt" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/dgrf1945.dat" dest="${DST_IGRF/FORTRAN_CODE}/dgrf1945.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/dgrf1950.dat" dest="${DST_IGRF/FORTRAN_CODE}/dgrf1950.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/dgrf1955.dat" dest="${DST_IGRF/FORTRAN_CODE}/dgrf1955.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/dgrf1960.dat" dest="${DST_IGRF/FORTRAN_CODE}/dgrf1960.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/dgrf1965.dat" dest="${DST_IGRF/FORTRAN_CODE}/dgrf1965.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/dgrf1970.dat" dest="${DST_IGRF/FORTRAN_CODE}/dgrf1970.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/dgrf1975.dat" dest="${DST_IGRF/FORTRAN_CODE}/dgrf1975.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/dgrf1980.dat" dest="${DST_IGRF/FORTRAN_CODE}/dgrf1980.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/dgrf1985.dat" dest="${DST_IGRF/FORTRAN_CODE}/dgrf1985.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/dgrf1990.dat" dest="${DST_IGRF/FORTRAN_CODE}/dgrf1990.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/dgrf1995.dat" dest="${DST_IGRF/FORTRAN_CODE}/dgrf1995.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/dgrf2000.dat" dest="${DST_IGRF/FORTRAN_CODE}/dgrf2000.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/dgrf2005.dat" dest="${DST_IGRF/FORTRAN_CODE}/dgrf2005.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/igrf1900.dat" dest="${DST_IGRF/FORTRAN_CODE}/igrf1900.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/igrf1905.dat" dest="${DST_IGRF/FORTRAN_CODE}/igrf1905.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/igrf1910.dat" dest="${DST_IGRF/FORTRAN_CODE}/igrf1910.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/igrf1915.dat" dest="${DST_IGRF/FORTRAN_CODE}/igrf1915.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/igrf1920.dat" dest="${DST_IGRF/FORTRAN_CODE}/igrf1920.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/igrf1925.dat" dest="${DST_IGRF/FORTRAN_CODE}/igrf1925.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/igrf1930.dat" dest="${DST_IGRF/FORTRAN_CODE}/igrf1930.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/igrf1935.dat" dest="${DST_IGRF/FORTRAN_CODE}/igrf1935.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/igrf1940.dat" dest="${DST_IGRF/FORTRAN_CODE}/igrf1940.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/igrf2005.dat" dest="${DST_IGRF/FORTRAN_CODE}/igrf2005.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/igrf2010.dat" dest="${DST_IGRF/FORTRAN_CODE}/igrf2010.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/igrf2010s.dat" dest="${DST_IGRF/FORTRAN_CODE}/igrf2010s.dat" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/igrf_sub.for" dest="${DST_IGRF/FORTRAN_CODE}/igrf_sub.for" />
+    <get src="${SRC_IGRF/FORTRAN_CODE}/shellig.for" dest="${DST_IGRF/FORTRAN_CODE}/shellig.for" />
+  </target>
+
+  <target name="old_matlab_igrf">
+    <mkdir dir="${DST_OLD_MATLAB_IGRF}"/>
+    <get src="${SRC_OLD_MATLAB_IGRF}/Contributions.pdf" dest="${DST_OLD_MATLAB_IGRF}/Contributions.pdf" />
+    <get src="${SRC_OLD_MATLAB_IGRF}/IGRF95.m" dest="${DST_OLD_MATLAB_IGRF}/IGRF95.m" />
+    <get src="${SRC_OLD_MATLAB_IGRF}/aareadme.doc" dest="${DST_OLD_MATLAB_IGRF}/aareadme.doc" />
+    <get src="${SRC_OLD_MATLAB_IGRF}/aareadme.txt" dest="${DST_OLD_MATLAB_IGRF}/aareadme.txt" />
+    <get src="${SRC_OLD_MATLAB_IGRF}/bfield.m" dest="${DST_OLD_MATLAB_IGRF}/bfield.m" />
+    <get src="${SRC_OLD_MATLAB_IGRF}/igrf_example.m" dest="${DST_OLD_MATLAB_IGRF}/igrf_example.m" />
+    <get src="${SRC_OLD_MATLAB_IGRF}/recursion.m" dest="${DST_OLD_MATLAB_IGRF}/recursion.m" />
+    <get src="${SRC_OLD_MATLAB_IGRF}/schmidt.m" dest="${DST_OLD_MATLAB_IGRF}/schmidt.m" />
+  </target>
+
+  <target name="jensen_cain">
+    <mkdir dir="${DST_JENSEN_CAIN}"/>
+    <get src="${SRC_JENSEN_CAIN}/fieldg.for" dest="${DST_JENSEN_CAIN}/fieldg.for" />
+    <get src="${SRC_JENSEN_CAIN}/jensen_cain_62.dat" dest="${DST_JENSEN_CAIN}/jensen_cain_62.dat" />
+  </target>
+
+  <target name="mgst">
+    <mkdir dir="${DST_MGST}"/>
+    <get src="${SRC_MGST}/mgst380.dat" dest="${DST_MGST}/mgst380.dat" />
+    <get src="${SRC_MGST}/mgst481.dat" dest="${DST_MGST}/mgst481.dat" />
+  </target>
+
+  <target name="feldstein_holzworth">
+    <mkdir dir="${DST_FELDSTEIN_HOLZWORTH}"/>
+    <get src="${SRC_FELDSTEIN_HOLZWORTH}/AAREADME.TXT" dest="${DST_FELDSTEIN_HOLZWORTH}/AAREADME.TXT" />
+    <get src="${SRC_FELDSTEIN_HOLZWORTH}/AAREADME.TXT.bak" dest="${DST_FELDSTEIN_HOLZWORTH}/AAREADME.TXT.bak" />
+    <get src="${SRC_FELDSTEIN_HOLZWORTH}/oval.for" dest="${DST_FELDSTEIN_HOLZWORTH}/oval.for" />
+    <exec executable="${FC}" dir="${DST_FELDSTEIN_HOLZWORTH}">
+      <arg value="${FC_OPT}"/>
+      <arg value="oval.for"/>
+    </exec>
+  </target>
+
+  <target name="chiu">
+    <mkdir dir="${DST_CHIU}"/>
+    <get src="${SRC_CHIU}/aareadme.doc" dest="${DST_CHIU}/aareadme.doc" />
+    <get src="${SRC_CHIU}/chiu.for" dest="${DST_CHIU}/chiu.for" />
+    <exec executable="${FC}" dir="${DST_CHIU}">
+      <arg value="${FC_OPT}"/>
+      <arg value="chiu.for"/>
+    </exec>
+  </target>
+
+  <target name="HMR">
+    <mkdir dir="${DST_HMR}"/>
+    <get src="${SRC_HMR}/aareadme.doc" dest="${DST_HMR}/aareadme.doc" />
+    <get src="${SRC_HMR}/hm_main.for" dest="${DST_HMR}/hm_main.for" />
+    <get src="${SRC_HMR}/hm_model.for" dest="${DST_HMR}/hm_model.for" />
+    <get src="${SRC_HMR}/hm_subr.for" dest="${DST_HMR}/hm_subr.for" />
+    <get src="${SRC_HMR}/hmcoef.dat" dest="${DST_HMR}/hmcoef.dat" />
+    <get src="${SRC_HMR}/tape1.dat" dest="${DST_HMR}/tape1.dat" />
+    <exec executable="${FC}" dir="${DST_HMR}">
+<!--
+      <arg value="${FC_OPT}"/>
+      <arg value="hm_main.for"/>
+      <arg value="hm_model.for"/>
+      <arg value="hm_subr.for"/>
+-->
+    </exec>
+  </target>
+
+  <target name="drift">
+    <mkdir dir="${DST_DRIFT}"/>
+    <get src="${SRC_DRIFT}/isr_drift.for" dest="${DST_DRIFT}/isr_drift.for" />
+    <exec executable="${FC}" dir="${DST_DRIFT}">
+      <arg value="${FC_OPT}"/>
+      <arg value="isr_drift.for"/>
+    </exec>
+  </target>
+
+  <target name="iri90">
+    <mkdir dir="${DST_IRI90}"/>
+    <get src="${SRC_IRI90}/aareadme.doc" dest="${DST_IRI90}/aareadme.doc" />
+    <get src="${SRC_IRI90}/binccir.for" dest="${DST_IRI90}/binccir.for" /> 
+    <get src="${SRC_IRI90}/binursi.for" dest="${DST_IRI90}/binursi.for" /> 
+    <get src="${SRC_IRI90}/ccir11.asc" dest="${DST_IRI90}/CCIR11.ASC" /> 
+    <get src="${SRC_IRI90}/ccir12.asc" dest="${DST_IRI90}/CCIR12.ASC" /> 
+    <get src="${SRC_IRI90}/ccir13.asc" dest="${DST_IRI90}/CCIR13.ASC" /> 
+    <get src="${SRC_IRI90}/ccir14.asc" dest="${DST_IRI90}/CCIR14.ASC" /> 
+    <get src="${SRC_IRI90}/ccir15.asc" dest="${DST_IRI90}/CCIR15.ASC" /> 
+    <get src="${SRC_IRI90}/ccir16.asc" dest="${DST_IRI90}/CCIR16.ASC" /> 
+    <get src="${SRC_IRI90}/ccir17.asc" dest="${DST_IRI90}/CCIR17.ASC" /> 
+    <get src="${SRC_IRI90}/ccir18.asc" dest="${DST_IRI90}/CCIR18.ASC" /> 
+    <get src="${SRC_IRI90}/ccir19.asc" dest="${DST_IRI90}/CCIR19.ASC" /> 
+    <get src="${SRC_IRI90}/ccir20.asc" dest="${DST_IRI90}/CCIR20.ASC" /> 
+    <get src="${SRC_IRI90}/ccir21.asc" dest="${DST_IRI90}/CCIR21.ASC" /> 
+    <get src="${SRC_IRI90}/ccir22.asc" dest="${DST_IRI90}/CCIR22.ASC" />
+    <get src="${SRC_IRI90}/cira86.for" dest="${DST_IRI90}/cira86.for" /> 
+    <get src="${SRC_IRI90}/irid12.for" dest="${DST_IRI90}/irid12.for" />
+    <get src="${SRC_IRI90}/irid12.log" dest="${DST_IRI90}/irid12.log" /> 
+    <get src="${SRC_IRI90}/irif12.for" dest="${DST_IRI90}/irif12.for" /> 
+    <get src="${SRC_IRI90}/iris12.for" dest="${DST_IRI90}/iris12.for" /> 
+    <get src="${SRC_IRI90}/ursi11.asc" dest="${DST_IRI90}/URSI11.ASC" /> 
+    <get src="${SRC_IRI90}/ursi12.asc" dest="${DST_IRI90}/URSI12.ASC" /> 
+    <get src="${SRC_IRI90}/ursi13.asc" dest="${DST_IRI90}/URSI13.ASC" /> 
+    <get src="${SRC_IRI90}/ursi14.asc" dest="${DST_IRI90}/URSI14.ASC" /> 
+    <get src="${SRC_IRI90}/ursi15.asc" dest="${DST_IRI90}/URSI15.ASC" />     
+    <get src="${SRC_IRI90}/ursi16.asc" dest="${DST_IRI90}/URSI16.ASC" /> 
+    <get src="${SRC_IRI90}/ursi17.asc" dest="${DST_IRI90}/URSI17.ASC" /> 
+    <get src="${SRC_IRI90}/ursi18.asc" dest="${DST_IRI90}/URSI18.ASC" /> 
+    <get src="${SRC_IRI90}/ursi19.asc" dest="${DST_IRI90}/URSI19.ASC" /> 
+    <get src="${SRC_IRI90}/ursi20.asc" dest="${DST_IRI90}/URSI20.ASC" /> 
+    <get src="${SRC_IRI90}/ursi21.asc" dest="${DST_IRI90}/URSI21.ASC" /> 
+    <get src="${SRC_IRI90}/ursi22.asc" dest="${DST_IRI90}/URSI22.ASC" /> 
+    <exec executable="${FC}" dir="${DST_IRI90}">
+      <arg value="${FC_OPT}"/>
+      <arg value="-o"/>
+      <arg value="iri_test"/>
+      <arg value="irid12.for"/>
+      <arg value="irif12.for"/>
+      <arg value="cira86.for"/>
+    </exec>
+  </target>
+
+  <target name="iri90_storm">
+    <mkdir dir="${DST_IRI90_STORM}"/>
+    <get src="${SRC_IRI90_STORM}/ccir11.bin" dest="${DST_IRI90_STORM}/ccir11.bin" /> 
+    <get src="${SRC_IRI90_STORM}/ccir12.bin" dest="${DST_IRI90_STORM}/ccir12.bin" />
+    <get src="${SRC_IRI90_STORM}/ccir13.bin" dest="${DST_IRI90_STORM}/ccir13.bin" /> 
+    <get src="${SRC_IRI90_STORM}/ccir14.bin" dest="${DST_IRI90_STORM}/ccir14.bin" /> 
+    <get src="${SRC_IRI90_STORM}/ccir15.bin" dest="${DST_IRI90_STORM}/ccir15.bin" /> 
+    <get src="${SRC_IRI90_STORM}/ccir16.bin" dest="${DST_IRI90_STORM}/ccir16.bin" /> 
+    <get src="${SRC_IRI90_STORM}/ccir17.bin" dest="${DST_IRI90_STORM}/ccir17.bin" /> 
+    <get src="${SRC_IRI90_STORM}/ccir18.bin" dest="${DST_IRI90_STORM}/ccir18.bin" /> 
+    <get src="${SRC_IRI90_STORM}/ccir19.bin" dest="${DST_IRI90_STORM}/ccir19.bin" /> 
+    <get src="${SRC_IRI90_STORM}/ccir20.bin" dest="${DST_IRI90_STORM}/ccir20.bin" /> 
+    <get src="${SRC_IRI90_STORM}/ccir21.bin" dest="${DST_IRI90_STORM}/ccir21.bin" /> 
+    <get src="${SRC_IRI90_STORM}/ccir22.bin" dest="${DST_IRI90_STORM}/ccir22.bin" /> 
+    <get src="${SRC_IRI90_STORM}/cira86.for" dest="${DST_IRI90_STORM}/cira86.for" /> 
+    <get src="${SRC_IRI90_STORM}/irifu12.for" dest="${DST_IRI90_STORM}/irifu12.for" /> 
+    <get src="${SRC_IRI90_STORM}/iristorm.bak" dest="${DST_IRI90_STORM}/iristorm.bak" /> 
+    <get src="${SRC_IRI90_STORM}/iristorm.exe" dest="${DST_IRI90_STORM}/iristorm.exe" /> 
+    <get src="${SRC_IRI90_STORM}/iristorm.for" dest="${DST_IRI90_STORM}/iristorm.for" /> 
+    <get src="${SRC_IRI90_STORM}/lstid11.bak" dest="${DST_IRI90_STORM}/lstid11.bak" /> 
+    <get src="${SRC_IRI90_STORM}/lstid11.for" dest="${DST_IRI90_STORM}/lstid11.for" /> 
+    <get src="${SRC_IRI90_STORM}/output.iri" dest="${DST_IRI90_STORM}/output.iri" /> 
+    <exec executable="${FC}" dir="${DST_IRI90_STORM}">
+      <arg value="${FC_OPT}"/>
+      <arg value="-o"/>
+      <arg value="iri_test"/>
+      <arg value="irif12.for"/>
+      <arg value="iris12.for"/>
+      <arg value="irit12.for"/>
+      <arg value="binccir.for"/>
+      <arg value="binursi.for"/>
+      <arg value="cira86.for"/>
+    </exec>
+  </target>
+
+  <target name="iri95">
+    <mkdir dir="${DST_IRI95}"/>
+    <get src="${SRC_IRI95}/../AAREADME.TXT" dest="${DST_IRI95}/../AAREADME.TXT" /> 
+    <get src="${SRC_IRI95}/AAREADME.TXT" dest="${DST_IRI95}/AAREADME.TXT" /> 
+    <get src="${SRC_IRI95}/ccir11.asc" dest="${DST_IRI95}/ccir11.asc" /> 
+    <get src="${SRC_IRI95}/ccir12.asc" dest="${DST_IRI95}/ccir12.asc" /> 
+    <get src="${SRC_IRI95}/ccir13.asc" dest="${DST_IRI95}/ccir13.asc" /> 
+    <get src="${SRC_IRI95}/ccir14.asc" dest="${DST_IRI95}/ccir14.asc" /> 
+    <get src="${SRC_IRI95}/ccir15.asc" dest="${DST_IRI95}/ccir15.asc" /> 
+    <get src="${SRC_IRI95}/ccir16.asc" dest="${DST_IRI95}/ccir16.asc" /> 
+    <get src="${SRC_IRI95}/ccir17.asc" dest="${DST_IRI95}/ccir17.asc" /> 
+    <get src="${SRC_IRI95}/ccir18.asc" dest="${DST_IRI95}/ccir18.asc" /> 
+    <get src="${SRC_IRI95}/ccir19.asc" dest="${DST_IRI95}/ccir19.asc" /> 
+    <get src="${SRC_IRI95}/ccir20.asc" dest="${DST_IRI95}/ccir20.asc" /> 
+    <get src="${SRC_IRI95}/ccir21.asc" dest="${DST_IRI95}/ccir21.asc" /> 
+    <get src="${SRC_IRI95}/ccir22.asc" dest="${DST_IRI95}/ccir22.asc" /> 
+    <get src="${SRC_IRI95}/cira86.for" dest="${DST_IRI95}/cira86.for" /> 
+    <get src="${SRC_IRI95}/ig_rz.dat" dest="${DST_IRI95}/ig_rz.dat" /> 
+    <get src="${SRC_IRI95}/iri_test.for" dest="${DST_IRI95}/iri_test.for" /> 
+    <get src="${SRC_IRI95}/iri_test.log" dest="${DST_IRI95}/iri_test.log" /> 
+    <get src="${SRC_IRI95}/iri_test.out" dest="${DST_IRI95}/iri_test.out" /> 
+    <get src="${SRC_IRI95}/irif13.for" dest="${DST_IRI95}/irif13.for" /> 
+    <get src="${SRC_IRI95}/iris13.for" dest="${DST_IRI95}/iris13.for" /> 
+    <get src="${SRC_IRI95}/irit13.for" dest="${DST_IRI95}/irit13.for" /> 
+    <get src="${SRC_IRI95}/ursi11.asc" dest="${DST_IRI95}/ursi11.asc" /> 
+    <get src="${SRC_IRI95}/ursi12.asc" dest="${DST_IRI95}/ursi12.asc" /> 
+    <get src="${SRC_IRI95}/ursi13.asc" dest="${DST_IRI95}/ursi13.asc" /> 
+    <get src="${SRC_IRI95}/ursi14.asc" dest="${DST_IRI95}/ursi14.asc" /> 
+    <get src="${SRC_IRI95}/ursi15.asc" dest="${DST_IRI95}/ursi15.asc" /> 
+    <get src="${SRC_IRI95}/ursi16.asc" dest="${DST_IRI95}/ursi16.asc" /> 
+    <get src="${SRC_IRI95}/ursi17.asc" dest="${DST_IRI95}/ursi17.asc" /> 
+    <get src="${SRC_IRI95}/ursi18.asc" dest="${DST_IRI95}/ursi18.asc" /> 
+    <get src="${SRC_IRI95}/ursi19.asc" dest="${DST_IRI95}/ursi19.asc" /> 
+    <get src="${SRC_IRI95}/ursi20.asc" dest="${DST_IRI95}/ursi20.asc" /> 
+    <get src="${SRC_IRI95}/ursi21.asc" dest="${DST_IRI95}/ursi21.asc" /> 
+    <get src="${SRC_IRI95}/ursi22.asc" dest="${DST_IRI95}/ursi22.asc" /> 
+
+    <exec executable="${FC}" dir="${DST_IRI95}">
+      <arg value="${FC_OPT}"/>
+      <arg value="-o"/>
+      <arg value="iri_test"/>
+      <arg value="irif13.for"/>
+      <arg value="iris13.for"/>
+      <arg value="irit13.for"/>
+      <arg value="cira86.for"/>
+    </exec>
+  </target>
+
+  <target name="iri2001">
+    <mkdir dir="${DST_IRI2001}"/>
+    <get src="${SRC_IRI2001}/00README.TXT" dest="${DST_IRI2001}/00README.TXT" /> 
+    <get src="${SRC_IRI2001}/ap.dat" dest="${DST_IRI2001}/ap.dat" /> 
+    <get src="${SRC_IRI2001}/ccir11.asc" dest="${DST_IRI2001}/ccir1.asc" /> 
+    <get src="${SRC_IRI2001}/ccir12.asc" dest="${DST_IRI2001}/ccir12.asc" /> 
+    <get src="${SRC_IRI2001}/ccir13.asc" dest="${DST_IRI2001}/ccir13.asc" /> 
+    <get src="${SRC_IRI2001}/ccir14.asc" dest="${DST_IRI2001}/ccir14.asc" /> 
+    <get src="${SRC_IRI2001}/ccir15.asc" dest="${DST_IRI2001}/ccir15.asc" /> 
+    <get src="${SRC_IRI2001}/ccir16.asc" dest="${DST_IRI2001}/ccir16.asc" /> 
+    <get src="${SRC_IRI2001}/ccir17.asc" dest="${DST_IRI2001}/ccir17.asc" /> 
+    <get src="${SRC_IRI2001}/ccir18.asc" dest="${DST_IRI2001}/ccir18.asc" /> 
+    <get src="${SRC_IRI2001}/ccir19.asc" dest="${DST_IRI2001}/ccir19.asc" /> 
+    <get src="${SRC_IRI2001}/ccir20.asc" dest="${DST_IRI2001}/ccir20.asc" /> 
+    <get src="${SRC_IRI2001}/ccir21.asc" dest="${DST_IRI2001}/ccir21.asc" /> 
+    <get src="${SRC_IRI2001}/ccir22.asc" dest="${DST_IRI2001}/ccir22.asc" /> 
+    <get src="${SRC_IRI2001}/cira.for" dest="${DST_IRI2001}/cira.for" /> 
+    <get src="${SRC_IRI2001}/dgrf00.dat" dest="${DST_IRI2001}/dgrf00.dat" /> 
+    <get src="${SRC_IRI2001}/dgrf05.dat" dest="${DST_IRI2001}/dgrf05.dat" /> 
+    <get src="${SRC_IRI2001}/dgrf45.dat" dest="${DST_IRI2001}/dgrf45.dat" /> 
+    <get src="${SRC_IRI2001}/dgrf50.dat" dest="${DST_IRI2001}/dgrf50.dat" /> 
+    <get src="${SRC_IRI2001}/dgrf55.dat" dest="${DST_IRI2001}/dgrf55.dat" /> 
+    <get src="${SRC_IRI2001}/dgrf60.dat" dest="${DST_IRI2001}/dgrf60.dat" /> 
+    <get src="${SRC_IRI2001}/dgrf65.dat" dest="${DST_IRI2001}/dgrf65.dat" /> 
+    <get src="${SRC_IRI2001}/dgrf70.dat" dest="${DST_IRI2001}/dgrf70.dat" /> 
+    <get src="${SRC_IRI2001}/dgrf75.dat" dest="${DST_IRI2001}/dgrf75.dat" /> 
+    <get src="${SRC_IRI2001}/dgrf80.dat" dest="${DST_IRI2001}/dgrf80.dat" /> 
+    <get src="${SRC_IRI2001}/dgrf85.dat" dest="${DST_IRI2001}/dgrf85.dat" /> 
+    <get src="${SRC_IRI2001}/dgrf90.dat" dest="${DST_IRI2001}/dgrf90.dat" /> 
+    <get src="${SRC_IRI2001}/dgrf95.dat" dest="${DST_IRI2001}/dgrf95.dat" /> 
+    <get src="${SRC_IRI2001}/ig_rz.dat" dest="${DST_IRI2001}/ig_rz.dat" /> 
+    <get src="${SRC_IRI2001}/igrf.for" dest="${DST_IRI2001}/igrf.for" /> 
+    <get src="${SRC_IRI2001}/igrf00.dat" dest="${DST_IRI2001}/igrf00.dat" /> 
+    <get src="${SRC_IRI2001}/igrf00s.dat" dest="${DST_IRI2001}/igrf00s.dat" /> 
+    <get src="${SRC_IRI2001}/igrf10.dat" dest="${DST_IRI2001}/igrf10.dat" /> 
+    <get src="${SRC_IRI2001}/igrf10s.dat" dest="${DST_IRI2001}/igrf10s.dat" /> 
+    <get src="${SRC_IRI2001}/input.txt" dest="${DST_IRI2001}/input.txt" /> 
+    <get src="${SRC_IRI2001}/inputne.txt" dest="${DST_IRI2001}/inputne.txt" /> 
+    <get src="${SRC_IRI2001}/iridreg.for" dest="${DST_IRI2001}/iridreg.for" /> 
+    <get src="${SRC_IRI2001}/irifun.for" dest="${DST_IRI2001}/irifun.for" /> 
+    <get src="${SRC_IRI2001}/irisub.for" dest="${DST_IRI2001}/irisub.for" /> 
+    <get src="${SRC_IRI2001}/irisubne.for" dest="${DST_IRI2001}/irisubne.for" /> 
+    <get src="${SRC_IRI2001}/iritec.for" dest="${DST_IRI2001}/iritec.for" /> 
+    <get src="${SRC_IRI2001}/iritecne.for" dest="${DST_IRI2001}/iritecne.for" /> 
+    <get src="${SRC_IRI2001}/iritest.for" dest="${DST_IRI2001}/iritest.for" /> 
+    <get src="${SRC_IRI2001}/iritestne.for" dest="${DST_IRI2001}/iritestne.for" /> 
+    <get src="${SRC_IRI2001}/output.txt" dest="${DST_IRI2001}/output.txt" /> 
+    <get src="${SRC_IRI2001}/outputne.txt" dest="${DST_IRI2001}/outputne.txt" /> 
+    <get src="${SRC_IRI2001}/ursi11.asc" dest="${DST_IRI2001}/ursi11.asc" /> 
+    <get src="${SRC_IRI2001}/ursi12.asc" dest="${DST_IRI2001}/ursi12.asc" /> 
+    <get src="${SRC_IRI2001}/ursi13.asc" dest="${DST_IRI2001}/ursi13.asc" /> 
+    <get src="${SRC_IRI2001}/ursi14.asc" dest="${DST_IRI2001}/ursi14.asc" /> 
+    <get src="${SRC_IRI2001}/ursi15.asc" dest="${DST_IRI2001}/ursi15.asc" /> 
+    <get src="${SRC_IRI2001}/ursi16.asc" dest="${DST_IRI2001}/ursi16.asc" /> 
+    <get src="${SRC_IRI2001}/ursi17.asc" dest="${DST_IRI2001}/ursi17.asc" /> 
+    <get src="${SRC_IRI2001}/ursi18.asc" dest="${DST_IRI2001}/ursi18.asc" /> 
+    <get src="${SRC_IRI2001}/ursi19.asc" dest="${DST_IRI2001}/ursi19.asc" /> 
+    <get src="${SRC_IRI2001}/ursi20.asc" dest="${DST_IRI2001}/ursi20.asc" /> 
+    <get src="${SRC_IRI2001}/ursi21.asc" dest="${DST_IRI2001}/ursi21.asc" /> 
+    <get src="${SRC_IRI2001}/ursi22.asc" dest="${DST_IRI2001}/ursi22.asc" /> 
+
+    <exec executable="${FC}" dir="${DST_IRI2001}">
+      <arg value="${FC_OPT}"/>
+      <arg value="-o"/>
+      <arg value="iritest"/>
+      <arg value="iritest.for"/>
+      <arg value="irisub.for"/>
+      <arg value="irifun.for"/>
+      <arg value="iritec.for"/>
+      <arg value="iridreg.for"/>
+      <arg value="igrf.for"/>
+      <arg value="cira.for"/>
+    </exec>
+  </target>
+
+  <target name="iri2007">
+    <mkdir dir="${DST_IRI2007}"/>
+    <get src="${SRC_IRI2007}/00_iri2007.tar" dest="/tmp/00_iri2007.tar" />
+    <untar src="/tmp/00_iri2007.tar" dest="${DST_IRI2007}" />
+    <exec executable="${FC}" dir="${DST_IRI2007}">
+      <arg value="${FC_OPT}"/>
+      <arg value="-o"/>
+      <arg value="iritest"/>
+      <arg value="iritest.for"/>
+      <arg value="irisub.for"/>
+      <arg value="irifun.for"/>
+      <arg value="iritec.for"/>
+      <arg value="iridreg.for"/>
+      <arg value="igrf.for"/>
+      <arg value="cira.for"/>
+    </exec>
+  </target>
+
+  <target name="iri2012">
+    <mkdir dir="${DST_IRI2012}"/>
+    <get src="${SRC_IRI2012}/00_iri2012.tar" dest="/tmp/00_iri2012.tar" />
+    <untar src="/tmp/00_iri2012.tar" dest="${DST_IRI2012}" />
+    <exec executable="ifort" dir="${DST_IRI2012}">
+      <arg value="-o"/>
+      <arg value="iritest"/>
+      <arg value="iritest.for"/>
+      <arg value="irisub.for"/>
+      <arg value="irifun.for"/>
+      <arg value="iritec.for"/>
+      <arg value="iridreg.for"/>
+      <arg value="igrf.for"/>
+      <arg value="cira.for"/>
+      <arg value="iriflip.for"/>
+    </exec>
+  </target>
+
+  <target name="photoelectron_code">
+    <mkdir dir="${DST_PHOTOELECTRON_CODE}"/>
+    <get src="${SRC_PHOTOELECTRON_CODE}/pesimp.for" dest="${DST_PHOTOELECTRON_CODE}/pesimp.for" /> 
+  </target>
+
+  <target name="tsyganenko">
+    <mkdir dir="${DST_TSYGANENKO}"/>
+    <mkdir dir="${DST_TSYGANENKO}/2001paper"/>
+    <mkdir dir="${DST_TSYGANENKO}/2001paper/Paper2"/>
+    <get src="${SRC_TSYGANENKO}/Errata_for_T01_01" dest="${DST_TSYGANENKO}/Errata_for_T01_01" /> 
+    <get src="${SRC_TSYGANENKO}/Example1.for" dest="${DST_TSYGANENKO}/Example1.for" /> 
+    <get src="${SRC_TSYGANENKO}/Example2.for" dest="${DST_TSYGANENKO}/Example2.for" /> 
+    <get src="${SRC_TSYGANENKO}/Geopack-2005.doc" dest="${DST_TSYGANENKO}/Geopack-2005.doc" /> 
+    <get src="${SRC_TSYGANENKO}/Geopack_2005.for" dest="${DST_TSYGANENKO}/Geopack_2005.for" /> 
+    <get src="${SRC_TSYGANENKO}/Geopack_2005.html" dest="${DST_TSYGANENKO}/Geopack_2005.html" /> 
+    <get src="${SRC_TSYGANENKO}/Storm_paper2.pdf" dest="${DST_TSYGANENKO}/Storm_paper2.pdf" /> 
+    <get src="${SRC_TSYGANENKO}/T01_01.for" dest="${DST_TSYGANENKO}/T01_01.for" /> 
+    <get src="${SRC_TSYGANENKO}/T89c.for" dest="${DST_TSYGANENKO}/T89c.for" /> 
+    <get src="${SRC_TSYGANENKO}/T96.for" dest="${DST_TSYGANENKO}/T96.for" /> 
+    <get src="${SRC_TSYGANENKO}/T96_comments.txt" dest="${DST_TSYGANENKO}/T96_comments.txt" /> 
+    <get src="${SRC_TSYGANENKO}/TS04.for" dest="${DST_TSYGANENKO}/TS04.for" /> 
+    <get src="${SRC_TSYGANENKO}/TS04.html" dest="${DST_TSYGANENKO}/TS04.html" /> 
+    <get src="${SRC_TSYGANENKO}/aareadme.txt" dest="${DST_TSYGANENKO}/aareadme.txt" /> 
+    <antcall target="2001paper"/>
+    <exec executable="${FC}" dir="${DST_TSYGANENKO}">
+      <arg value="${FC_OPT}"/>
+      <arg value="Example1.for"/>
+      <arg value="Example2.for"/>
+      <arg value="Geopack_2005.for"/>
+      <arg value="T01_01.for"/>
+      <arg value="T89c.for"/>
+      <arg value="T96.for"/>
+      <arg value="TS04.for"/>
+    </exec>
+  </target>
+  
+  <target name="2001paper">
+    <antcall target="Paper1"/>
+    <antcall target="Paper2"/>
+  </target>
+
+  <target name="Paper1">
+    <mkdir dir="${DST_TSYGANENKO}/2001paper/Paper1"/>
+    <get src="${SRC_TSYGANENKO}/2001paper/Paper1/2001ja000219.pdf" dest="${DST_TSYGANENKO}/2001paper/Paper1/2001ja000219.pdf" /> 
+  </target>
+
+  <target name="Paper2">
+    <mkdir dir="${DST_TSYGANENKO}/2001paper/Paper2"/>
+    <get src="${SRC_TSYGANENKO}/2001paper/Paper2/2001ja000220.pdf" dest="${DST_TSYGANENKO}/2001paper/Paper2/2001ja000220.pdf" /> 
+  </target>
+
+  <target name="xu">
+    <mkdir dir="${DST_XU}"/>
+    <get src="${SRC_XU}/aareadme.txt" dest="${DST_XU}/aareadme.txt" /> 
+    <get src="${SRC_XU}/aen.for" dest="${DST_XU}/aen.for" /> 
+    <get src="${SRC_XU}/den.for" dest="${DST_XU}/den.for" /> 
+    <get src="${SRC_XU}/sen.for" dest="${DST_XU}/sen.for" />
+    <exec executable="${FC}" dir="${DST_XU}">
+      <arg value="${FC_OPT}"/>
+      <arg value="aen.for"/>
+      <arg value="den.for"/>
+      <arg value="sen.for"/>
+    </exec>
+  </target>
+
+  <target name="pv_atmos">
+    <mkdir dir="${DST_PV_ATMOS}"/>
+    <get src="${SRC_PV_ATMOS}/aareadme.doc" dest="${DST_PV_ATMOS}/aareadme.doc" /> 
+    <get src="${SRC_PV_ATMOS}/pvatmos.for" dest="${DST_PV_ATMOS}/pvatmos.for" /> 
+    <exec executable="${FC}" dir="${DST_PV_ATMOS}">
+      <arg value="${FC_OPT}"/>
+      <arg value="pvatmos.for"/>
+    </exec>
+  </target>
+
+  <target name="pv_ionos">
+    <mkdir dir="${DST_PV_IONOS}"/>
+    <get src="${SRC_PV_IONOS}/aareadme.doc" dest="${DST_PV_IONOS}/aareadme.doc" /> 
+    <get src="${SRC_PV_IONOS}/fsmod.dat" dest="${DST_PV_IONOS}/fsmod.dat" /> 
+    <get src="${SRC_PV_IONOS}/fsmodne.for" dest="${DST_PV_IONOS}/fsmodne.for" /> 
+    <get src="${SRC_PV_IONOS}/fsmodt.dat" dest="${DST_PV_IONOS}/fsmodt.dat" /> 
+    <get src="${SRC_PV_IONOS}/fsmodte.for" dest="${DST_PV_IONOS}/fsmodte.for" /> 
+    <exec executable="${FC}" dir="${DST_PV_IONOS}">
+      <arg value="${FC_OPT}"/>
+      <arg value="fsmodne.for"/>
+      <arg value="fsmodte.for"/>
+    </exec>
+  </target>
+
+  <target name="radbelt/c_code">
+    <mkdir dir="${DST_RADBELT/C_CODE}"/>
+    <get src="${SRC_RADBELT/C_CODE}/radbelt_trmfun.c" dest="${DST_RADBELT/C_CODE}/radbelt_trmfun.c" /> 
+    <get src="${SRC_RADBELT/C_CODE}/readme.doc" dest="${DST_RADBELT/C_CODE}/readme.doc" /> 
+    <exec executable="${CC}" dir="${DST_RADBELT/C_CODE}">
+      <arg value="${FC_OPT}"/>
+      <arg value="radbelt_trmfun.c"/>
+    </exec>
+  </target>
+
+  <target name="radbelt/fortran_code">
+    <mkdir dir="${DST_RADBELT/FORTRAN_CODE}/fortran_code"/>
+    <get src="${SRC_RADBELT/FORTRAN_CODE}/aareadme.doc" dest="${DST_RADBELT/FORTRAN_CODE}/aareadme.doc" /> 
+    <get src="${SRC_RADBELT/FORTRAN_CODE}/ae8max.asc" dest="${DST_RADBELT/FORTRAN_CODE}/ae8max.asc" /> 
+    <get src="${SRC_RADBELT/FORTRAN_CODE}/ae8max.bin" dest="${DST_RADBELT/FORTRAN_CODE}/ae8max.bin" /> 
+    <get src="${SRC_RADBELT/FORTRAN_CODE}/ae8min.asc" dest="${DST_RADBELT/FORTRAN_CODE}/ae8min.asc" /> 
+    <get src="${SRC_RADBELT/FORTRAN_CODE}/ae8min.bin" dest="${DST_RADBELT/FORTRAN_CODE}/ae8min.bin" /> 
+    <get src="${SRC_RADBELT/FORTRAN_CODE}/ap8max.asc" dest="${DST_RADBELT/FORTRAN_CODE}/ap8max.asc" /> 
+    <get src="${SRC_RADBELT/FORTRAN_CODE}/ap8max.bin" dest="${DST_RADBELT/FORTRAN_CODE}/ap8max.bin" /> 
+    <get src="${SRC_RADBELT/FORTRAN_CODE}/ap8min.asc" dest="${DST_RADBELT/FORTRAN_CODE}/ap8min.asc" /> 
+    <get src="${SRC_RADBELT/FORTRAN_CODE}/ap8min.bin" dest="${DST_RADBELT/FORTRAN_CODE}/ap8min.bin" /> 
+    <get src="${SRC_RADBELT/FORTRAN_CODE}/radbelt.for" dest="${DST_RADBELT/FORTRAN_CODE}/radbelt.for" /> 
+    <get src="${SRC_RADBELT/FORTRAN_CODE}/radbelt.log" dest="${DST_RADBELT/FORTRAN_CODE}/radbelt.log" /> 
+    <get src="${SRC_RADBELT/FORTRAN_CODE}/trmfun.for" dest="${DST_RADBELT/FORTRAN_CODE}/trmfun.for" /> 
+    <exec executable="${FC}" dir="${DST_RADBELT/FORTRAN_CODE}">
+      <arg value="${FC_OPT}"/>
+      <arg value="radbelt.for"/>
+      <arg value="trmfun.for"/>
+    </exec>      
+  </target>
+
+  <target name="shieldose">
+    <mkdir dir="${DST_SHIELDOSE}"/>
+    <get src="${SRC_SHIELDOSE}/aareadme.doc" dest="${DST_SHIELDOSE}/aareadme.doc" /> 
+    <get src="${SRC_SHIELDOSE}/shieldose.dan" dest="${DST_SHIELDOSE}/shieldose.dan" /> 
+    <get src="${SRC_SHIELDOSE}/shieldose.dat" dest="${DST_SHIELDOSE}/shieldose.dat" /> 
+    <get src="${SRC_SHIELDOSE}/shieldose.for" dest="${DST_SHIELDOSE}/shieldose.for" /> 
+    <exec executable="${FC}" dir="${DST_SHIELDOSE}">
+      <arg value="${FC_OPT}"/>
+      <arg value="shieldose.for"/>
+    </exec>
+  </target>
+
+  <target name="guzik_version">
+    <mkdir dir="${DST_GUZIK_VERSION}"/>
+    <get src="${SRC_GUZIK_VERSION}/aareadme.txt" dest="${DST_GUZIK_VERSION}/aareadme.txt" /> 
+    <get src="${SRC_GUZIK_VERSION}/ae5min.for" dest="${DST_GUZIK_VERSION}/ae5min.for" /> 
+    <get src="${SRC_GUZIK_VERSION}/ae6max.for" dest="${DST_GUZIK_VERSION}/ae6max.for" /> 
+    <get src="${SRC_GUZIK_VERSION}/aei7hi.for" dest="${DST_GUZIK_VERSION}/aei7hi.for" /> 
+    <get src="${SRC_GUZIK_VERSION}/aei7lo.for" dest="${DST_GUZIK_VERSION}/aei7lo.for" /> 
+    <get src="${SRC_GUZIK_VERSION}/ap8mac.for" dest="${DST_GUZIK_VERSION}/ap8mac.for" /> 
+    <get src="${SRC_GUZIK_VERSION}/ap8mic.for" dest="${DST_GUZIK_VERSION}/ap8mic.for" /> 
+    <get src="${SRC_GUZIK_VERSION}/dspctr.for" dest="${DST_GUZIK_VERSION}/dspctr.for" /> 
+    <get src="${SRC_GUZIK_VERSION}/guzik.doc" dest="${DST_GUZIK_VERSION}/guzik.doc" /> 
+    <get src="${SRC_GUZIK_VERSION}/run_sofip.com" dest="${DST_GUZIK_VERSION}/run_sofip.com" /> 
+    <get src="${SRC_GUZIK_VERSION}/sample_input.inp" dest="${DST_GUZIK_VERSION}/sample_input.inp" /> 
+    <get src="${SRC_GUZIK_VERSION}/sample_orbit.dat" dest="${DST_GUZIK_VERSION}/sample_orbit.dat" /> 
+    <get src="${SRC_GUZIK_VERSION}/sample_orbit_6.out" dest="${DST_GUZIK_VERSION}/sample_orbit_6.out" /> 
+    <get src="${SRC_GUZIK_VERSION}/sample_orbit_7.out" dest="${DST_GUZIK_VERSION}/sample_orbit_7.out" /> 
+    <get src="${SRC_GUZIK_VERSION}/sofip.for" dest="${DST_GUZIK_VERSION}/sofip.for" /> 
+    <get src="${SRC_GUZIK_VERSION}/sofip_main.for" dest="${DST_GUZIK_VERSION}/sofip_main.for" /> 
+    <get src="${SRC_GUZIK_VERSION}/solpro.for" dest="${DST_GUZIK_VERSION}/solpro.for" /> 
+    <get src="${SRC_GUZIK_VERSION}/strip_to_72.for" dest="${DST_GUZIK_VERSION}/strip_to_72.for" /> 
+    <get src="${SRC_GUZIK_VERSION}/tarara1.for" dest="${DST_GUZIK_VERSION}/tarara1.for" /> 
+    <get src="${SRC_GUZIK_VERSION}/tarara2.for" dest="${DST_GUZIK_VERSION}/tarara2.for" /> 
+    <get src="${SRC_GUZIK_VERSION}/unfold_records.for" dest="${DST_GUZIK_VERSION}/unfold_records.for" /> 
+    <get src="${SRC_GUZIK_VERSION}/unpack_sofip.com" dest="${DST_GUZIK_VERSION}/unpack_sofip.com" /> 
+<!-- sofip/guzik_version -->
+    <exec executable="${FC}" dir="${DST_GUZIK_VERSION}">
+      <arg value="${FC_OPT}"/>
+      <arg value="ae5min.for"/>
+      <arg value="ae6max.for"/>
+      <arg value="aei7hi.for"/>
+      <arg value="aei7lo.for"/>
+      <arg value="ap8mac.for"/>
+      <arg value="ap8mic.for"/>
+      <arg value="dspctr.for"/>
+      <arg value="sofip.for"/>
+      <arg value="sofip_main.for"/>
+      <arg value="solpro.for"/>
+      <arg value="strip_to_72.for"/>
+      <arg value="tarara1.for"/>
+      <arg value="tarara2.for"/>
+      <arg value="unfold_records.for"/>
+    </exec>
+  </target>
+
+  <target name="original">
+    <mkdir dir="${DST_ORIGINAL}"/>
+    <get src="${SRC_ORIGINAL}/aareadme.doc" dest="${DST_ORIGINAL}/aareadme.doc" />
+    <get src="${SRC_ORIGINAL}/ae5min.dat" dest="${DST_ORIGINAL}/ae5min.dat" />
+    <get src="${SRC_ORIGINAL}/ae6max.dat" dest="${DST_ORIGINAL}/ae6max.dat" />
+    <get src="${SRC_ORIGINAL}/ap8mac.dat" dest="${DST_ORIGINAL}/ap8mac.dat" />
+    <get src="${SRC_ORIGINAL}/ap8mic.dat" dest="${DST_ORIGINAL}/ap8mic.dat" />
+    <get src="${SRC_ORIGINAL}/sofip.for" dest="${DST_ORIGINAL}/sofip.for" />
+    <get src="${SRC_ORIGINAL}/test.dat" dest="${DST_ORIGINAL}/test.dat" />
+  </target>
+
+  <target name="ae-euv">
+    <mkdir dir="${DST_AE-EUV}"/>
+    <get src="${SRC_AE-EUV}/aareadme.doc" dest="${DST_AE-EUV}/aareadme.doc" />
+    <get src="${SRC_AE-EUV}/f76ref.dat" dest="${DST_AE-EUV}/f76ref.dat" />
+    <get src="${SRC_AE-EUV}/f74113.dat" dest="${DST_AE-EUV}/f74113.dat" />
+    <get src="${SRC_AE-EUV}/r74113.dat" dest="${DST_AE-EUV}/r74113.dat" />
+    <get src="${SRC_AE-EUV}/sc21refw.dat" dest="${DST_AE-EUV}/sc21refw.dat" />
+  </target>
+
+  <target name="euv91">
+    <mkdir dir="${DST_EUV91}"/>
+    <get src="${SRC_EUV91}/aareadme.doc" dest="${DST_EUV91}/aareadme.doc" />
+    <get src="${SRC_EUV91}/euv91.pro" dest="${DST_EUV91}/euv91.pro" />
+    <get src="${SRC_EUV91}/euv91coe.txt" dest="${DST_EUV91}/euv91coe.txt" />
+    <get src="${SRC_EUV91}/euv91ix1.dat" dest="${DST_EUV91}/euv91ix1.dat" />
+    <get src="${SRC_EUV91}/euv91ix2.dat" dest="${DST_EUV91}/euv91ex2.dat" />
+    <get src="${SRC_EUV91}/euv91ix3.dat" dest="${DST_EUV91}/euv91ex3.dat" />
+    <get src="${SRC_EUV91}/euv91ix3_old.dat" dest="${DST_EUV91}/euv91ex3_old.dat" />
+    <get src="${SRC_EUV91}/euv91sub.for" dest="${DST_EUV91}/euv91sub.for" />
+    <get src="${SRC_EUV91}/f80183.dat" dest="${DST_EUV91}/f80183.dat" />
+    <get src="${SRC_EUV91}/serfd.for" dest="${DST_EUV91}/serfd.for" />
+    <get src="${SRC_EUV91}/update.log" dest="${DST_EUV91}/update.log" />
+    <get src="${SRC_EUV91}/update.log.bak" dest="${DST_EUV91}/update.log.bak" />
+    <exec executable="${FC}" dir="${DST_EUV91}">
+      <arg value="${FC_OPT}"/>
+      <arg value="euv91sub.for"/>
+      <arg value="serfd.for"/>
+    </exec>
+  </target>
+  
+  <target name="euvac">
+    <mkdir dir="${DST_EUVAC}"/>
+    <get src="${SRC_EUVAC}/aareadme.doc" dest="${DST_EUVAC}/aareadme.doc" />
+    <get src="${SRC_EUVAC}/euvac.for" dest="${DST_EUVAC}/euvac.for" />
+    <exec executable="${FC}" dir="${DST_EUVAC}">
+      <arg value="${FC_OPT}"/>
+      <arg value="euvac.for"/>
+    </exec>
+  </target>
+
+  <target name="solar2000">
+    <mkdir dir="${DST_SOLAR2000}"/>
+    <get src="${SRC_SOLAR2000}/aareadme.doc" dest="${DST_SOLAR2000}/aareadme.doc" />
+  </target>
+
+  <target name="solpro">
+    <mkdir dir="${DST_SOLPRO}"/>
+    <get src="${SRC_SOLPRO}/solpro.for" dest="${DST_SOLPRO}/solpro.for" />
+    <exec executable="${FC}" dir="${DST_SOLPRO}">
+      <arg value="${FC_OPT}"/>
+      <arg value="-o"/>
+      <arg value="solpro"/>
+      <arg value="solpro.for"/>
+    </exec>
+  </target>
+
+</project>
