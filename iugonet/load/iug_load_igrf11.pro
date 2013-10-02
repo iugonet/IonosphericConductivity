@@ -100,7 +100,7 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
         result_f[i]=temp6       ; F
         free_lun, unit
 ;
-        iug_insert_igrf11,1,yyyy,glat,glon,height,temp0_0,temp0_1,temp1_0,temp1_1,result_h[i],result_x[i],result_y[i],result_z[i],result_f[i],temp7,temp8,temp9,temp10,temp11,temp12,temp13
+        iug_insert_igrf11,1,yyyy=yyyy,glat=glat,glon=glon,height=height,d_ec=temp0_0,d_ecm=temp0_1,i_nc=temp1_0,i_ncm=temp1_1,h=result_h[i],x=result_x[i],y=result_y[i],z=result_z[i],f=result_f[i],d_sv=temp7,i_sv=temp8,h_sv=temp9,x_sv=temp10,y_sv=temp11,z_sv=temp12,f_sv=temp13
 ;
      endif else begin           ; retrieve from DB                             
         openr, unit, '/tmp/tmp.txt', /GET_LUN

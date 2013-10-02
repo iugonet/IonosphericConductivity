@@ -18,7 +18,7 @@
 ;EXAMPLE:
 ;  iug_insert_iri2012
 ;-
-pro iug_insert_iri2012,jmag,lat,lon,yyyy,mm,dd,ltut,atime,height,ine,ner,tn,ti,te,io,ih,ihe,io2,ino,icl,tec,t,NmF2,NmF1,NmE,hmF2,hmF1,hmE,sza,dip,modip,rz12,ig12
+pro iug_insert_iri2012,jmag=jmag,lat=lat,lon=lon,yyyy=yyyy,mm=mm,dd=dd,ltut=ltut,atime=atime,height=height,ine=ine,ner=ner,tn=tn,ti=ti,te=te,io=io,ih=ih,ihe=ihe,io2=io2,ino=ino,icl=icl,tec=tec,t=t,NmF2=NmF2,NmF1=NmF1,NmE=NmE,hmF2=hmF2,hmF1=hmF1,hmE=hmE,sza=sza,dip=dip,modip=modip,rz12=rz12,ig12=ig12
   openw,unit,'/tmp/iug_insert_iri2012.sql',/get_lun ; create query file
   printf,unit,'insert into iug_iri2012 values(',strtrim(string(jmag),1),',',strtrim(string(lat),1),',',strtrim(string(lon),1),',',strtrim(string(yyyy),1),',',strtrim(string(mm),1),',',strtrim(string(dd),1),',',strtrim(string(ltut),1),',',strtrim(string(atime),1),',',strtrim(string(height),1),',',strtrim(string(ine),1),',',strtrim(string(ner),1),',',strtrim(string(tn),1),',',strtrim(string(ti),1),',',strtrim(string(te),1),',',strtrim(string(io),1),',',strtrim(string(ih),1),',',strtrim(string(ihe),1),',',strtrim(string(io2),1),',',strtrim(string(ino),1),',',strtrim(string(icl),1),',',strtrim(string(tec),1),',',strtrim(string(t),1),',',strtrim(string(NmF2),1),',',strtrim(string(NmF1),1),',',strtrim(string(NmE),1),',',strtrim(string(hmF2),1),',',strtrim(string(hmF1),1),',',strtrim(string(hmE),1),',',strtrim(string(sza),1),',',strtrim(string(dip),1),',',strtrim(string(modip),1),',',strtrim(string(rz12),1),',',strtrim(string(ig12),1),');'
   free_lun, unit
