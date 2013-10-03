@@ -15,10 +15,10 @@ create table iug_igrf11 (
        glat real not null, -- deg
        glon real not null, -- deg
        height real not null, -- km
-       d_ec  real not null, -- deg
-       d_ecm real not null, -- min
-       i_nc  real not null, -- deg
-       i_ncm real not null, -- min
+       d_deg  real not null, -- deg
+       d_min real not null, -- min
+       i_deg  real not null, -- deg
+       i_min real not null, -- min
        h real not null, -- nT
        x real not null, -- nT
        y real not null, -- nT
@@ -35,4 +35,4 @@ create table iug_igrf11 (
 );
 
 create view iug_igrf11_view as
-       select coordinate_system,yyyy,glat,glon,height,d_ec+d_ecm/60,i_nc*i_ncm/60,h,x,y,z,f,d_sv,i_sv,h_sv,x_sv,y_sv,z_sv,f_sv from iug_igrf11;
+       select coordinate_system,yyyy,glat,glon,height,d_deg+d_min/60,i_deg*i_min/60,h,x,y,z,f,d_sv,i_sv,h_sv,x_sv,y_sv,z_sv,f_sv from iug_igrf11;
