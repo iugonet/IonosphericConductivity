@@ -23,7 +23,7 @@
 ;
 ;-
 
-pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_step=height_step,yyyy=yyyy,glat=glat,glon=glon,result_d=result_d,result_i=result_i,result_h=result_h,result_x=result_x,result_y=result_y,result_z=result_z,result_f=result_f
+pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_step=height_step,yyyy=yyyy,glat=glat,glon=glon,r_d=r_d,r_i=r_i,r_h=r_h,r_x=r_x,r_y=r_y,r_z=r_z,r_f=r_f
 
   if height_top ne height_bottom then begin
      num_height = (height_top-height_bottom)/height_step+1
@@ -31,18 +31,18 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
      num_height = 1
   endelse
 
-  result_d = fltarr(num_height)
-  result_i = fltarr(num_height)
-  result_h = fltarr(num_height)
-  result_x = fltarr(num_height)
-  result_y = fltarr(num_height)
-  result_z = fltarr(num_height)
-  result_f = fltarr(num_height)
+  r_d = fltarr(num_height)
+  r_i = fltarr(num_height)
+  r_h = fltarr(num_height)
+  r_x = fltarr(num_height)
+  r_y = fltarr(num_height)
+  r_z = fltarr(num_height)
+  r_f = fltarr(num_height)
 
   for i=0L,num_height-1 do begin
 ;;;
      height=height_bottom+height_step*i
-     iug_create_query_igrf11,1,yyyy,glat,glon,height
+     iug_create_query_igrf11,coordinate_system=1,yyyy=yyyy,glat=glat,glon=glon,height=height
      spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/iug_igrf11.db < /tmp/iug_igrf11_query.sql > /tmp/tmp.txt'
      result=file_info('/tmp/tmp.txt')
 
@@ -82,25 +82,25 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
         readf,unit,format='(a6,a6)',temp5,temp12
         readf,unit,format='(a6,a6)',temp6,temp13
         if( temp0_0>0 ) then begin
-           result_d[i]=temp0_0+temp0_1/60. ; D
+           r_d[i]=temp0_0+temp0_1/60. ; D
         endif
         if( temp0_0<0 ) then begin
-           result_d[i]=temp0_0-temp0_1/60. ; D
+           r_d[i]=temp0_0-temp0_1/60. ; D
         endif
         if( temp1_0>0 ) then begin
-           result_i[i]=temp1_0+temp1_1/60. ; I
+           r_i[i]=temp1_0+temp1_1/60. ; I
         endif
         if( temp1_0<0 ) then begin
-           result_i[i]=temp1_0-temp1_1/60. ; I
+           r_i[i]=temp1_0-temp1_1/60. ; I
         endif
-        result_h[i]=temp2       ; H
-        result_x[i]=temp3       ; X
-        result_y[i]=temp4       ; Y
-        result_z[i]=temp5       ; Z
-        result_f[i]=temp6       ; F
+        r_h[i]=temp2       ; H
+        r_x[i]=temp3       ; X
+        r_y[i]=temp4       ; Y
+        r_z[i]=temp5       ; Z
+        r_f[i]=temp6       ; F
         free_lun, unit
 ;
-        iug_insert_igrf11,1,yyyy=yyyy,glat=glat,glon=glon,height=height,d_ec=temp0_0,d_ecm=temp0_1,i_nc=temp1_0,i_ncm=temp1_1,h=result_h[i],x=result_x[i],y=result_y[i],z=result_z[i],f=result_f[i],d_sv=temp7,i_sv=temp8,h_sv=temp9,x_sv=temp10,y_sv=temp11,z_sv=temp12,f_sv=temp13
+        iug_insert_igrf11,coordinate_system=1,yyyy=yyyy,glat=glat,glon=glon,height=height,d_ec=temp0_0,d1_ecm=temp0_1,i_nc=temp1_0,i_ncm=temp1_1,h=r_h[i],x=r_x[i],y=r_y[i],z=r_z[i],f=r_f[i],d_sv=temp7,i_sv=temp8,h_sv=temp9,x_sv=temp10,y_sv=temp11,z_sv=temp12,f_sv=temp13
 ;
      endif else begin           ; retrieve from DB                             
         openr, unit, '/tmp/tmp.txt', /GET_LUN
@@ -113,22 +113,22 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
         temp1_1 = array(8)
 
         if( temp0_0>0 ) then begin
-           result_d[i]=temp0_0+temp0_1/60. ; D
+           r_d[i]=temp0_0+temp0_1/60. ; D
         endif
         if( temp0_0<0 ) then begin
-           result_d[i]=temp0_0-temp0_1/60. ; D
+           r_d[i]=temp0_0-temp0_1/60. ; D
         endif
         if( temp1_0>0 ) then begin
-           result_i[i]=temp1_0+temp1_1/60. ; I
+           r_i[i]=temp1_0+temp1_1/60. ; I
         endif
         if( temp1_0<0 ) then begin
-           result_i[i]=temp1_0-temp1_1/60. ; I
+           r_i[i]=temp1_0-temp1_1/60. ; I
         endif
-        result_h[i] = array(9)
-        result_x[i] = array(10)
-        result_y[i] = array(11)
-        result_z[i] = array(12)
-        result_f[i] = array(13)
+        r_h[i] = array(9)
+        r_x[i] = array(10)
+        r_y[i] = array(11)
+        r_z[i] = array(12)
+        r_f[i] = array(13)
         free_lun, unit
      endelse
   endfor
