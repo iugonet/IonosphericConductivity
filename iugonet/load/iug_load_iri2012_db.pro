@@ -81,7 +81,7 @@ pro iug_load_iri2012_db,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=g
      dd=02
      height=height_bottom+height_step*i
      iug_create_query_iri2012,1,glat,glon,yyyy,mm,dd,ltut,time,height
-     spawn,'sqlite3 -separator " " iug_iri2012.db < /tmp/iug_iri2012_query.sql > /tmp/tmp.txt'
+     spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/iug_iri2012.db < /tmp/iug_iri2012_query.sql > /tmp/tmp.txt'
      result=file_info('/tmp/tmp.txt')
 
      if result.size eq 0 then begin ; to store
