@@ -130,7 +130,7 @@ pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=hei
 ;
 ; IGRF11
 ; 
-  iug_load_igrf11, height_bottom=height_bottom, height_top=height_top, height_step=height_step, yyyy=yyyy, glat=glat, glon=glon, result_d=result_d, result_i=result_i, result_h=result_h,result_x=result_x,result_y=result_y,result_z=result_z,result_f=result_f
+  iug_load_igrf11, height_bottom=height_bottom, height_top=height_top, height_step=height_step, yyyy=yyyy, glat=glat, glon=glon, r_d=r_d, r_i=r_i, r_h=r_h,r_x=r_x,r_y=r_y,r_z=r_z,r_f=r_f
 
 ;
 ; Calculation based on Kenichi Maeda's equation
@@ -171,29 +171,29 @@ pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=hei
            + 30.* num_no_p $
            + 82.* num_cluster_p) / num_ions * m_p
 
-     omega_e = (e_charge*result_f[i]*1.E-9)/(m_e)
-     omega_i = (e_charge*result_f[i]*1.E-9)/(m_i)
+     omega_e = (e_charge*r_f[i]*1.E-9)/(m_e)
+     omega_i = (e_charge*r_f[i]*1.E-9)/(m_i)
 
      result[0,i] = e_charge^2. * ( result_iri(1,i) * 1.E6 ) $
                    /( m_e * (nu_en_para+nu_ei_para) )
-     result[1,i] = ( result_iri(1,i)*1.E6*e_charge/(result_f[i]*1.E-9) ) $
+     result[1,i] = ( result_iri(1,i)*1.E6*e_charge/(r_f[i]*1.E-9) ) $
                    * ( (nu_in*omega_i)/(nu_in^2. +omega_i^2.)  $
                        + (nu_en_perp*omega_e)/(nu_en_perp^2. + omega_e^2.) )
-     result[2,i] = ( result_iri(1,i)*1.E6*e_charge/(result_f[i]*1.E-9) ) $
+     result[2,i] = ( result_iri(1,i)*1.E6*e_charge/(r_f[i]*1.E-9) ) $
                    * ( (omega_e^2.)/(nu_en_perp^2. +omega_e^2. ) $
                        + (omega_i^2.)/(nu_in^2. + omega_i^2. ) )
 ; 2 dimensional conductivity
      result[3,i] = ( result[0,i]*result[1,i] ) $
-                 / ( result[1,i]*cos(!dpi/180.*result_i[i])^2. $
-                   + result[0,i]*sin(!dpi/180.*result_i[i])^2. )
-     result[4,i]=( result[0,i]*result[1,i]*sin(!dpi/180.*result_i[i])^2. $
+                 / ( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
+                   + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
+     result[4,i]=( result[0,i]*result[1,i]*sin(!dpi/180.*r_i[i])^2. $
                    + ( result[1,i]^2. + result[2,i]^2.) $
-                   *cos(!dpi/180.*result_i[i])^2. ) $
-                 /( result[1,i]*cos(!dpi/180.*result_i[i])^2. $
-                    + result[0,i]*sin(!dpi/180.*result_i[i])^2. )
-     result[5,i]=( result[0,i]*result[2,i]*sin(!dpi/180.*result_i[i])) $
-                 /( result[1,i]*cos(!dpi/180.*result_i[i])^2. $
-                   + result[0,i]*sin(!dpi/180.*result_i[i])^2. )
+                   *cos(!dpi/180.*r_i[i])^2. ) $
+                 /( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
+                    + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
+     result[5,i]=( result[0,i]*result[2,i]*sin(!dpi/180.*r_i[i])) $
+                 /( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
+                   + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
      result[6,i] = height_array[i]
 
   endfor

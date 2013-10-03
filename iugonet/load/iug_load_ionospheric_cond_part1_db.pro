@@ -219,7 +219,6 @@ pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=hei
         resutl[3,i] = array(3)
         resutl[4,i] = array(4)
         result[5,i] = array(5)
-
   endfor
 
 end

@@ -59,7 +59,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_09
 ;
 ; IGRF11
 ; 
-  iug_load_igrf11, height_bottom=height_bottom, height_top=height_top, height_step=height_step, yyyy=yyyy, glat=glat, glon=glon, result_d=result_d, result_i=result_i, result_h=result_h,result_x=result_x,result_y=result_y,result_z=result_z,result_f=result_f
+  iug_load_igrf11, height_bottom=height_bottom, height_top=height_top, height_step=height_step, yyyy=yyyy, glat=glat, glon=glon, r_d=r_d, r_i=r_i, r_h=r_h,r_x=r_x,r_y=r_y,r_z=r_z,r_f=r_f
 
 ;
 ; Calculation based on Kenichi Maeda's equation
@@ -146,8 +146,8 @@ pro iug_load_ionospheric_cond_diagnostics_1_09
            + 30.* num_no_p $
            + 82.* num_cluster_p) / num_ions * m_p
 
-     omega_e = ( e_charge*result_f[i]*1.E-9 )/(m_e)
-     omega_i = ( e_charge*result_f[i]*1.E-9 )/(m_i)
+     omega_e = ( e_charge*r_f[i]*1.E-9 )/(m_e)
+     omega_i = ( e_charge*r_f[i]*1.E-9 )/(m_i)
      kappa = ( omega_e*omega_i )/( nu_e*nu_i )
 
      result[0,i]=height_array[i]
