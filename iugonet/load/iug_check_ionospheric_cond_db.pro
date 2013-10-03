@@ -16,42 +16,42 @@ function iug_check_ionospheric_cond_db,height,glat,glon,yyyy,mmdd,ltut,atime,alg
           +" and yyyy="+string(yyyy)+" and mmdd="+string(mmdd) $
           +" and ltut="+string(ltut)+" and atime="+string(atime) $
           +" and algorithm="+string(algorithm)
-  spawn,'sqlite3 ionospheric_cond.db "'+query+'"',sigma_0
+  spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db "'+query+'"',sigma_0
 
   query = "SELECT sigma_1 FROM ionospheric_cond WHERE height="+string(height) $
           +" and glat="+string(glat)+" and glon="+string(glon) $
           +" and yyyy="+string(yyyy)+" and mmdd="+string(mmdd) $
           +" and ltut="+string(ltut)+" and atime="+string(atime) $
           +" and algorithm="+string(algorithm)
-  spawn,'sqlite3 ionospheric_cond.db "'+query+'"',sigma_1
+  spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db "'+query+'"',sigma_1
 
   query = "SELECT sigma_2 FROM ionospheric_cond WHERE height="+string(height)$
           +" and glat="+string(glat)+" and glon="+string(glon) $
           +" and yyyy="+string(yyyy)+" and mmdd="+string(mmdd) $
           +" and ltut="+string(ltut)+" and atime="+string(atime) $
           +" and algorithm="+string(algorithm)
-  spawn,'sqlite3 ionospheric_cond.db "'+query+'"',sigma_2
+  spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db "'+query+'"',sigma_2
 
   query = "SELECT sigma_xx FROM ionospheric_cond WHERE height="+string(height)$
           +" and glat="+string(glat)+" and glon="+string(glon) $
           +" and yyyy="+string(yyyy)+" and mmdd="+string(mmdd) $
           +" and ltut="+string(ltut)+" and atime="+string(atime) $
           +" and algorithm="+string(algorithm)
-  spawn,'sqlite3 ionospheric_cond.db "'+query+'"',sigma_xx
+  spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db "'+query+'"',sigma_xx
 
   query = "SELECT sigma_yy FROM ionospheric_cond WHERE height="+string(height)$
           +" and glat="+string(glat)+" and glon="+string(glon) $
           +" and yyyy="+string(yyyy)+" and mmdd="+string(mmdd) $
           +" and ltut="+string(ltut)+" and atime="+string(atime) $
           +" and algorithm="+string(algorithm)
-  spawn,'sqlite3 ionospheric_cond.db "'+query+'"',sigma_yy
+  spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db "'+query+'"',sigma_yy
 
   query = "SELECT sigma_xy FROM ionospheric_cond WHERE height="+string(height)$
           +" and glat="+string(glat)+" and glon="+string(glon) $
           +" and yyyy="+string(yyyy)+" and mmdd="+string(mmdd) $
           +" and ltut="+string(ltut)+" and atime="+string(atime) $
           +" and algorithm="+string(algorithm)
-  spawn,'sqlite3 ionospheric_cond.db "'+query+'"',sigma_xy
+  spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db "'+query+'"',sigma_xy
 
   if strlen(sigma_0) ne 0 then begin
      return,{sigma_0:sigma_0,sigma_1:sigma_1,sigma_2:sigma_2,sigma_xx:sigma_xx,sigma_yy:sigma_yy,sigma_xy:sigma_xy}

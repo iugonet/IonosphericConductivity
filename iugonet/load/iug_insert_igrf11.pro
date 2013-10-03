@@ -23,5 +23,5 @@ pro iug_insert_igrf11,coordinate_system=coordinate_system,yyyy=yyyy,glat=glat,gl
   printf,unit,'insert into iug_igrf11 values(',strtrim(string(coordinate_system),1),',',strtrim(string(yyyy),1),',',strtrim(string(glat),1),',',strtrim(string(glon),1),',',strtrim(string(height),1),',',strtrim(string(d_ec),1),',',strtrim(string(d_ecm),1),',',strtrim(string(i_nc),1),',',strtrim(string(i_ncm),1),',',strtrim(string(h),1),',',strtrim(string(x),1),',',strtrim(string(y),1),',',strtrim(string(z),1),',',strtrim(string(f),1),',',strtrim(string(d_sv),1),',',strtrim(string(i_sv),1),',',strtrim(string(h_sv),1),',',strtrim(string(x_sv),1),',',strtrim(string(y_sv),1),',',strtrim(string(z_sv),1),',',strtrim(string(f_sv),1),');'
   free_lun, unit
 
-  spawn,'sqlite3 iug_igrf11.db < /tmp/iug_insert_igrf11.sql'
+  spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/iug_igrf11.db < /tmp/iug_insert_igrf11.sql'
 end

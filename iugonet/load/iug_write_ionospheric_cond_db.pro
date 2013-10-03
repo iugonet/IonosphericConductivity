@@ -17,7 +17,7 @@ function iug_write_ionospheric_cond_db,height,glat,glon,yyyy,mmdd,ltut,atime,alg
           +","+string(yyyy)+","+string(mmdd) $
           +","+string(ltut)+","+string(atime) $
           +","+string(algorithm)+")"
-  spawn,'sqlite3 ionospheric_cond.db "'+query+'"'
+  spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db "'+query+'"'
 
   return,0
 
