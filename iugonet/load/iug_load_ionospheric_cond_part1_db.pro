@@ -142,10 +142,9 @@ pro iug_load_ionospheric_cond_part1_db, height_bottom=height_bottom, height_top=
      height=height_bottom+height_step*i
      iug_create_query_ionospheric_cond,height=height,glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=time,algorithm=algorithm
      spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/iug_ionospheric_cond.db < /tmp/iug_ionospheric_cond_query.sql > /tmp/tmp.txt'
-     result=file_info('/tmp/tmp.txt')
+     query_result=file_info('/tmp/tmp.txt')
 
-     if result.size eq 0 then begin ; calculate by using model        
-        print,"HOGE"
+     if query_result.size eq 0 then begin ; calculate by using model        
 ;;;
         nu_en=iug_collision_freq1_en(result_iri[5,i],result_msis[4,i],result_msis[5,i],result_msis[3,i],result_msis[7,i],result_msis[2,i])
         nu_ei=iug_collision_freq1_ei(result_iri[1,i],result_iri[5,i])
@@ -211,17 +210,18 @@ pro iug_load_ionospheric_cond_part1_db, height_bottom=height_bottom, height_top=
         
         iug_insert_ionospheric_cond,sigma_0=result[0,i],sigma_1=result[1,i],sigma_2=result[2,i],sigma_xx=result[3,i],sigma_yy=result[4,i],sigma_xy=result[5,i],height=height,glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=time,algorithm=algorithm
      endif else begin ; retrieve from DB
-        print,"HOGE2"
-        openr, unit, '/tmp/tmp.txt', /GET_LUN
-        array=fltar(6)
+        openr, unit, '/tmp/tmp.txt', /get_lun
+        array=fltarr(6)
         readf,unit,array
 
         result[0,i] = array(0)
         result[1,i] = array(1)
         result[2,i] = array(2)
-        resutl[3,i] = array(3)
-        resutl[4,i] = array(4)
+        result[3,i] = array(3)
+        result[4,i] = array(4)
         result[5,i] = array(5)
+        
+        free_lun, unit
      endelse
   endfor
 

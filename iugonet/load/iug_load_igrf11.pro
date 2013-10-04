@@ -103,7 +103,7 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
         iug_insert_igrf11,coordinate_system=1,yyyy=yyyy,glat=glat,glon=glon,height=height,d_deg=temp0_0,d_min=temp0_1,i_deg=temp1_0,i_min=temp1_1,r_h=r_h[i],r_x=r_x[i],r_y=r_y[i],r_z=r_z[i],r_f=r_f[i],d_sv=temp7,i_sv=temp8,h_sv=temp9,x_sv=temp10,y_sv=temp11,z_sv=temp12,f_sv=temp13
 ;
      endif else begin           ; retrieve from DB                             
-        openr, unit, '/tmp/tmp.txt', /GET_LUN
+        openr, unit, '/tmp/tmp.txt', /get_lun
         array=fltarr(21)
         readf,unit,array
 
