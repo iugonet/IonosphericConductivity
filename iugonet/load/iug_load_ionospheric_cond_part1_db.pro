@@ -51,8 +51,9 @@
 ; glat=0, glon=0, yyyy=2000, mmdd=101, ltut=0, time=12, result=result
 ;-
 
-pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, result=result
+pro iug_load_ionospheric_cond_part1_db, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, result=result
 
+  algorithm = 1
 ; validate height_bottom
   if height_bottom lt 80 then begin
      dprint,"Satisfy this constraint 'height_bottom >= 80'."
@@ -129,7 +130,7 @@ pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=hei
 ;
 ; IGRF11
 ; 
-  iug_load_igrf11, height_bottom=height_bottom, height_top=height_top, height_step=height_step, yyyy=yyyy, glat=glat, glon=glon, result_d=result_d, result_i=result_i, result_h=result_h,result_x=result_x,result_y=result_y,result_z=result_z,result_f=result_f
+  iug_load_igrf11, height_bottom=height_bottom, height_top=height_top, height_step=height_step, yyyy=yyyy, glat=glat, glon=glon, r_d=r_d, r_i=r_i, r_h=r_h,r_x=r_x,r_y=r_y,r_z=r_z,r_f=r_f
 
 ;
 ; Calculation based on Kenichi Maeda's equation
@@ -139,11 +140,12 @@ pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=hei
   for i=0L,num_height-1 do begin
 ;;;
      height=height_bottom+height_step*i
-     iug_create_query_ioospheric_cond,height=height,glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=atime,algorithm=algorithm
+     iug_create_query_ionospheric_cond,height=height,glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=time,algorithm=algorithm
      spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/iug_ionospheric_cond.db < /tmp/iug_ionospheric_cond_query.sql > /tmp/tmp.txt'
      result=file_info('/tmp/tmp.txt')
 
      if result.size eq 0 then begin ; calculate by using model        
+        print,"HOGE"
 ;;;
         nu_en=iug_collision_freq1_en(result_iri[5,i],result_msis[4,i],result_msis[5,i],result_msis[3,i],result_msis[7,i],result_msis[2,i])
         nu_ei=iug_collision_freq1_ei(result_iri[1,i],result_iri[5,i])
@@ -184,8 +186,8 @@ pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=hei
                 + 30.* num_no_p $
                 + 82.* num_cluster_p) / num_ions * m_p
 
-        omega_e = (e_charge*result_f[i]*1.E-9)/(m_e)
-        omega_i = (e_charge*result_f[i]*1.E-9)/(m_i)
+        omega_e = (e_charge*r_f[i]*1.E-9)/(m_e)
+        omega_i = (e_charge*r_f[i]*1.E-9)/(m_i)
         kappa=( omega_e*omega_i )/( nu_e*nu_i )
         
         denominator =   (1.+kappa)^2*nu_e^2. + omega_e^2.
@@ -195,20 +197,21 @@ pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=hei
         result[2,i] = ( omega_e*nu_e )       /denominator * result[0,i]
 ; 2 dimensional conductivity
         result[3,i] = ( result[0,i]*result[1,i] ) $
-                      / ( result[1,i]*cos(!dpi/180.*result_i[i])^2. $
-                          + result[0,i]*sin(!dpi/180.*result_i[i])^2. )
-        result[4,i]=( result[0,i]*result[1,i]*sin(!dpi/180.*result_i[i])^2. $
+                      / ( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
+                          + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
+        result[4,i]=( result[0,i]*result[1,i]*sin(!dpi/180.*r_i[i])^2. $
                       + ( result[1,i]^2. + result[2,i]^2.) $
-                      *cos(!dpi/180.*result_i[i])^2. ) $
-                    /( result[1,i]*cos(!dpi/180.*result_i[i])^2. $
-                       + result[0,i]*sin(!dpi/180.*result_i[i])^2. )
-        result[5,i]=( result[0,i]*result[2,i]*sin(!dpi/180.*result_i[i])) $
-                    /( result[1,i]*cos(!dpi/180.*result_i[i])^2. $
-                       + result[0,i]*sin(!dpi/180.*result_i[i])^2. )
+                      *cos(!dpi/180.*r_i[i])^2. ) $
+                    /( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
+                       + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
+        result[5,i]=( result[0,i]*result[2,i]*sin(!dpi/180.*r_i[i])) $
+                    /( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
+                       + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
         result[6,i] = height_array[i]
         
-        iug_insert_ionospheric_cond,sigma_0=sigma_0,sigma_1=sigma_1,sigma_2=sigma_2,sigma_xx=sigma_xx,sigma_yy=sigma_yy,sigma_xy=sigma_xy,height=height,glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=atime,algorithm=algorithm
+        iug_insert_ionospheric_cond,sigma_0=result[0,i],sigma_1=result[1,i],sigma_2=result[2,i],sigma_xx=result[3,i],sigma_yy=result[4,i],sigma_xy=result[5,i],height=height,glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=time,algorithm=algorithm
      endif else begin ; retrieve from DB
+        print,"HOGE2"
         openr, unit, '/tmp/tmp.txt', /GET_LUN
         array=fltar(6)
         readf,unit,array
@@ -219,6 +222,7 @@ pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=hei
         resutl[3,i] = array(3)
         resutl[4,i] = array(4)
         result[5,i] = array(5)
+     endelse
   endfor
 
 end

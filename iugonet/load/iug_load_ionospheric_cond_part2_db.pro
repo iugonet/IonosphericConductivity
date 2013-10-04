@@ -52,8 +52,9 @@
 ; time=12, result=result
 ;-
 
-pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, result=result
+pro iug_load_ionospheric_cond_part2_db, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, result=result
 
+  algorithm=2
 ; validate height_bottom
   if height_bottom lt 80 then begin
      dprint,"Satisfy this constraint 'height_bottom >= 80'."
@@ -130,7 +131,7 @@ pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=hei
 ;
 ; IGRF11
 ; 
-  iug_load_igrf11, height_bottom=height_bottom, height_top=height_top, height_step=height_step, yyyy=yyyy, glat=glat, glon=glon, result_d=result_d, result_i=result_i, result_h=result_h,result_x=result_x,result_y=result_y,result_z=result_z,result_f=result_f
+  iug_load_igrf11, height_bottom=height_bottom, height_top=height_top, height_step=height_step, yyyy=yyyy, glat=glat, glon=glon, r_d=r_d, r_i=r_i, r_h=r_h,r_x=r_x,r_y=r_y,r_z=r_z,r_f=r_f
 
 ;
 ; Calculation based on Kenichi Maeda's equation
@@ -138,13 +139,21 @@ pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=hei
   result = fltarr(7,num_height)
 
   for i=0L,num_height-1 do begin
-     r_e=result_iri[5,i]/300.
-     nu_en_perp=iug_collision_freq2_en_perp(r_e,result_msis[4,i]*1.E6,result_msis[5,i]*1.E6,result_msis[3,i]*1.E6)
-     nu_en_para=iug_collision_freq2_en_para(r_e,result_msis[4,i]*1.E6,result_msis[5,i]*1.E6,result_msis[3,i]*1.E6)
-     nu_ei_para=iug_collision_freq2_ei_para(result_iri[1,i]*1.E6,result_iri[5,i])
+;;;
+     height=height_bottom+height_step*i
+     iug_create_query_ionospheric_cond,height=height,glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=time,algorithm=algorithm
+     spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/iug_ionospheric_cond.db < /tmp/iug_ionospheric_cond_query.sql > /tmp/tmp.txt'
+     result=file_info('/tmp/tmp.txt')
 
-     r_i=(result_iri[3,i]+result_iri[4,i])/1000.
-     nu_in=iug_collision_freq2_in(r_i,result_msis[4,i]*1.E6,result_msis[5,i]*1.E6, result_msis[3,i]*1.E6, result_iri[11,i]*1.E6, result_iri[10,i]*1.E6, result_iri[6,i]*1.E6)
+     if result.size eq 0 then begin ; calculate by using model    
+        print,"HOGE"
+;;;
+        r_e=result_iri[5,i]/300.
+        nu_en_perp=iug_collision_freq2_en_perp(r_e,result_msis[4,i]*1.E6,result_msis[5,i]*1.E6,result_msis[3,i]*1.E6)
+        nu_en_para=iug_collision_freq2_en_para(r_e,result_msis[4,i]*1.E6,result_msis[5,i]*1.E6,result_msis[3,i]*1.E6)
+        nu_ei_para=iug_collision_freq2_ei_para(result_iri[1,i]*1.E6,result_iri[5,i])
+        r_i=(result_iri[3,i]+result_iri[4,i])/1000.
+        nu_in=iug_collision_freq2_in(r_i,result_msis[4,i]*1.E6,result_msis[5,i]*1.E6, result_msis[3,i]*1.E6, result_iri[11,i]*1.E6, result_iri[10,i]*1.E6, result_iri[6,i]*1.E6)
 
 ; result[0,*]: simga_0, parallel conductivity
 ; result[1,*]: sigma_1, pedarsen conductivity
@@ -153,49 +162,61 @@ pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=hei
 ; result[4,*]: sigma_yy, pedarsen conductivity
 ; result[5,*]: sigma_xy, hole conductivity
 ; result[6,*]: height
+        
+        num_o_p = result_iri[1,i]*1.E6*result_iri[6,i] /100.    ; O+
+        num_n_p = result_iri[1,i]*1.E6*result_iri[7,i] /100.    ; N+
+        num_h_p = result_iri[1,i]*1.E6*result_iri[8,i] /100.    ; H+
+        num_he_p= result_iri[1,i]*1.E6*result_iri[9,i] /100.    ; He+
+        num_o2_p= result_iri[1,i]*1.E6*result_iri[10,i]/100.    ; O2+
+        num_no_p= result_iri[1,i]*1.E6*result_iri[11,i]/100.    ; NO+
+        num_cluster_p = result_iri[1,i]*1.E6*result_iri[12,i]/100. ; Cluster+
+        num_ions= result_iri[1,i]*1.E6                             ; Ne/m-3
 
-     num_o_p = result_iri[1,i]*1.E6*result_iri[6,i] /100.       ; O+
-     num_n_p = result_iri[1,i]*1.E6*result_iri[7,i] /100.       ; N+
-     num_h_p = result_iri[1,i]*1.E6*result_iri[8,i] /100.       ; H+
-     num_he_p= result_iri[1,i]*1.E6*result_iri[9,i] /100.       ; He+
-     num_o2_p= result_iri[1,i]*1.E6*result_iri[10,i]/100.       ; O2+
-     num_no_p= result_iri[1,i]*1.E6*result_iri[11,i]/100.       ; NO+
-     num_cluster_p = result_iri[1,i]*1.E6*result_iri[12,i]/100. ; Cluster+
-     num_ions= result_iri[1,i]*1.E6 ; Ne/m-3
+        m_i = ( 16.* num_o_p $
+                + 14.* num_n_p $
+                + 1. * num_h_p $
+                + 4. * num_he_p $
+                + 32.* num_o2_p $
+                + 30.* num_no_p $
+                + 82.* num_cluster_p) / num_ions * m_p
 
-     m_i = ( 16.* num_o_p $
-           + 14.* num_n_p $
-           + 1. * num_h_p $
-           + 4. * num_he_p $
-           + 32.* num_o2_p $
-           + 30.* num_no_p $
-           + 82.* num_cluster_p) / num_ions * m_p
-
-     omega_e = (e_charge*result_f[i]*1.E-9)/(m_e)
-     omega_i = (e_charge*result_f[i]*1.E-9)/(m_i)
-
-     result[0,i] = e_charge^2. * ( result_iri(1,i) * 1.E6 ) $
-                   /( m_e * (nu_en_para+nu_ei_para) )
-     result[1,i] = ( result_iri(1,i)*1.E6*e_charge/(result_f[i]*1.E-9) ) $
-                   * ( (nu_in*omega_i)/(nu_in^2. +omega_i^2.)  $
-                       + (nu_en_perp*omega_e)/(nu_en_perp^2. + omega_e^2.) )
-     result[2,i] = ( result_iri(1,i)*1.E6*e_charge/(result_f[i]*1.E-9) ) $
-                   * ( (omega_e^2.)/(nu_en_perp^2. +omega_e^2. ) $
-                       + (omega_i^2.)/(nu_in^2. + omega_i^2. ) )
+        omega_e = (e_charge*r_f[i]*1.E-9)/(m_e)
+        omega_i = (e_charge*r_f[i]*1.E-9)/(m_i)
+        
+        result[0,i] = e_charge^2. * ( result_iri(1,i) * 1.E6 ) $
+                      /( m_e * (nu_en_para+nu_ei_para) )
+        result[1,i] = ( result_iri(1,i)*1.E6*e_charge/(r_f[i]*1.E-9) ) $
+                      * ( (nu_in*omega_i)/(nu_in^2. +omega_i^2.)  $
+                          + (nu_en_perp*omega_e)/(nu_en_perp^2. + omega_e^2.) )
+        result[2,i] = ( result_iri(1,i)*1.E6*e_charge/(r_f[i]*1.E-9) ) $
+                      * ( (omega_e^2.)/(nu_en_perp^2. +omega_e^2. ) $
+                          + (omega_i^2.)/(nu_in^2. + omega_i^2. ) )
 ; 2 dimensional conductivity
-     result[3,i] = ( result[0,i]*result[1,i] ) $
-                 / ( result[1,i]*cos(!dpi/180.*result_i[i])^2. $
-                   + result[0,i]*sin(!dpi/180.*result_i[i])^2. )
-     result[4,i]=( result[0,i]*result[1,i]*sin(!dpi/180.*result_i[i])^2. $
-                   + ( result[1,i]^2. + result[2,i]^2.) $
-                   *cos(!dpi/180.*result_i[i])^2. ) $
-                 /( result[1,i]*cos(!dpi/180.*result_i[i])^2. $
-                    + result[0,i]*sin(!dpi/180.*result_i[i])^2. )
-     result[5,i]=( result[0,i]*result[2,i]*sin(!dpi/180.*result_i[i])) $
-                 /( result[1,i]*cos(!dpi/180.*result_i[i])^2. $
-                   + result[0,i]*sin(!dpi/180.*result_i[i])^2. )
-     result[6,i] = height_array[i]
+        result[3,i] = ( result[0,i]*result[1,i] ) $
+                      / ( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
+                          + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
+        result[4,i]=( result[0,i]*result[1,i]*sin(!dpi/180.*r_i[i])^2. $
+                      + ( result[1,i]^2. + result[2,i]^2.) $
+                      *cos(!dpi/180.*r_i[i])^2. ) $
+                    /( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
+                       + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
+        result[5,i]=( result[0,i]*result[2,i]*sin(!dpi/180.*r_i[i])) $
+                    /( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
+                       + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
+        result[6,i] = height_array[i]
+     endif else begin           ; retrieve from DB
+        print,"HOGE2"
+        openr, unit, '/tmp/tmp.txt', /GET_LUN
+        array = fltar(6)
+        readf, unit, array
 
+        result[0,i] = array(0)
+        result[1,i] = array(1)
+        result[2,i] = array(2)
+        result[3,i] = array(3)
+        result[4,i] = array(4)
+        result[5,i] = array(5)
+     endelse
   endfor
 
 end
