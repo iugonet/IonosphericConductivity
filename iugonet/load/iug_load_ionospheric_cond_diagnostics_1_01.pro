@@ -20,7 +20,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_01
   algorithm=1
 
   set_plot,'ps'
-  device,filename='iug_load_ionospheric_cond_diagnostics_1_01_result1.ps',/color
+  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_1_01_result1.ps',/color
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy,mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
   plot, result[0,*]/result[0,*], result[6,*], xtitle="/sigma0", ytitle="Altitude (km)",xrange=[1.E-10,1.E1], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 2000/01/01, LT0"
@@ -97,7 +97,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_01
   algorithm=1
 
   set_plot,'ps'
-  device,filename='iug_load_ionospheric_cond_diagnostics_1_01_result2.ps',/color
+  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_1_01_result2.ps',/color
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
   plot, result[0,*]/result[0,*], result[6,*], xtitle="/sigma0", ytitle="Altitude (km)",xrange=[1.E-10,1.E1], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 2000/01/01, LT12"
@@ -168,7 +168,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_01
   algorithm=1
 
   set_plot,'ps'
-  device,filename='iug_load_ionospheric_cond_diagnostics_1_01_result3.ps',/color
+  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_1_01_result3.ps',/color
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
   plot, result[0,*]/result[0,*], result[6,*], xtitle="/sigma0", ytitle="Altitude (km)",xrange=[1.E-10,1.E1], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 1992/01/01, LT0"
@@ -238,7 +238,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_01
   algorithm=1
 
   set_plot,'ps'
-  device,filename='iug_load_ionospheric_cond_diagnostics_1_01_result4.ps',/color
+  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_1_01_result4.ps',/color
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
   plot, result[0,*]/result[0,*], result[6,*], xtitle="/sigma0", ytitle="Altitude (km)",xrange=[1.E-10,1.E1], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 1992/01/01, LT12"

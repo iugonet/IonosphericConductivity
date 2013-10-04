@@ -49,7 +49,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_03
   iug_load_iri2012,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon,height_bottom=height_bottom,height_top=height_top,height_step=height_step,result=result_iri
 
   set_plot,'ps'
-  device,filename='iug_load_ionospheric_cond_diagnostics_2_03.ps',/color
+  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_2_03.ps',/color
 
   plot,result_iri[1,*]*1E6,result_iri[0,*],xtitle="Electron Density (m^-3)", $
        ytitle="Altitude (km)",yrange=[0,400],xrange=[1E8,1E13],/xlog, $

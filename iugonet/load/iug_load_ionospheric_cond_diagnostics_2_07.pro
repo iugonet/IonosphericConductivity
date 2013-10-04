@@ -55,7 +55,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_07
   endfor
 
   set_plot,'ps'
-  device,filename='iug_load_ionospheric_cond_diagnostics_2_07.ps',/color
+  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_2_07.ps',/color
 
   plot,result2d[1,*],height_array[*],xtitle="Local Time (hr)", $
        ytitle="Conductance (S)",yrange=[0.1,100],xrange=[0,24], /ylog, $

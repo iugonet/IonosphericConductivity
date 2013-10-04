@@ -36,7 +36,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_04
   endfor
 
   set_plot,'ps'
-  device,filename='iug_load_ionospheric_cond_diagnostics_1_04.ps',/color
+  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_1_04.ps',/color
 
   plot,temperature[*],result[0,*],xtitle="Temperature (K)",ytitle="Collision Frequency (Hz)",yrange=[1E-2,1E5],xrange=[600,2000],/ylog,linestyle=0,color=0, title="ELECTRON COLLISION FREQUENCIES WITH POSITIVE IONS"
   for i=0L,n_elements(num_e)-1 do begin

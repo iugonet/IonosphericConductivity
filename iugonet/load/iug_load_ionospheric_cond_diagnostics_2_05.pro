@@ -61,7 +61,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_05, yyyy=yyyy
   endfor
 
   set_plot,'ps'
-  device,filename='iug_load_ionospheric_cond_diagnostics_2_05.ps',/color
+  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_2_05.ps',/color
 
   plot,result[0,*],result[6,*],xtitle="Conductivities (S/m)", $
        ytitle="Altitude (km)",yrange=[0,400],xrange=[1E-8,1E2],/xlog, $

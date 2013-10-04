@@ -32,7 +32,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_06
 
 ;
   set_plot,'ps'
-  device,filename='iug_load_ionospheric_cond_diagnostics_1_06.ps',/color
+  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_1_06.ps',/color
 
   coulomb_logarithm1en2 = fltarr(n_elements(debye_length))
   coulomb_logarithm5en2 = fltarr(n_elements(debye_length))
