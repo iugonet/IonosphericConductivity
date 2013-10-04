@@ -53,6 +53,7 @@
 
 pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, result=result
 
+  algorithm = 1
 ; validate height_bottom
   if height_bottom lt 80 then begin
      dprint,"Satisfy this constraint 'height_bottom >= 80'."
@@ -137,16 +138,24 @@ pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=hei
   result = fltarr(7,num_height)
 
   for i=0L,num_height-1 do begin
-     nu_en=iug_collision_freq1_en(result_iri[5,i],result_msis[4,i],result_msis[5,i],result_msis[3,i],result_msis[7,i],result_msis[2,i])
-     nu_ei=iug_collision_freq1_ei(result_iri[1,i],result_iri[5,i])
-     nu_e=nu_en+nu_ei
-     nu_i=iug_collision_freq1_in(result_msis[2,i],result_msis[3,i],$
-                                 result_msis[4,i],result_msis[5,i],$
-                                 result_msis[6,i],result_msis[7,i],$
-                                 result_msis[8,i],result_msis[9,i],$
-                                 result_iri[6,i],result_iri[7,i],$
-                                 result_iri[8,i],result_iri[9,i],$
-                                 result_iri[10,i],result_iri[11,i])
+;;;
+     height=height_bottom+height_step*i
+     iug_create_query_ionospheric_cond,height=height,glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=time,algorithm=algorithm
+     spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/iug_ionospheric_cond.db < /tmp/iug_ionospheric_cond_query.sql > /tmp/tmp.txt'
+     query_result=file_info('/tmp/tmp.txt')
+
+     if query_result.size eq 0 then begin ; calculate by using model        
+;;;
+        nu_en=iug_collision_freq1_en(result_iri[5,i],result_msis[4,i],result_msis[5,i],result_msis[3,i],result_msis[7,i],result_msis[2,i])
+        nu_ei=iug_collision_freq1_ei(result_iri[1,i],result_iri[5,i])
+        nu_e=nu_en+nu_ei
+        nu_i=iug_collision_freq1_in(result_msis[2,i],result_msis[3,i],$
+                                    result_msis[4,i],result_msis[5,i],$
+                                    result_msis[6,i],result_msis[7,i],$
+                                    result_msis[8,i],result_msis[9,i],$
+                                    result_iri[6,i],result_iri[7,i],$
+                                    result_iri[8,i],result_iri[9,i],$
+                                    result_iri[10,i],result_iri[11,i])
 ; result[0,*]: simga_0, parallel conductivity
 ; result[1,*]: sigma_1, pedarsen conductivity
 ; result[2,*]: sigma_2, hole conductivity
@@ -155,50 +164,66 @@ pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=hei
 ; result[5,*]: sigma_xy, hole conductivity
 ; result[6,*]: height
 
-     num_ions= result_iri[1,i]*1.E6                             ; Ne/m-3
-     num_o_p = result_iri[1,i]*1.E6*result_iri[6,i] /100.       ; O+
-     num_n_p = result_iri[1,i]*1.E6*result_iri[7,i] /100.       ; N+
-     num_h_p = result_iri[1,i]*1.E6*result_iri[8,i] /100.       ; H+
-     num_he_p= result_iri[1,i]*1.E6*result_iri[9,i] /100.       ; He+
-     num_o2_p= result_iri[1,i]*1.E6*result_iri[10,i]/100.       ; O2+
-     num_no_p= result_iri[1,i]*1.E6*result_iri[11,i]/100.       ; NO+
-     if result_iri[12,i] eq -1 then begin                       ; Cluster+
-        num_cluster_p = 0.
-     endif else begin
-        num_cluster_p = result_iri[1,i]*1.E6*result_iri[12,i]/100. 
-     endelse
+        num_ions= result_iri[1,i]*1.E6                    ; Ne/m-3
+        num_o_p = result_iri[1,i]*1.E6*result_iri[6,i] /100. ; O+
+        num_n_p = result_iri[1,i]*1.E6*result_iri[7,i] /100. ; N+
+        num_h_p = result_iri[1,i]*1.E6*result_iri[8,i] /100. ; H+
+        num_he_p= result_iri[1,i]*1.E6*result_iri[9,i] /100. ; He+
+        num_o2_p= result_iri[1,i]*1.E6*result_iri[10,i]/100. ; O2+
+        num_no_p= result_iri[1,i]*1.E6*result_iri[11,i]/100. ; NO+
+        if result_iri[12,i] eq -1 then begin                 ; Cluster+
+           num_cluster_p = 0.
+        endif else begin
+           num_cluster_p = result_iri[1,i]*1.E6*result_iri[12,i]/100. 
+        endelse
 
-     m_i = ( 16.* num_o_p $
-           + 14.* num_n_p $
-           + 1. * num_h_p $
-           + 4. * num_he_p $
-           + 32.* num_o2_p $
-           + 30.* num_no_p $
-           + 82.* num_cluster_p) / num_ions * m_p
+        m_i = ( 16.* num_o_p $
+                + 14.* num_n_p $
+                + 1. * num_h_p $
+                + 4. * num_he_p $
+                + 32.* num_o2_p $
+                + 30.* num_no_p $
+                + 82.* num_cluster_p) / num_ions * m_p
 
-     omega_e = (e_charge*r_f[i]*1.E-9)/(m_e)
-     omega_i = (e_charge*r_f[i]*1.E-9)/(m_i)
-     kappa=( omega_e*omega_i )/( nu_e*nu_i )
+        omega_e = (e_charge*r_f[i]*1.E-9)/(m_e)
+        omega_i = (e_charge*r_f[i]*1.E-9)/(m_i)
+        kappa=( omega_e*omega_i )/( nu_e*nu_i )
+        
+        denominator =   (1.+kappa)^2*nu_e^2. + omega_e^2.
 
-     denominator =   (1.+kappa)^2*nu_e^2. + omega_e^2.
-
-     result[0,i] = e_charge^2. * ( result_iri(1,i) * 1.E6 )/(m_e * nu_e)
-     result[1,i] = ( (1.+kappa)*nu_e^2.  )/denominator * result[0,i]
-     result[2,i] = ( omega_e*nu_e )       /denominator * result[0,i]
+        result[0,i] = e_charge^2. * ( result_iri(1,i) * 1.E6 )/(m_e * nu_e)
+        result[1,i] = ( (1.+kappa)*nu_e^2.  )/denominator * result[0,i]
+        result[2,i] = ( omega_e*nu_e )       /denominator * result[0,i]
 ; 2 dimensional conductivity
-     result[3,i] = ( result[0,i]*result[1,i] ) $
-                 / ( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
-                   + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
-     result[4,i]=( result[0,i]*result[1,i]*sin(!dpi/180.*r_i[i])^2. $
-                   + ( result[1,i]^2. + result[2,i]^2.) $
-                   *cos(!dpi/180.*r_i[i])^2. ) $
-                 /( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
-                    + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
-     result[5,i]=( result[0,i]*result[2,i]*sin(!dpi/180.*r_i[i])) $
-                 /( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
-                   + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
-     result[6,i] = height_array[i]
+        result[3,i] = ( result[0,i]*result[1,i] ) $
+                      / ( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
+                          + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
+        result[4,i]=( result[0,i]*result[1,i]*sin(!dpi/180.*r_i[i])^2. $
+                      + ( result[1,i]^2. + result[2,i]^2.) $
+                      *cos(!dpi/180.*r_i[i])^2. ) $
+                    /( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
+                       + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
+        result[5,i]=( result[0,i]*result[2,i]*sin(!dpi/180.*r_i[i])) $
+                    /( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
+                       + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
+        result[6,i] = height_array[i]
+        
+        iug_insert_ionospheric_cond,sigma_0=result[0,i],sigma_1=result[1,i],sigma_2=result[2,i],sigma_xx=result[3,i],sigma_yy=result[4,i],sigma_xy=result[5,i],height=height,glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=time,algorithm=algorithm
+     endif else begin ; retrieve from DB
+        openr, unit, '/tmp/tmp.txt', /get_lun
+        array=fltarr(7)
+        readf,unit,array
 
+        result[0,i] = array(0)
+        result[1,i] = array(1)
+        result[2,i] = array(2)
+        result[3,i] = array(3)
+        result[4,i] = array(4)
+        result[5,i] = array(5)
+        result[6,i] = array(6)
+        
+        free_lun, unit
+     endelse
   endfor
 
 end
