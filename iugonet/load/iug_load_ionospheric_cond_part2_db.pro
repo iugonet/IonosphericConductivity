@@ -143,10 +143,9 @@ pro iug_load_ionospheric_cond_part2_db, height_bottom=height_bottom, height_top=
      height=height_bottom+height_step*i
      iug_create_query_ionospheric_cond,height=height,glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=time,algorithm=algorithm
      spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/iug_ionospheric_cond.db < /tmp/iug_ionospheric_cond_query.sql > /tmp/tmp.txt'
-     result=file_info('/tmp/tmp.txt')
+     query_result=file_info('/tmp/tmp.txt')
 
-     if result.size eq 0 then begin ; calculate by using model    
-        print,"HOGE"
+     if query_result.size eq 0 then begin ; calculate by using model    
 ;;;
         r_e=result_iri[5,i]/300.
         nu_en_perp=iug_collision_freq2_en_perp(r_e,result_msis[4,i]*1.E6,result_msis[5,i]*1.E6,result_msis[3,i]*1.E6)
@@ -182,7 +181,7 @@ pro iug_load_ionospheric_cond_part2_db, height_bottom=height_bottom, height_top=
 
         omega_e = (e_charge*r_f[i]*1.E-9)/(m_e)
         omega_i = (e_charge*r_f[i]*1.E-9)/(m_i)
-        
+
         result[0,i] = e_charge^2. * ( result_iri(1,i) * 1.E6 ) $
                       /( m_e * (nu_en_para+nu_ei_para) )
         result[1,i] = ( result_iri(1,i)*1.E6*e_charge/(r_f[i]*1.E-9) ) $
