@@ -68,7 +68,7 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
 ; validate algorithm
   if algorithm ne 1 or algorithm ne 2 then begin
      dprint,"Specify algorithm correctry."
-     dprint,"1: Ken-ichi Maeda's, 2: by Richmond's book"
+     dprint,'1: Ken-ichi Maedas, 2: by Richmonds book'
      return
   endif
 
