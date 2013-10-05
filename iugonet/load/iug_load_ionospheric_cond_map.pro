@@ -26,11 +26,50 @@
 ;-
 
 pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, height_bottom=height_bottom, height_top=height_top, height_step=height_step, algorithm=algorithm, resolution=resolution, result=result
-
+  
+; validate height_bottom 
+  if height_bottom lt 80 then begin
+     dprint,"Satisfy this constraint 'height_bottom >= 80'."
+;     dprint,"This procedure don't consider the cluster ion's
+;     influence under the altitude of 100km."
+     return
+  endif
+; validate height_top
+  if height_top gt 2000 then begin
+     dprint,"Specify height_top < 2000(km)."
+     return
+  endif
+; validate height_step
+  if height_step gt height_top-height_bottom then begin
+     dprint,"Satisfy this constraint 'height_step < height_top-height_bottom'."
+     return
+  endif
 ; validate yyyy
   if yyyy lt 1958 and yyyy ge 2013 then begin
      dprint,"Specify yyyy in 1958 to 2012."
      return 
+  endif
+; validate mmdd
+  if mmdd lt 101 and mmdd gt 1231 then begin
+     dprint,"Specify mmdd correctly."
+     return
+  endif
+; validate ltut
+  if ltut ne 0 and ltut ne 1 then begin
+     dprint,"Specify ltut correctly."
+     dprint,"   0:lt, 1:ut"
+     return
+  endif
+; validate time                                                               
+  if time lt 0 and time gt 24 then begin
+     dprint,"Specify time in 0 to 24."
+     return
+  endif
+; validate algorithm
+  if algorithm ne 1 or algorithm ne 2 then begin
+     dprint,"Specify algorithm correctry."
+     dprint,"1: Ken-ichi Maeda's, 2: by Richmond's book"
+     return
   endif
 
   if height_top ne height_bottom then begin
