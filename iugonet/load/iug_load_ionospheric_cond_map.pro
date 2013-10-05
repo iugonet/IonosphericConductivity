@@ -60,13 +60,13 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
   print,n_elements(glon_list)
 
   for i=0L,n_elements(glat_list)-1 do begin
-     glat_list[i]=-90+i*resolution
+     glat_list[i]=-90.+i*resolution
   endfor
   print,n_elements(glat_list)
   print,n_elements(glon_list)
 
   for i=0L,n_elements(glon_list)-1 do begin
-     glon_list[i]=-180+i*resolution
+     glon_list[i]=-180.+i*resolution
   endfor
 ;
 ;
@@ -92,7 +92,7 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
   result3 = fltarr(360./resolution+1,180./resolution+1)
   for i=0L,n_elements(glon_list)-1 do begin
      for j=0L,n_elements(glat_list)-1 do begin
-        result3[i,j]=100*i+10*j
+        result3[i,j]=100.*i+10.*j
      endfor
   endfor
   print,"result3=",result3
