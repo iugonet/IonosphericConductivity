@@ -17,7 +17,17 @@ conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/iug_ionospheri
 sql = "select * from iug_ionospheric_cond;"
 #conn.execute(sql)
 conn.row_factory= sqlite3.Row
-for row in conn.execute(sql):
-    print row['sigma_0'], row['sigma_1'], row['sigma_2'], row['sigma_xx'], row['sigma_yy'], row['sigma_xy'], row['height'], row['glat'], row['glon'], row['yyyy'], row['mmdd'], row['ltut'], row['atime'], row['algorithm']
+#for row in conn.execute(sql):
+#    print row['sigma_0'], row['sigma_1'], row['sigma_2'], row['sigma_xx'], row['sigma_yy'], row['sigma_xy'], row['height'], row['glat'], row['glon'], row['yyyy'], row['mmdd'], row['ltut'], row['atime'], row['algorithm']
 conn.close()
+
+name_object = KML.name("Hello World!")
+pm1 = KML.Placemark(
+    KML.name("Hello World!"),
+    KML.Point(
+        KML.coordinates("-64.5253,18.4607")
+        )
+)
+etree.tostring(pm1)
+print etree.tostring(pm1, pretty_print=True)
 
