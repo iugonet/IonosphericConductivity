@@ -89,8 +89,8 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
   result = fltarr(7,num_height)
   result2 = fltarr(360./resolution,180./resolution,6,num_height)
 
-;  set_plot,'ps'
-;  device,filename='iug_load_ionospheric_cond_map.eps',/color,/encapsulated
+  set_plot,'ps'
+  device,filename='/tmp/iug_load_ionospheric_cond_map.eps',/color,/encapsulated
 
   glat_list=fltarr(180./resolution+1)
   glon_list=fltarr(360./resolution+1)
