@@ -57,7 +57,7 @@ pro iug_load_nrlmsise00, yyyy=yyyy, mmdd=mmdd, height_bottom=height_bottom, heig
 
   result = fltarr(11,num_height)
   
-  openr, unit, '${HOME}/models/atmospheric/msis/nrlmsise00/output_nrlmsise00.txt', /GET_LUN
+  openr, unit, '${HOME}/models/atmospheric/msis/nrlmsise00/output_nrlmsise00.txt', /get_lun
   temp0='' & temp1='' & temp2='' & temp3='' & temp4='' 
   temp5='' & temp6='' & temp7='' & temp8='' & temp9='' 
   temp10=''

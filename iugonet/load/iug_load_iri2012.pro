@@ -51,7 +51,7 @@ pro iug_load_iri2012,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon
 
   result = fltarr(15,num_height)
 
-  openr, unit, '/tmp/tmp.txt', /GET_LUN
+  openr, unit, '/tmp/tmp.txt', /get_lun
   temp0='' & temp1='' & temp2='' & temp3='' & temp4='' 
   temp5='' & temp6='' & temp7='' & temp8='' & temp9='' 
   temp10='' & temp11='' & temp12='' & temp13='' & temp14=''

@@ -121,6 +121,7 @@ pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=hei
 
 ; Calculation of IRI2012 model
   iug_load_iri2012,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon,height_bottom=height_bottom,height_top=height_top,height_step=height_step,result=result_iri
+  print,result_iri
 
 ;
 ; Calculation of NRLMSISE for getting composition of atmosphere

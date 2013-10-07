@@ -89,20 +89,12 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
   result = fltarr(7,num_height)
   result2 = fltarr(360./resolution,180./resolution,6,num_height)
 
-  set_plot,'ps'
-  device,filename='/tmp/iug_load_ionospheric_cond_map.eps',/color,/encapsulated
-
   glat_list=fltarr(180./resolution+1)
   glon_list=fltarr(360./resolution+1)
-
-  print,n_elements(glat_list)
-  print,n_elements(glon_list)
 
   for i=0L,n_elements(glat_list)-1 do begin
      glat_list[i]=-90.+i*resolution
   endfor
-  print,n_elements(glat_list)
-  print,n_elements(glon_list)
 
   for i=0L,n_elements(glon_list)-1 do begin
      glon_list[i]=-180.+i*resolution
@@ -113,25 +105,25 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
   for i=0L,n_elements(glon_list)-1 do begin
      for j=0L,n_elements(glat_list)-1  do begin
         for k=0L,num_height-1 do begin
-           print,"HOGE",height_bottom,height_top,height_step,glat_list[j],glon_list[i],yyyy,mmdd,ltut,time,algorithm
            iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat_list[j], glon=glon_list[i], yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
-           print,"HOGE2",result
            result2[i,j,k]=result
-           print,"HOGE3",result2
         endfor
      endfor
   endfor
+
+  set_plot,'ps'
+  device,filename='/tmp/iug_load_ionospheric_cond_map.eps',/color,/encapsulated
 
   print,"HOGE4"
 
   map_set, /CYLINDRICAL, 0, 0, /GRID, /CONTINENTS, $  
    TITLE = 'World map of Ionospheric Conductivity'
-;  plot,result[0,*],result[6,*],xtitle="Conductivities (S/m)", $
-;       ytitle="Altitude (km)",yrange=[0,400],xrange=[1E-8,1E2],/xlog, $
-;       linestyle=0,color=0, title="GLAT=44.6, GLON=2.2, Solar Minimum conditions on March 21"
-;  oplot, result[1,*],result[6,*],linestyle=0,color=6
-;  oplot, result[2,*],result[6,*],linestyle=0,color=2
-;  xyouts, 135, 35, 'Japan', ALIGNMENT=0.5, color=6
+  plot,result[0,*],result[6,*],xtitle="Conductivities (S/m)", $
+       ytitle="Altitude (km)",yrange=[0,400],xrange=[1E-8,1E2],/xlog, $
+       linestyle=0,color=0, title="GLAT=44.6, GLON=2.2, Solar Minimum conditions on March 21"
+  oplot, result[1,*],result[6,*],linestyle=0,color=6
+  oplot, result[2,*],result[6,*],linestyle=0,color=2
+  xyouts, 135, 35, 'Japan', ALIGNMENT=0.5, color=6
   print,result2
   result3 = fltarr(360./resolution+1,180./resolution+1)
   for i=0L,n_elements(glon_list)-1 do begin
