@@ -24,43 +24,49 @@ def get_max():
     conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/iug_ionospheric_cond.db')
 
     sql = "select max(sigma_0) from iug_ionospheric_cond;"
-    conn.execute(sql)
-    conn.row_factory = sqlite3.Row
-    for row in conn.execute(sql):
+    c = conn.execute(sql)
+#    conn.row_factory = sqlite3.Row
+    for row in c:
         print row
 #
     sql = "select max(sigma_1) from iug_ionospheric_cond;"
-    conn.execute(sql)
-    conn.row_factory = sqlite3.Row
-    for row in conn.execute(sql):
+    c = conn.execute(sql)
+    for row in c:
         print row
 #
     sql = "select max(sigma_2) from iug_ionospheric_cond;"
-    conn.execute(sql)
-    conn.row_factory = sqlite3.Row
-    for row in conn.execute(sql):
+    c = conn.execute(sql)
+    for row in c:
         print row
 #
     sql = "select max(sigma_xx) from iug_ionospheric_cond;"
-    conn.execute(sql)
-    conn.row_factory = sqlite3.Row
-    for row in conn.execute(sql):
+    c = conn.execute(sql)
+    for row in c:
         print row
 #
     sql = "select max(sigma_yy) from iug_ionospheric_cond;"
-    conn.execute(sql)
-    conn.row_factory = sqlite3.Row
-    for row in conn.execute(sql):
+    c = conn.execute(sql)
+    for row in c:
         print row
 #
     sql = "select max(sigma_xy) from iug_ionospheric_cond;"
-    conn.execute(sql)
-    conn.row_factory = sqlite3.Row
-    for row in conn.execute(sql):
+    c = conn.execute(sql)
+    for row in c:
         print row
         
     conn.close;
 
+def read_all():
+    conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/iug_ionospheric_cond.db')
+
+    sql = "select * from iug_ionospheric_cond;"
+    c = conn.execute(sql)
+#    conn.row_factory = sqlite3.Row
+    for row in c:
+        print row
+
+    conn.close
+    
 
 
 def main():
@@ -99,6 +105,7 @@ def main():
     print prettify(kml)
 
     get_max()
+    read_all()
 
 if __name__ == '__main__':
     main()
