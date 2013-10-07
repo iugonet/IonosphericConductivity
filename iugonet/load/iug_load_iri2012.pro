@@ -34,9 +34,9 @@ pro iug_load_iri2012,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon
      height_step = 1 ; height_step=1 is just dummy to execute iri2012. 
   endelse
 
-  openw,unit,'/tmp/input_iri2012.txt',/get_lun ; create input file
+  openw,unit,'/tmp/iri2012.input',/get_lun ; create input file
   printf,unit,0,glat,glon
-  printf,unit,yyyy,mmdd,ltut,time
+  printf,unit,format='(i8,i8,i8,i8)',yyyy,mmdd,ltut,time
   printf,unit,0
   printf,unit,0
   printf,unit,0
@@ -46,12 +46,12 @@ pro iug_load_iri2012,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon
   printf,unit,0
   free_lun, unit
 
-  spawn,'cd ${HOME}/models/ionospheric/iri/iri2012;./iritest < /tmp/input_iri2012.txt'
-  spawn,"cat ${HOME}/models/ionospheric/iri/iri2012/fort.7 | awk '{if( NR>27 ) print $0}' > /tmp/tmp.txt"
+  spawn,'cd ${HOME}/models/ionospheric/iri/iri2012;./iritest < /tmp/iri2012.input'
+  spawn,"cat ${HOME}/models/ionospheric/iri/iri2012/fort.7 | awk '{if( NR>27 ) print $0}' > /tmp/iri2012.result"
 
   result = fltarr(15,num_height)
 
-  openr, unit, '/tmp/tmp.txt', /get_lun
+  openr, unit, '/tmp/iri2012.result', /get_lun
   temp0='' & temp1='' & temp2='' & temp3='' & temp4='' 
   temp5='' & temp6='' & temp7='' & temp8='' & temp9='' 
   temp10='' & temp11='' & temp12='' & temp13='' & temp14=''
