@@ -34,7 +34,7 @@ pro iug_load_iri2012_db,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=g
      height_step = 1 ; height_step=1 is just dummy to execute iri2012. 
   endelse
 
-  openw,unit,'/tmp/input_iri2012.txt',/get_lun ; create input file
+  openw,unit,'/tmp/iri2012.input',/get_lun ; create input file
   printf,unit,0,glat,glon
   printf,unit,yyyy,mmdd,ltut,time
   printf,unit,0
@@ -46,12 +46,12 @@ pro iug_load_iri2012_db,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=g
   printf,unit,0
   free_lun, unit
 
-  spawn,'cd ${HOME}/models/ionospheric/iri/iri2012;./iritest < /tmp/input_iri2012.txt'
-  spawn,"cat ${HOME}/models/ionospheric/iri/iri2012/fort.7 | awk '{if( NR>16 && NR<17){print $3,$4,$5,$6,$7,$8}else if( NR>19 && NR<21 ){print $4}else if( NR==22 ){print $8}else if( NR==23 ){print $5}else if( NR>27 ) print $0}' > /tmp/tmp.txt"
+  spawn,'cd ${HOME}/models/ionospheric/iri/iri2012;./iritest < /tmp/iri2012.inpu'
+  spawn,"cat ${HOME}/models/ionospheric/iri/iri2012/fort.7 | awk '{if( NR>16 && NR<17){print $3,$4,$5,$6,$7,$8}else if( NR>19 && NR<21 ){print $4}else if( NR==22 ){print $8}else if( NR==23 ){print $5}else if( NR>27 ) print $0}' > /tmp/iri2012.result"
 
   result = fltarr(15,num_height)
 
-  openr, unit, '/tmp/tmp.txt', /GET_LUN
+  openr, unit, '/tmp/iri2012.result', /GET_LUN
   temp0='' & temp1='' & temp2='' & temp3='' & temp4='' 
   temp5='' & temp6='' & temp7='' & temp8='' & temp9='' 
   temp10='' & temp11='' & temp12='' & temp13='' & temp14=''
@@ -81,8 +81,8 @@ pro iug_load_iri2012_db,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=g
      dd=02
      height=height_bottom+height_step*i
      iug_create_query_iri2012,1,glat,glon,yyyy,mm,dd,ltut,time,height
-     spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/iug_iri2012.db < /tmp/iug_iri2012_query.sql > /tmp/tmp.txt'
-     query_result=file_info('/tmp/tmp.txt')
+     spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/iug_iri2012.db < /tmp/iug_iri2012_query.sql > /tmp/iri2012.result'
+     query_result=file_info('/tmp/iri2012.result')
 
      if query_result.size eq 0 then begin ; to store
         iug_insert_iri2012,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
