@@ -136,7 +136,7 @@ pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=hei
 ;;;
      height=height_bottom+height_step*i
      iug_create_query_ionospheric_cond,height=height,glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=time,algorithm=algorithm
-     spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/iug_ionospheric_cond.db < /tmp/iug_ionospheric_cond_query.sql > /tmp/ionospheric_cond.result'
+     spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db < /tmp/ionospheric_cond_query.sql > /tmp/ionospheric_cond.result'
      query_result=file_info('/tmp/ionospheric_cond.result')
 
      if query_result.size eq 0 then begin ; calculate by using model        

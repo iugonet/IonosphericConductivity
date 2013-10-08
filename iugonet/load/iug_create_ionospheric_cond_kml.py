@@ -21,35 +21,35 @@ def prettify(elem):
     return reparsed.toprettyxml(indent="  ")
 
 def get_max():
-    conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/iug_ionospheric_cond.db')
+    conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/ionospheric_cond.db')
 
-    sql = "select max(sigma_0) from iug_ionospheric_cond;"
+    sql = "select max(sigma_0) from ionospheric_cond;"
     c = conn.execute(sql)
 #    conn.row_factory = sqlite3.Row
     for row in c:
         print row
 #
-    sql = "select max(sigma_1) from iug_ionospheric_cond;"
+    sql = "select max(sigma_1) from ionospheric_cond;"
     c = conn.execute(sql)
     for row in c:
         print row
 #
-    sql = "select max(sigma_2) from iug_ionospheric_cond;"
+    sql = "select max(sigma_2) from ionospheric_cond;"
     c = conn.execute(sql)
     for row in c:
         print row
 #
-    sql = "select max(sigma_xx) from iug_ionospheric_cond;"
+    sql = "select max(sigma_xx) from ionospheric_cond;"
     c = conn.execute(sql)
     for row in c:
         print row
 #
-    sql = "select max(sigma_yy) from iug_ionospheric_cond;"
+    sql = "select max(sigma_yy) from ionospheric_cond;"
     c = conn.execute(sql)
     for row in c:
         print row
 #
-    sql = "select max(sigma_xy) from iug_ionospheric_cond;"
+    sql = "select max(sigma_xy) from ionospheric_cond;"
     c = conn.execute(sql)
     for row in c:
         print row
@@ -57,9 +57,9 @@ def get_max():
     conn.close;
 
 def read_all():
-    conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/iug_ionospheric_cond.db')
+    conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/ionospheric_cond.db')
 
-    sql = "select * from iug_ionospheric_cond;"
+    sql = "select * from ionospheric_cond;"
     c = conn.execute(sql)
 #    conn.row_factory = sqlite3.Row
     for row in c:
@@ -70,9 +70,9 @@ def read_all():
 
 
 def main():
-#    conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/iug_ionospheric_cond.db')
+#    conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/ionospheric_cond.db')
 
-#   sql = "select * from iug_ionospheric_cond;"
+#   sql = "select * from ionospheric_cond;"
 #    conn.execute(sql)
 #    conn.row_factory= sqlite3.Row
 #    for row in conn.execute(sql):
