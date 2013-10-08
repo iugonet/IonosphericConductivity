@@ -136,7 +136,7 @@ pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=hei
 ;
 ; Calculation based on Kenichi Maeda's equation
 ;
-  result = fltarr(7,num_height)
+  result = fltarr(num_height,7)
 
   for i=0L,num_height-1 do begin
 ;;;
@@ -192,36 +192,37 @@ pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=hei
         
         denominator =   (1.+kappa)^2*nu_e^2. + omega_e^2.
 
-        result[0,i] = e_charge^2. * ( result_iri(1,i) * 1.E6 )/(m_e * nu_e)
-        result[1,i] = ( (1.+kappa)*nu_e^2.  )/denominator * result[0,i]
-        result[2,i] = ( omega_e*nu_e )       /denominator * result[0,i]
+        result[i,0] = e_charge^2. * ( result_iri(1,i) * 1.E6 )/(m_e * nu_e)
+        result[i,1] = ( (1.+kappa)*nu_e^2.  )/denominator * result[0,i]
+        result[i,2] = ( omega_e*nu_e )       /denominator * result[0,i]
 ; 2 dimensional conductivity
-        result[3,i] = ( result[0,i]*result[1,i] ) $
+        result[i,3] = ( result[0,i]*result[1,i] ) $
                       / ( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
                           + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
-        result[4,i]=( result[0,i]*result[1,i]*sin(!dpi/180.*r_i[i])^2. $
+        result[i,4]=( result[0,i]*result[1,i]*sin(!dpi/180.*r_i[i])^2. $
                       + ( result[1,i]^2. + result[2,i]^2.) $
                       *cos(!dpi/180.*r_i[i])^2. ) $
                     /( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
                        + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
-        result[5,i]=( result[0,i]*result[2,i]*sin(!dpi/180.*r_i[i])) $
+        result[i,5]=( result[0,i]*result[2,i]*sin(!dpi/180.*r_i[i])) $
                     /( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
                        + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
-        result[6,i] = height_array[i]
+        result[i,6] = height_array[i]
+
         
-        iug_insert_ionospheric_cond,sigma_0=result[0,i],sigma_1=result[1,i],sigma_2=result[2,i],sigma_xx=result[3,i],sigma_yy=result[4,i],sigma_xy=result[5,i],height=height,glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=time,algorithm=algorithm
+        iug_insert_ionospheric_cond,sigma_0=result[i,0],sigma_1=result[i,1],sigma_2=result[i,2],sigma_xx=result[i,3],sigma_yy=result[i,4],sigma_xy=result[i,5],height=result[i,6],glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=time,algorithm=algorithm
      endif else begin ; retrieve from DB
         openr, unit, '/tmp/tmp.txt', /get_lun
         array=fltarr(7)
         readf,unit,array
 
-        result[0,i] = array(0)
-        result[1,i] = array(1)
-        result[2,i] = array(2)
-        result[3,i] = array(3)
-        result[4,i] = array(4)
-        result[5,i] = array(5)
-        result[6,i] = array(6)
+        result[i,0] = array(0)
+        result[i,1] = array(1)
+        result[i,2] = array(2)
+        result[i,3] = array(3)
+        result[i,4] = array(4)
+        result[i,5] = array(5)
+        result[i,6] = array(6)
         
         free_lun, unit
      endelse

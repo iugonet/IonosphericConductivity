@@ -86,11 +86,8 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
 ;
 ; Calculation based on Kenichi Maeda's equation
 ;
-  result = fltarr(7,num_height)
-  result2 = fltarr(360./resolution,180./resolution,6,num_height)
-
-  glat_list=fltarr(180./resolution+1)
-  glon_list=fltarr(360./resolution+1)
+  glat_list=fltarr(180/resolution+1)
+  glon_list=fltarr(360/resolution+1)
 
   for i=0L,n_elements(glat_list)-1 do begin
      glat_list[i]=-90.+i*resolution
@@ -99,46 +96,46 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
   for i=0L,n_elements(glon_list)-1 do begin
      glon_list[i]=-180.+i*resolution
   endfor
+
+
+;  result = fltarr(num_height,7)
+  result2 = fltarr(n_elements(glat_list),n_elements(glon_list),num_height,7)
+
 ;
 ;
 ;
-  for i=0L,n_elements(glon_list)-1 do begin
-     for j=0L,n_elements(glat_list)-1  do begin
+  for i=0L,n_elements(glat_list)-1  do begin
+     for j=0L,n_elements(glon_list)-1 do begin
         for k=0L,num_height-1 do begin
-           iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat_list[j], glon=glon_list[i], yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
-           result2[i,j,k]=result
+           iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat_list[i], glon=glon_list[j], yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
+           for l=0L,7-1 do begin
+              result2[i,j,k,l]=result[k,l]
+           endfor
         endfor
      endfor
   endfor
 
   set_plot,'ps'
-  device,filename='/tmp/iug_load_ionospheric_cond_map.eps',/color,/encapsulated
-
-  print,"HOGE4"
+  device,filename='/tmp/iug_load_ionospheric_cond_map.ps',/color,/encapsulated
 
   map_set, /CYLINDRICAL, 0, 0, /GRID, /CONTINENTS, $  
-   TITLE = 'World map of Ionospheric Conductivity'
-  plot,result[0,*],result[6,*],xtitle="Conductivities (S/m)", $
-       ytitle="Altitude (km)",yrange=[0,400],xrange=[1E-8,1E2],/xlog, $
-       linestyle=0,color=0, title="GLAT=44.6, GLON=2.2, Solar Minimum conditions on March 21"
-  oplot, result[1,*],result[6,*],linestyle=0,color=6
-  oplot, result[2,*],result[6,*],linestyle=0,color=2
-  xyouts, 135, 35, 'Japan', ALIGNMENT=0.5, color=6
-  print,result2
-  result3 = fltarr(360./resolution+1,180./resolution+1)
-  for i=0L,n_elements(glon_list)-1 do begin
-     for j=0L,n_elements(glat_list)-1 do begin
-        result3[i,j]=100.*i+10.*j
+           TITLE = 'Ionospheric Conductivity'
+
+; BE CAREFULL
+  result3 = fltarr(n_elements(glon_list),n_elements(glat_list))
+
+  for i=0L,n_elements(glat_list)-1 do begin
+     for j=0L,n_elements(glon_list)-1 do begin
+        result3[j,i]=result2[i,j,0,0]
      endfor
   endfor
-  print,"result3=",result3
-;  map_set, /stereo, 90, 0, /ISOTROPIC, /HORIZON, E_HORIZON={FILL:1},$
-;  title='World Map of Ionospheric Conductivity'
-;  CONTOUR, result3, glon_list, glat_list, $
-;           /OVERPLOT,/FILL,LEVELS=10,c_colors=[1,2]
-;  CONTOUR, result3, glon_list,glat_list,/OVERPLOT,/FILL,LEVELS=1
-  contour, result3, /OVERPLOT, LEVELS=2
-;  map_grid, latdel=10, londel=10, color=255
-;  set_plot,'x'
+
+  nlevels=12
+  LoadCT, 33, NColors=nlevels, Bottom=1
+  transparency=50
+  contour, result3, glon_list, glat_list, /overplot,/fill,nlevels=nlevels,c_colors=IndGen(nlevels)+1
+  map_grid, latdel=10, londel=10, color=240
+  map_continents
+  set_plot,'x'
 
 end
