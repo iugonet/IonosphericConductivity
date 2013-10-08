@@ -43,7 +43,7 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
 ;;;
      height=height_bottom+height_step*i
      iug_create_query_igrf11,coordinate_system=1,yyyy=yyyy,glat=glat,glon=glon,height=height
-     spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/iug_igrf11.db < /tmp/iug_igrf11_query.sql > /tmp/igrf11.result'
+     spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/igrf11.db < /tmp/igrf11_query.sql > /tmp/igrf11.result'
      query_result=file_info('/tmp/igrf11.result')
 
      if query_result.size eq 0 then begin ; calculate by using model         

@@ -1,19 +1,19 @@
 # for initialize DATABASE
-sqlite3 iug_igrf11.db < iug_igrf11.sql
-sqlite3 iug_iri2012.db < iug_iri2012.sql
-sqlite3 iug_nrlmsise00.db < iug_nrlmsise00.sql
-sqlite3 iug_ionospheric_cond.db < iug_ionospheric_cond.sql
+sqlite3 igrf11.db < igrf11.sql
+sqlite3 iri2012.db < iri2012.sql
+sqlite3 nrlmsise00.db < nrlmsise00.sql
+sqlite3 ionospheric_cond.db < ionospheric_cond.sql
 
-# To check inside DATABASE (in case of iug_igrf11) 
-$ sqlite3 iug_igrf11.db
+# To check inside DATABASE (in case of igrf11) 
+$ sqlite3 igrf11.db
 sqlite> .schema
-sqlite> select * from iug_igrf11;
+sqlite> select * from igrf11;
 sqlite> .quit
 
-# To delete all records (in case of iug_igrf11)
-$ sqlite3 iug_igrf11.db
-sqlite> delete from iug_igrf11;
+# To delete all records (in case of igrf11)
+$ sqlite3 igrf11.db
+sqlite> delete from igrf11;
 sqlite> .quit
 
-# To remove DATABASE (in case of iug_igrf11)
-$ rm iug_igrf11.db
+# To remove DATABASE (in case of igrf11)
+$ rm igrf11.db
