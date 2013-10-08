@@ -111,6 +111,7 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
            for l=0L,7-1 do begin
               result2[i,j,k,l]=result[k,l]
            endfor
+           exit
         endfor
      endfor
   endfor

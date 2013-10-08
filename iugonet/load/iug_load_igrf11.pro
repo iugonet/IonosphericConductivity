@@ -43,12 +43,12 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
 ;;;
      height=height_bottom+height_step*i
      iug_create_query_igrf11,coordinate_system=1,yyyy=yyyy,glat=glat,glon=glon,height=height
-     spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/iug_igrf11.db < /tmp/iug_igrf11_query.sql > /tmp/tmp.txt'
-     query_result=file_info('/tmp/tmp.txt')
+     spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/iug_igrf11.db < /tmp/iug_igrf11_query.sql > /tmp/igrf11.result'
+     query_result=file_info('/tmp/igrf11.result')
 
      if query_result.size eq 0 then begin ; calculate by using model         
 ;;;
-        openw,unit,'/tmp/input_igrf11.txt',/get_lun ; create input file
+        openw,unit,'/tmp/igrf11.input',/get_lun ; create input file
         printf,unit,'result.txt' ; Enter name of output file (30 characters maximum)
         printf,unit,1 ; 1 - geodetic (shape of Earth is approximated by a spheroid)
                   ; 2 - geocentric (shape of Earth is approximated by a shere)
@@ -64,7 +64,7 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
         printf,unit,'n'       ; Do you want values for another date & position?
         free_lun, unit
 
-        spawn,'cd ${HOME}/IAGA/vmod; rm result.txt ; rm result2.txt; ./a.out < /tmp/input_igrf11.txt'
+        spawn,'cd ${HOME}/IAGA/vmod; rm result.txt ; rm result2.txt; ./a.out < /tmp/igrf11.input'
         spawn,"cat ${HOME}/IAGA/vmod/result.txt | awk '{if( NR>1 && NR<4){printf(""%6d%6d%6d\n"",$3,$5,$9)}else if( NR>3 && NR<9){printf(""%6d%6d\n"",$3,$7)}}' > ${HOME}/IAGA/vmod/result2.txt"
 
         openr,unit, '${HOME}/IAGA/vmod/result2.txt', /GET_LUN
@@ -103,7 +103,7 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
         iug_insert_igrf11,coordinate_system=1,yyyy=yyyy,glat=glat,glon=glon,height=height,d_deg=temp0_0,d_min=temp0_1,i_deg=temp1_0,i_min=temp1_1,r_h=r_h[i],r_x=r_x[i],r_y=r_y[i],r_z=r_z[i],r_f=r_f[i],d_sv=temp7,i_sv=temp8,h_sv=temp9,x_sv=temp10,y_sv=temp11,z_sv=temp12,f_sv=temp13
 ;
      endif else begin           ; retrieve from DB                             
-        openr, unit, '/tmp/tmp.txt', /get_lun
+        openr, unit, '/tmp/igrf11.result', /get_lun
         array=fltarr(21)
         readf,unit,array
 
