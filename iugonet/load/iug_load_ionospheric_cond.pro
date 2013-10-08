@@ -69,11 +69,6 @@ pro iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_to
      dprint,"Specify height_top < 2000(km)."
      return
   endif
-; validate height_step
-  if height_step gt height_top-height_bottom then begin
-     dprint,"Satisfy this constraint 'height_step < height_top-height_bottom'."
-     return
-  endif
 ; validate glat
   if glat lt -90 and glat gt 90 then begin
      dprint,"Specify glat in -90 to 90."

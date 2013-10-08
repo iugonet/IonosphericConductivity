@@ -65,11 +65,6 @@ pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=hei
      dprint,"Specify height_top < 2000(km)."
      return 
   endif
-; validate height_step
-  if height_step gt height_top-height_bottom then begin
-     dprint,"Satisfy this constraint 'height_step < height_top-height_bottom'."
-     return 
-  endif
 ; validate glat
   if glat lt -90 and glat gt 90 then begin
      dprint,"Specify glat in -90 to 90."
@@ -121,7 +116,6 @@ pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=hei
 
 ; Calculation of IRI2012 model
   iug_load_iri2012,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon,height_bottom=height_bottom,height_top=height_top,height_step=height_step,result=result_iri
-  print,result_iri
 
 ;
 ; Calculation of NRLMSISE for getting composition of atmosphere
@@ -142,8 +136,8 @@ pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=hei
 ;;;
      height=height_bottom+height_step*i
      iug_create_query_ionospheric_cond,height=height,glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=time,algorithm=algorithm
-     spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/iug_ionospheric_cond.db < /tmp/iug_ionospheric_cond_query.sql > /tmp/tmp.txt'
-     query_result=file_info('/tmp/tmp.txt')
+     spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/iug_ionospheric_cond.db < /tmp/iug_ionospheric_cond_query.sql > /tmp/ionospheric_cond.result'
+     query_result=file_info('/tmp/ionospheric_cond.result')
 
      if query_result.size eq 0 then begin ; calculate by using model        
 ;;;
@@ -209,10 +203,9 @@ pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=hei
                        + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
         result[i,6] = height_array[i]
 
-        
         iug_insert_ionospheric_cond,sigma_0=result[i,0],sigma_1=result[i,1],sigma_2=result[i,2],sigma_xx=result[i,3],sigma_yy=result[i,4],sigma_xy=result[i,5],height=result[i,6],glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=time,algorithm=algorithm
      endif else begin ; retrieve from DB
-        openr, unit, '/tmp/tmp.txt', /get_lun
+        openr, unit, '/tmp/ionospheric_cond.result', /get_lun
         array=fltarr(7)
         readf,unit,array
 
