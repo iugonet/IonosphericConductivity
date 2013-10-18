@@ -72,14 +72,14 @@ pro iug_load_ionospheric_cond_diagnostics_2_04
 
   for i=0L,num_height-1 do begin
      r_e=result_iri[i,5]/300.
-     nu_en_perp=iug_collision_freq2_en_perp(r_e,result_msis[4,i]*1E6,result_msis[5,i]*1E6,result_msis[3,i]*1E6)
-     nu_en_para=iug_collision_freq2_en_para(r_e,result_msis[4,i]*1E6,result_msis[5,i]*1E6,result_msis[3,i]*1E6)
+     nu_en_perp=iug_collision_freq2_en_perp(r_e,result_msis[i,4]*1E6,result_msis[i,5]*1E6,result_msis[i,3]*1E6)
+     nu_en_para=iug_collision_freq2_en_para(r_e,result_msis[i,4]*1E6,result_msis[i,5]*1E6,result_msis[i,3]*1E6)
      nu_ei_para=iug_collision_freq2_ei_para(result_iri[i,1]*1E6,result_iri[i,5])
      nu_e_para=nu_en_para+nu_ei_para
      nu_e=nu_e_para
 
      r_i=(result_iri[i,3]+result_iri[i,4])/1000.
-     nu_i=iug_collision_freq2_in(r_i,result_msis[4,i]*1.E6,result_msis[5,i]*1E6,result_msis[3,i]*1.E6,result_iri[i,11]*1.E6,result_iri[i,10]*1.E6,result_iri[i,6]*1.E6)
+     nu_i=iug_collision_freq2_in(r_i,result_msis[i,4]*1.E6,result_msis[i,5]*1E6,result_msis[i,3]*1.E6,result_iri[i,11]*1.E6,result_iri[i,10]*1.E6,result_iri[i,6]*1.E6)
      
 ; "O+=",result_iri[i,6]                                                        
 ; "N+=",result_iri[i,7]                                                        

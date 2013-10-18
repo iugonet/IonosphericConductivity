@@ -71,36 +71,36 @@ pro iug_load_ionospheric_cond_diagnostics_1_09
   for i=0L,num_height-1 do begin
      if algorithm eq 1 then begin
 ; t_e,n2,o2,o,h,he                                                              
-        nu_en=iug_collision_freq1_en(result_iri[i,5],result_msis[4,i],$
-                                     result_msis[5,i],result_msis[3,i],$
-                                     result_msis[7,i],result_msis[2,i])
+        nu_en=iug_collision_freq1_en(result_iri[i,5],result_msis[i,4],$
+                                     result_msis[i,5],result_msis[i,3],$
+                                     result_msis[i,7],result_msis[i,2])
         nu_ei=iug_collision_freq1_ei(result_iri[i,1],result_iri[i,5])
         nu_e=nu_en+nu_ei
-        nu_i=iug_collision_freq1_in(result_msis[2,i],result_msis[3,i],$
-                                   result_msis[4,i],result_msis[5,i],$
-                                   result_msis[6,i],result_msis[7,i],$
-                                   result_msis[8,i],result_msis[9,i],$
+        nu_i=iug_collision_freq1_in(result_msis[i,2],result_msis[i,3],$
+                                   result_msis[i,4],result_msis[i,5],$
+                                   result_msis[i,6],result_msis[i,7],$
+                                   result_msis[i,8],result_msis[i,9],$
                                    result_iri[i,6],result_iri[i,7],$
                                    result_iri[i,8],result_iri[i,9],$
                                    result_iri[i,10],result_iri[i,11])
         iug_collision_freq1_in_reso,tn=result_iri[i,3],ti=result_iri[i,4],$
-                                    nh1=result_msis[7,i],$
-                                    no1=result_msis[3,i],$
-                                    nn1=result_msis[8,i],$
-                                    nhe=result_msis[2,i],$
-                                    no2=result_msis[5,i],$
-                                    nn2=result_msis[4,i],$
+                                    nh1=result_msis[i,7],$
+                                    no1=result_msis[i,3],$
+                                    nn1=result_msis[i,8],$
+                                    nhe=result_msis[i,2],$
+                                    no2=result_msis[i,5],$
+                                    nn2=result_msis[i,4],$
                                     fh1_reso=fh1_reso,fo1_reso=fo1_reso,$
                                     fn1_reso=fn1_reso,fhe_reso=fhe_reso,$
                                     fo2_reso=fo2_reso,fn2_reso=fn2_reso
         nu_in_reso[i] = fh1_reso+fo1_reso+fn1_reso+fhe_reso+fo2_reso+fn2_reso
         iug_collision_freq1_in_exchange,tn=result_iri[i,3],ti=result_iri[i,4],$
-                                        nh1=result_msis[7,i],$
-                                        no1=result_msis[3,i],$
+                                        nh1=result_msis[i,7],$
+                                        no1=result_msis[i,3],$
                                         nn1=result_msis[8,8],$
-                                        nhe=result_msis[2,i],$
-                                        no2=result_msis[5,i],$
-                                        nn2=result_msis[4,8],$
+                                        nhe=result_msis[i,2],$
+                                        no2=result_msis[i,5],$
+                                        nn2=result_msis[8,4],$
                                         fh1_exchange=fh1_exchange,$
                                         fo1_exchange=fo1_exchange,$
                                         fn1_exchange=fn1_exchange,$
@@ -112,14 +112,14 @@ pro iug_load_ionospheric_cond_diagnostics_1_09
      endif
      if algorithm eq 2 then begin
         r_e=result_iri[i,5]/300.
-        nu_en_para=iug_collision_freq2_en_para(r_e,result_msis[4,i]*1E6,result_msis[5,i]*1E6,result_msis[3,i]*1E6)
+        nu_en_para=iug_collision_freq2_en_para(r_e,result_msis[i,4]*1E6,result_msis[i,5]*1E6,result_msis[i,3]*1E6)
         nu_ei_para=iug_collision_freq2_ei_para(result_iri[i,1]*1E6,result_iri[i,5])
         nu_e_para=nu_en_para+nu_ei_para
         nu_e=nu_e_para
-        nu_en_perp=iug_collision_freq2_en_perp(r_e,result_msis[4,i]*1E6,result_msis[5,i]*1E6,result_msis[3,i]*1E6)
+        nu_en_perp=iug_collision_freq2_en_perp(r_e,result_msis[i,4]*1E6,result_msis[i,5]*1E6,result_msis[i,3]*1E6)
 
         r_i=(result_iri[i,3]+result_iri[i,4])/1000.
-        nu_i=iug_collision_freq2_in(r_i,result_msis[4,i]*1E6,result_msis[5,i]*1E6,result_msis[3,i]*1E6,result_iri[i,11]*1E6,result_iri[i,10]*1E6,result_iri[i,6]*1E6)
+        nu_i=iug_collision_freq2_in(r_i,result_msis[i,4]*1E6,result_msis[i,5]*1E6,result_msis[i,3]*1E6,result_iri[i,11]*1E6,result_iri[i,10]*1E6,result_iri[i,6]*1E6)
      endif
 
 ;     m_i= ( (16*m_p*result_iri[i,6]/100-m_e)*result_iri[i,2] $

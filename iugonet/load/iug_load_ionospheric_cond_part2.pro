@@ -186,17 +186,17 @@ pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=hei
                       * ( (omega_e^2.)/(nu_en_perp^2. +omega_e^2. ) $
                           + (omega_i^2.)/(nu_in^2. + omega_i^2. ) )
 ; 2 dimensional conductivity
-        result[i,3] = ( result[0,i]*result[1,i] ) $
-                      / ( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
-                          + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
-        result[i,4]=( result[0,i]*result[1,i]*sin(!dpi/180.*r_i[i])^2. $
-                      + ( result[1,i]^2. + result[2,i]^2.) $
+        result[i,3] = ( result[i,0]*result[i,1] ) $
+                      / ( result[i,1]*cos(!dpi/180.*r_i[i])^2. $
+                          + result[i,0]*sin(!dpi/180.*r_i[i])^2. )
+        result[i,4]=( result[0,i]*result[i,1]*sin(!dpi/180.*r_i[i])^2. $
+                      + ( result[i,1]^2. + result[i,2]^2.) $
                       *cos(!dpi/180.*r_i[i])^2. ) $
-                    /( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
-                       + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
-        result[i,5]=( result[0,i]*result[2,i]*sin(!dpi/180.*r_i[i])) $
-                    /( result[1,i]*cos(!dpi/180.*r_i[i])^2. $
-                       + result[0,i]*sin(!dpi/180.*r_i[i])^2. )
+                    /( result[i,1]*cos(!dpi/180.*r_i[i])^2. $
+                       + result[i,0]*sin(!dpi/180.*r_i[i])^2. )
+        result[i,5]=( result[i,0]*result[2,i]*sin(!dpi/180.*r_i[i])) $
+                    /( result[i,1]*cos(!dpi/180.*r_i[i])^2. $
+                       + result[i,0]*sin(!dpi/180.*r_i[i])^2. )
         result[i,6] = height_array[i]
 
        iug_insert_ionospheric_cond,sigma_0=result[i,0],sigma_1=result[i,1],sigma_2=result[i,2],sigma_xx=result[i,3],sigma_yy=result[i,4],sigma_xy=result[i,5],height=result[i,6],glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=time,algorithm=algorithm

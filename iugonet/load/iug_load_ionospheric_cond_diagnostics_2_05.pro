@@ -49,7 +49,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_05, yyyy=yyyy
 ;
 ; Calculation based on Kenichi Maeda's equation
 ;
-  result = fltarr(6,num_height)
+  result = fltarr(num_height,6)
 
   glat=44.6
   glon=2.2
@@ -57,17 +57,17 @@ pro iug_load_ionospheric_cond_diagnostics_2_05, yyyy=yyyy
   time=12
 
   for i=0L,num_height-1 do begin
-     iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, result=result,algorithm=0
+     iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, result=result,algorithm=1
   endfor
 
   set_plot,'ps'
   device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_2_05.ps',/color
 
-  plot,result[0,*],result[6,*],xtitle="Conductivities (S/m)", $
+  plot,result[*,0],result[*,6],xtitle="Conductivities (S/m)", $
        ytitle="Altitude (km)",yrange=[0,400],xrange=[1E-8,1E2],/xlog, $
        linestyle=0,color=0, title="GLAT=44.6, GLON=2.2, Solar Minimum conditions on March 21"
-  oplot, result[1,*],result[6,*],linestyle=0,color=6
-  oplot, result[2,*],result[6,*],linestyle=0,color=2
+  oplot, result[*,1],result[*,6],linestyle=0,color=6
+  oplot, result[*,2],result[*,6],linestyle=0,color=2
   xyouts,1E-3,height_bottom+(height_top-height_bottom)/20*18,"  solid line - by Koyama",color=0
   xyouts,1E-3,height_bottom+(height_top-height_bottom)/20*17,"dotted line - by Richmond",color=0
 
