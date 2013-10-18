@@ -29,7 +29,7 @@ pro iug_load_iri2012_diagnostics_0
 
   set_plot,'ps'
   device,filename='iug_load_iri2012_diagnostics_0_result1.ps',/color
-  plot,result_iri[1,*]*1.e6,a[*],xtitle="Electron Density [m-3]",ytitle="Height [km]",/xlog,linestyle=0,color=0,title="GLAT=0, GLON=0, 2000/01/01, LT0",xrange=[1E8,1E13],yrange=[100,400]
+  plot,result_iri[*,1]*1.e6,a[*],xtitle="Electron Density [m-3]",ytitle="Height [km]",/xlog,linestyle=0,color=0,title="GLAT=0, GLON=0, 2000/01/01, LT0",xrange=[1E8,1E13],yrange=[100,400]
   oplot,b[*],a[*],linestyle=1,color=0
 
   xyouts,2e8,360,"  solid line - Actual  by Koyama (by using IRI2012)"
@@ -39,7 +39,7 @@ pro iug_load_iri2012_diagnostics_0
 
   openw,unit,'/tmp/iug_load_iri2012_diagnostics_0_result1.txt',/get_lun
   for i=0L,n_elements(a)-1 do begin
-     printf,unit,a[i],result_iri[1,i]*1.e6,b[i],(result_iri[1,i]*1.e6-b[i])/b[i]*100.,format='(i4,e10.2,e10.2,f8.4)'
+     printf,unit,a[i],result_iri[i,1]*1.e6,b[i],(result_iri[i,1]*1.e6-b[i])/b[i]*100.,format='(i4,e10.2,e10.2,f8.4)'
   endfor
   free_lun,unit
 ;
@@ -63,7 +63,7 @@ pro iug_load_iri2012_diagnostics_0
 
   set_plot,'ps'
   device,filename='iug_load_iri2012_diagnostics_0_result2.ps',/color
-  plot,result_iri[1,*]*1.e6,a[*],xtitle="Electron Density [m-3]",ytitle="Height [km]",/xlog,linestyle=0,color=0,title="GLAT=0, GLON=0, 2000/01/01, LT12",xrange=[1E8,1E13],yrange=[100,400]
+  plot,result_iri[*,1]*1.e6,a[*],xtitle="Electron Density [m-3]",ytitle="Height [km]",/xlog,linestyle=0,color=0,title="GLAT=0, GLON=0, 2000/01/01, LT12",xrange=[1E8,1E13],yrange=[100,400]
   oplot,b[*],a[*],linestyle=1,color=0
 
   xyouts,2e8,360,"  solid line - Actual  by Koyama (by using IRI2012)"
@@ -73,7 +73,7 @@ pro iug_load_iri2012_diagnostics_0
 
   openw,unit,'/tmp/iug_load_iri2012_diagnostics_0_result2.txt',/get_lun
   for i=0L,n_elements(a)-1 do begin
-     printf,unit,a[i],result_iri[1,i]*1.e6,b[i],(result_iri[1,i]*1.e6-b[i])/b[i]*100.,format='(i4,e10.2,e10.2,f8.4)'
+     printf,unit,a[i],result_iri[i,1]*1.e6,b[i],(result_iri[i,1]*1.e6-b[i])/b[i]*100.,format='(i4,e10.2,e10.2,f8.4)'
   endfor
   free_lun,unit
 ;
@@ -97,7 +97,7 @@ pro iug_load_iri2012_diagnostics_0
 
   set_plot,'ps'
   device,filename='iug_load_iri2012_diagnostics_0_result3.ps',/color
-  plot,result_iri[1,*]*1.e6,a[*],xtitle="Electron Density [m-3]",ytitle="Height [km]",/xlog,linestyle=0,color=0,title="GLAT=0, GLON=0, 1992/01/01, LT0",xrange=[1E8,1E13],yrange=[100,400]
+  plot,result_iri[*,1]*1.e6,a[*],xtitle="Electron Density [m-3]",ytitle="Height [km]",/xlog,linestyle=0,color=0,title="GLAT=0, GLON=0, 1992/01/01, LT0",xrange=[1E8,1E13],yrange=[100,400]
   oplot,b[*],a[*],linestyle=1,color=0
 
   xyouts,2e8,360,"  solid line - Actual  by Koyama (by using IRI2012)"
@@ -107,7 +107,7 @@ pro iug_load_iri2012_diagnostics_0
 
   openw,unit,'/tmp/iug_load_iri2012_diagnostics_0_result3.txt',/get_lun
   for i=0L,n_elements(a)-1 do begin
-     printf,unit,a[i],result_iri[1,i]*1.e6,b[i],(result_iri[1,i]*1.e6-b[i])/b[i]*100.,format='(i4,e10.2,e10.2,f8.4)'
+     printf,unit,a[i],result_iri[i,1]*1.e6,b[i],(result_iri[i,1]*1.e6-b[i])/b[i]*100.,format='(i4,e10.2,e10.2,f8.4)'
   endfor
   free_lun,unit
 ;
@@ -131,7 +131,7 @@ pro iug_load_iri2012_diagnostics_0
 
   set_plot,'ps'
   device,filename='iug_load_iri2012_diagnostics_0_result4.ps',/color
-  plot,result_iri[1,*]*1.e6,a[*],xtitle="Electron Density [m-3]",ytitle="Height [km]",/xlog,linestyle=0,color=0,title="GLAT=0, GLON=0, 1992/01/01, LT12",xrange=[1E8,1E13],yrange=[100,400]
+  plot,result_iri[*,1]*1.e6,a[*],xtitle="Electron Density [m-3]",ytitle="Height [km]",/xlog,linestyle=0,color=0,title="GLAT=0, GLON=0, 1992/01/01, LT12",xrange=[1E8,1E13],yrange=[100,400]
   oplot,b[*],a[*],linestyle=1,color=0
 
   xyouts,2e8,360,"  solid line - Actual  by Koyama (by using IRI2012)"
@@ -141,7 +141,7 @@ pro iug_load_iri2012_diagnostics_0
 
   openw,unit,'/tmp/iug_load_iri2012_diagnostics_0_result4.txt',/get_lun
   for i=0L,n_elements(a)-1 do begin
-     printf,unit,a[i],result_iri[1,i]*1.e6,b[i],(result_iri[1,i]*1.e6-b[i])/b[i]*100.,format='(i4,e10.2,e10.2,f8.4)'
+     printf,unit,a[i],result_iri[i,1]*1.e6,b[i],(result_iri[i,1]*1.e6-b[i])/b[i]*100.,format='(i4,e10.2,e10.2,f8.4)'
   endfor
   free_lun,unit
 end

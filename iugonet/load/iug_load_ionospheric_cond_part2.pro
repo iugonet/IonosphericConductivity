@@ -142,12 +142,12 @@ pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=hei
 
      if query_result.size eq 0 then begin ; calculate by using model    
 ;;;
-        r_e=result_iri[5,i]/300.
-        nu_en_perp=iug_collision_freq2_en_perp(r_e,result_msis[4,i]*1.E6,result_msis[5,i]*1.E6,result_msis[3,i]*1.E6)
-        nu_en_para=iug_collision_freq2_en_para(r_e,result_msis[4,i]*1.E6,result_msis[5,i]*1.E6,result_msis[3,i]*1.E6)
-        nu_ei_para=iug_collision_freq2_ei_para(result_iri[1,i]*1.E6,result_iri[5,i])
-        r_i=(result_iri[3,i]+result_iri[4,i])/1000.
-        nu_in=iug_collision_freq2_in(r_i,result_msis[4,i]*1.E6,result_msis[5,i]*1.E6, result_msis[3,i]*1.E6, result_iri[11,i]*1.E6, result_iri[10,i]*1.E6, result_iri[6,i]*1.E6)
+        r_e=result_iri[i,5]/300.
+        nu_en_perp=iug_collision_freq2_en_perp(r_e,result_msis[i,4]*1.E6,result_msis[i,5]*1.E6,result_msis[i,3]*1.E6)
+        nu_en_para=iug_collision_freq2_en_para(r_e,result_msis[i,4]*1.E6,result_msis[i,5]*1.E6,result_msis[i,3]*1.E6)
+        nu_ei_para=iug_collision_freq2_ei_para(result_iri[i,1]*1.E6,result_iri[i,5])
+        r_i=(result_iri[i,3]+result_iri[i,4])/1000.
+        nu_in=iug_collision_freq2_in(r_i,result_msis[i,4]*1.E6,result_msis[i,5]*1.E6, result_msis[i,3]*1.E6, result_iri[i,11]*1.E6, result_iri[i,10]*1.E6, result_iri[i,6]*1.E6)
 
 ; result[0,*]: simga_0, parallel conductivity
 ; result[1,*]: sigma_1, pedarsen conductivity
@@ -157,14 +157,14 @@ pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=hei
 ; result[5,*]: sigma_xy, hole conductivity
 ; result[6,*]: height
         
-        num_o_p = result_iri[1,i]*1.E6*result_iri[6,i] /100.    ; O+
-        num_n_p = result_iri[1,i]*1.E6*result_iri[7,i] /100.    ; N+
-        num_h_p = result_iri[1,i]*1.E6*result_iri[8,i] /100.    ; H+
-        num_he_p= result_iri[1,i]*1.E6*result_iri[9,i] /100.    ; He+
-        num_o2_p= result_iri[1,i]*1.E6*result_iri[10,i]/100.    ; O2+
-        num_no_p= result_iri[1,i]*1.E6*result_iri[11,i]/100.    ; NO+
-        num_cluster_p = result_iri[1,i]*1.E6*result_iri[12,i]/100. ; Cluster+
-        num_ions= result_iri[1,i]*1.E6                             ; Ne/m-3
+        num_o_p = result_iri[i,1]*1.E6*result_iri[i,6] /100.    ; O+
+        num_n_p = result_iri[i,1]*1.E6*result_iri[i,7] /100.    ; N+
+        num_h_p = result_iri[i,1]*1.E6*result_iri[i,8] /100.    ; H+
+        num_he_p= result_iri[i,1]*1.E6*result_iri[i,9] /100.    ; He+
+        num_o2_p= result_iri[i,1]*1.E6*result_iri[i,10]/100.    ; O2+
+        num_no_p= result_iri[i,1]*1.E6*result_iri[i,11]/100.    ; NO+
+        num_cluster_p = result_iri[i,1]*1.E6*result_iri[i,12]/100. ; Cluster+
+        num_ions= result_iri[i,1]*1.E6                             ; Ne/m-3
 
         m_i = ( 16.* num_o_p $
                 + 14.* num_n_p $
@@ -177,12 +177,12 @@ pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=hei
         omega_e = (e_charge*r_f[i]*1.E-9)/(m_e)
         omega_i = (e_charge*r_f[i]*1.E-9)/(m_i)
 
-        result[i,0] = e_charge^2. * ( result_iri(1,i) * 1.E6 ) $
+        result[i,0] = e_charge^2. * ( result_iri(i,1) * 1.E6 ) $
                       /( m_e * (nu_en_para+nu_ei_para) )
-        result[i,1] = ( result_iri(1,i)*1.E6*e_charge/(r_f[i]*1.E-9) ) $
+        result[i,1] = ( result_iri(i,1)*1.E6*e_charge/(r_f[i]*1.E-9) ) $
                       * ( (nu_in*omega_i)/(nu_in^2. +omega_i^2.)  $
                           + (nu_en_perp*omega_e)/(nu_en_perp^2. + omega_e^2.) )
-        result[i,2] = ( result_iri(1,i)*1.E6*e_charge/(r_f[i]*1.E-9) ) $
+        result[i,2] = ( result_iri(i,1)*1.E6*e_charge/(r_f[i]*1.E-9) ) $
                       * ( (omega_e^2.)/(nu_en_perp^2. +omega_e^2. ) $
                           + (omega_i^2.)/(nu_in^2. + omega_i^2. ) )
 ; 2 dimensional conductivity

@@ -23,9 +23,9 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_1_00_result1.ps',/color
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy,mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
-  plot, result[0,*], result[6,*], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 2000/01/01, LT0"
-  oplot, result[1,*], result[6,*], linestyle=0, color=6
-  oplot, result[2,*], result[6,*], linestyle=0, color=2
+  plot, result[*,0], result[*,6], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 2000/01/01, LT0"
+  oplot, result[*,1], result[*,6], linestyle=0, color=6
+  oplot, result[*,2], result[*,6], linestyle=0, color=2
 
   height=[100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300,310,320,330,340,350,360,370,380,390,400]
   takeda0=[1.31E-03,6.64E-03,1.19E-02,1.08E-02,1.49E-02,3.97E-02,1.41E-01,3.23E-01,6.61E-01,1.31E+00,2.47E+00,4.39E+00,7.14E+00,1.02E+01,1.27E+01,1.45E+01,1.58E+01,1.66E+01,1.72E+01,1.76E+01,1.79E+01,1.81E+01,1.83E+01,1.84E+01,1.84E+01,1.85E+01,1.87E+01,1.89E+01,1.90E+01,1.91E+01,1.92E+01]
@@ -54,9 +54,9 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   print,"num_height=",num_height
   for i=0L,num_height-1 do begin
      printf,unit,height[i], $
-            takeda0[i],result[0,i],(result[0,i]-takeda0[i])/takeda0[i]*1.E2, $
-            takeda1[i],result[1,i],(result[1,i]-takeda1[i])/takeda1[i]*1.E2, $
-            takeda2[i],result[2,i],(result[2,i]-takeda2[i])/takeda2[i]*1.E2, $
+            takeda0[i],result[i,0],(result[i,0]-takeda0[i])/takeda0[i]*1.E2, $
+            takeda1[i],result[i,1],(result[i,1]-takeda1[i])/takeda1[i]*1.E2, $
+            takeda2[i],result[i,2],(result[i,2]-takeda2[i])/takeda2[i]*1.E2, $
             format='(i4,e10.2,e10.2,i5,e10.2,e10.2,i5,e10.2,e10.2,i5)'
   endfor
   free_lun,unit
@@ -100,9 +100,9 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_1_00_result2.ps',/color
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
-  plot, result[0,*], result[6,*], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 2000/01/01, LT12"
-  oplot, result[1,*], result[6,*], linestyle=0, color=6
-  oplot, result[2,*], result[6,*], linestyle=0, color=2
+  plot, result[*,0], result[*,6], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 2000/01/01, LT12"
+  oplot, result[*,1], result[*,6], linestyle=0, color=6
+  oplot, result[*,2], result[*,6], linestyle=0, color=2
 
   height=[100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300,310,320,330,340,350,360,370,380,390,400]
   takeda0=[7.12E-02,3.43E-01,9.69E-01,1.87E+00,2.98E+00,4.30E+00,5.84E+00,7.61E+00,9.65E+00,1.20E+01,1.46E+01,1.75E+01,2.08E+01,2.45E+01,2.86E+01,3.34E+01,3.87E+01,4.29E+01,4.44E+01,4.49E+01,4.39E+01,4.19E+01,3.92E+01,3.63E+01,3.33E+01,3.10E+01,3.04E+01,3.07E+01,3.11E+01,3.15E+01,3.19E+01]
@@ -124,9 +124,9 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   num_height = (height_top-height_bottom)/height_step+1
   for i=0L,num_height-1 do begin
      printf,unit,height[i], $
-            takeda0[i],result[0,i],(result[0,i]-takeda0[i])/takeda0[i]*1.E2, $
-            takeda1[i],result[1,i],(result[1,i]-takeda1[i])/takeda1[i]*1.E2, $
-            takeda2[i],result[2,i],(result[2,i]-takeda2[i])/takeda2[i]*1.E2, $
+            takeda0[i],result[i,0],(result[i,0]-takeda0[i])/takeda0[i]*1.E2, $
+            takeda1[i],result[i,1],(result[i,1]-takeda1[i])/takeda1[i]*1.E2, $
+            takeda2[i],result[i,2],(result[i,2]-takeda2[i])/takeda2[i]*1.E2, $
             format='(i4,e10.2,e10.2,i5,e10.2,e10.2,i5,e10.2,e10.2,i5)'
   endfor
   free_lun,unit
@@ -170,9 +170,9 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_1_00_result3.ps',/color
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
-  plot, result[0,*], result[6,*], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 1992/01/01, LT0"
-  oplot, result[1,*], result[6,*], linestyle=0, color=6
-  oplot, result[2,*], result[6,*], linestyle=0, color=2
+  plot, result[*,0], result[*,6], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 1992/01/01, LT0"
+  oplot, result[*,1], result[*,6], linestyle=0, color=6
+  oplot, result[*,2], result[*,6], linestyle=0, color=2
 
   height=[100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300,310,320,330,340,350,360,370,380,390,400]
   takeda0=[1.65E-03,6.94E-03,1.16E-02,1.02E-02,1.31E-02,3.32E-02,1.13E-01,2.40E-01,4.65E-01,8.82E-01,1.64E+00,2.96E+00,5.13E+00,8.22E+00,1.16E+01,1.48E+01,1.77E+01,2.01E+01,2.21E+01,2.39E+01,2.55E+01,2.70E+01,2.83E+01,2.96E+01,3.07E+01,3.16E+01,3.21E+01,3.23E+01,3.25E+01,3.26E+01,3.27E+01]
@@ -194,9 +194,9 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   num_height = (height_top-height_bottom)/height_step+1
   for i=0L,num_height-1 do begin
      printf,unit,height[i], $
-            takeda0[i],result[0,i],(result[0,i]-takeda0[i])/takeda0[i]*1.E2, $
-            takeda1[i],result[1,i],(result[1,i]-takeda1[i])/takeda1[i]*1.E2, $
-            takeda2[i],result[2,i],(result[2,i]-takeda2[i])/takeda2[i]*1.E2, $
+            takeda0[i],result[i,0],(result[i,0]-takeda0[i])/takeda0[i]*1.E2, $
+            takeda1[i],result[i,1],(result[i,1]-takeda1[i])/takeda1[i]*1.E2, $
+            takeda2[i],result[i,2],(result[i,2]-takeda2[i])/takeda2[i]*1.E2, $
             format='(i4,e10.2,e10.2,i5,e10.2,e10.2,i5,e10.2,e10.2,i5)'
   endfor
   free_lun,unit
@@ -240,9 +240,9 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_1_00_result4.ps',/color
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
-  plot, result[0,*], result[6,*], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 1992/01/01, LT12"
-  oplot, result[1,*], result[6,*], linestyle=0, color=6
-  oplot, result[2,*], result[6,*], linestyle=0, color=2
+  plot, result[*,0], result[*,6], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 1992/01/01, LT12"
+  oplot, result[*,1], result[*,6], linestyle=0, color=6
+  oplot, result[*,2], result[*,6], linestyle=0, color=2
 
   height=[100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300,310,320,330,340,350,360,370,380,390,400]
   takeda0=[8.50E-02,3.45E-01,9.20E-01,1.75E+00,2.72E+00,3.84E+00,5.08E+00,6.46E+00,8.01E+00,9.74E+00,1.17E+01,1.38E+01,1.62E+01,1.89E+01,2.20E+01,2.55E+01,2.98E+01,3.40E+01,3.70E+01,3.90E+01,4.09E+01,4.17E+01,4.15E+01,4.07E+01,3.96E+01,3.86E+01,3.86E+01,3.91E+01,3.97E+01,4.02E+01,4.07E+01]
@@ -264,9 +264,9 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   num_height = (height_top-height_bottom)/height_step+1
   for i=0L,num_height-1 do begin
      printf,unit,height[i], $
-            takeda0[i],result[0,i],(result[0,i]-takeda0[i])/takeda0[i]*1.E2, $
-            takeda1[i],result[1,i],(result[1,i]-takeda1[i])/takeda1[i]*1.E2, $
-            takeda2[i],result[2,i],(result[2,i]-takeda2[i])/takeda2[i]*1.E2, $
+            takeda0[i],result[i,0],(result[i,0]-takeda0[i])/takeda0[i]*1.E2, $
+            takeda1[i],result[i,1],(result[i,1]-takeda1[i])/takeda1[i]*1.E2, $
+            takeda2[i],result[i,2],(result[i,2]-takeda2[i])/takeda2[i]*1.E2, $
             format='(i4,e10.2,e10.2,i5,e10.2,e10.2,i5,e10.2,e10.2,i5)'
   endfor
   free_lun,unit

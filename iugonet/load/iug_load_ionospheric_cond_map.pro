@@ -108,7 +108,7 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
   spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db < /tmp/ionospheric_cond_map_query.sql > /tmp/ionospheric_cond_map.result'
   query_result=file_info('/tmp/ionospheric_cond_map.result')
 
-  exit
+;  exit
 ;
 ;
 ;

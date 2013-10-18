@@ -49,7 +49,7 @@ pro iug_load_iri2012,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon
   spawn,'cd ${HOME}/models/ionospheric/iri/iri2012;./iritest < /tmp/iri2012.input'
   spawn,"cat ${HOME}/models/ionospheric/iri/iri2012/fort.7 | awk '{if( NR>27 ) print $0}' > /tmp/iri2012.result"
 
-  result = fltarr(15,num_height)
+  result = fltarr(num_height,15)
 
   openr, unit, '/tmp/iri2012.result', /get_lun
   temp0='' & temp1='' & temp2='' & temp3='' & temp4='' 
@@ -59,21 +59,21 @@ pro iug_load_iri2012,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon
   for i=0L,num_height-1 do begin
      readf,unit,format='(a6,a8,a7,a6,a6,a6,a4,a4,a4,a4,a4,a4,a4,a6,a4)',temp0,temp1,temp2,temp3,temp4,temp5,temp6,temp7,temp8,temp9,temp10,temp11,temp12,temp13,temp14
 
-     result[0,i]=temp0 ; alt
-     result[1,i]=temp1 ; Ne/cm-3
-     result[2,i]=temp2 ; Ne/NmF2
-     result[3,i]=temp3 ; Tn/K
-     result[4,i]=temp4 ; Ti/K
-     result[5,i]=temp5 ; Te/K
-     result[6,i]=temp6 ; O+
-     result[7,i]=temp7 ; N+
-     result[8,i]=temp8 ; H+
-     result[9,i]=temp9 ; He+
-     result[10,i]=temp10 ; O2+
-     result[11,i]=temp11 ; NO+
-     result[12,i]=temp12 ; Clust
-     result[13,i]=temp13 ; TEC
-     result[14,i]=temp14 ; t/%
+     result[i,0]=temp0 ; alt
+     result[i,1]=temp1 ; Ne/cm-3
+     result[i,2]=temp2 ; Ne/NmF2
+     result[i,3]=temp3 ; Tn/K
+     result[i,4]=temp4 ; Ti/K
+     result[i,5]=temp5 ; Te/K
+     result[i,6]=temp6 ; O+
+     result[i,7]=temp7 ; N+
+     result[i,8]=temp8 ; H+
+     result[i,9]=temp9 ; He+
+     result[i,10]=temp10 ; O2+
+     result[i,11]=temp11 ; NO+
+     result[i,12]=temp12 ; Clust
+     result[i,13]=temp13 ; TEC
+     result[i,14]=temp14 ; t/%
   endfor
 
   free_lun, unit

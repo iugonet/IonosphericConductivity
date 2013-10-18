@@ -56,7 +56,7 @@ pro iug_load_iri90,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon,height_bott
      num_height = 1
   endelse
 
-  result = fltarr(12,num_height)
+  result = fltarr(num_height,12)
 
   openr, unit, '/tmp/tmp.txt', /GET_LUN
   temp0='' & temp1='' & temp2='' & temp3='' & temp4='' 
@@ -66,18 +66,18 @@ pro iug_load_iri90,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon,height_bott
   for i=0L,num_height-1 do begin
      readf,unit,format='(a8,a9,a8,a6,a6,a6,a7,a5,a5,a5,a5,a5)',temp0,temp1,temp2,temp3,temp4,temp5,temp6,temp7,temp8,temp9,temp10,temp11
 
-     result[0,i]=temp0 ; alt
-     result[1,i]=temp1 ; Ne/cm-3
-     result[2,i]=temp2 ; Ne/NmF2
-     result[3,i]=temp3 ; TN/K
-     result[4,i]=temp4 ; TI/K
-     result[5,i]=temp5 ; TE/K
-     result[6,i]=temp6 ; TE/TI
-     result[7,i]=temp7 ; O+
-     result[8,i]=temp8 ; H+
-     result[9,i]=temp9 ; He+
-     result[10,i]=temp10 ; O2+
-     result[11,i]=temp11 ; NO+
+     result[i,0]=temp0 ; alt
+     result[i,1]=temp1 ; Ne/cm-3
+     result[i,2]=temp2 ; Ne/NmF2
+     result[i,3]=temp3 ; TN/K
+     result[i,4]=temp4 ; TI/K
+     result[i,5]=temp5 ; TE/K
+     result[i,6]=temp6 ; TE/TI
+     result[i,7]=temp7 ; O+
+     result[i,8]=temp8 ; H+
+     result[i,9]=temp9 ; He+
+     result[i,10]=temp10 ; O2+
+     result[i,11]=temp11 ; NO+
   endfor
 
   free_lun, unit

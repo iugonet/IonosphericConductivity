@@ -55,7 +55,7 @@ pro iug_load_nrlmsise00, yyyy=yyyy, mmdd=mmdd, height_bottom=height_bottom, heig
      num_height = 1
   endelse
 
-  result = fltarr(11,num_height)
+  result = fltarr(num_height,11)
   
   openr, unit, '${HOME}/models/atmospheric/msis/nrlmsise00/output_nrlmsise00.txt', /GET_LUN
   temp0='' & temp1='' & temp2='' & temp3='' & temp4='' 
@@ -64,17 +64,17 @@ pro iug_load_nrlmsise00, yyyy=yyyy, mmdd=mmdd, height_bottom=height_bottom, heig
 
   for i=0L,num_height-1 do begin
      readf,unit,format='(a12,a12,a12,a12,a12,a12,a12,a12,a12,a12,a12,a12,a12,a12,a12)',temp0,temp1,temp2,temp3,temp4,temp5,temp6,temp7,temp8,temp9,temp10
-     result[0,i]=temp0 ; TINF
-     result[1,i]=temp1 ; TG
-     result[2,i]=temp2 ; HE
-     result[3,i]=temp3 ; O
-     result[4,i]=temp4 ; N2
-     result[5,i]=temp5 ; O2
-     result[6,i]=temp6 ; AR
-     result[7,i]=temp7 ; H
-     result[8,i]=temp8 ; N
-     result[9,i]=temp9 ; ANM O
-     result[10,i]=temp10 ; RHO
+     result[i,0]=temp0 ; TINF
+     result[i,1]=temp1 ; TG
+     result[i,2]=temp2 ; HE
+     result[i,3]=temp3 ; O
+     result[i,4]=temp4 ; N2
+     result[i,5]=temp5 ; O2
+     result[i,6]=temp6 ; AR
+     result[i,7]=temp7 ; H
+     result[i,8]=temp8 ; N
+     result[i,9]=temp9 ; ANM O
+     result[i,10]=temp10 ; RHO
   endfor
 
   free_lun, unit
