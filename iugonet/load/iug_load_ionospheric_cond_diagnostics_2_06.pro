@@ -88,7 +88,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_06
   glat=44.6
   glon=2.2
   ltut=0
-  time=12
+  time=0
   yyyy=1987
 
   for i=0L,num_height-1 do begin
@@ -106,7 +106,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_06
   glon=2.2
   ltut=0
   time=0
-  yyyy=1987
+  yyyy=1991
 
   for i=0L,num_height-1 do begin
      iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, result=result, algorithm=1
