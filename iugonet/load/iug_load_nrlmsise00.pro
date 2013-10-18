@@ -45,7 +45,6 @@ pro iug_load_nrlmsise00, yyyy=yyyy, mmdd=mmdd, height_bottom=height_bottom, heig
   printf,unit,iug_f107a(yy,mm,dd)   ; F107A
   printf,unit,iug_f107(yy,mm,dd)    ; F107
   printf,unit,iug_apindex(yy,mm,dd,time) ; AP
-  print,"UNIT=",unit
   free_lun, unit
 
   spawn,'cd ${HOME}/models/atmospheric/msis/nrlmsise00;./nrlmsise00_driver_iugonet.out < /tmp/nrlmsise00.input > /tmp/output_nrlmsise00.txt'

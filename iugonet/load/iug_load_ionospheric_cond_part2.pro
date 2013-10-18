@@ -142,12 +142,12 @@ pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=hei
 
      if query_result.size eq 0 then begin ; calculate by using model    
 ;;;
-        r_e=result_iri[i,5]/300.
-        nu_en_perp=iug_collision_freq2_en_perp(r_e,result_msis[i,4]*1.E6,result_msis[i,5]*1.E6,result_msis[i,3]*1.E6)
-        nu_en_para=iug_collision_freq2_en_para(r_e,result_msis[i,4]*1.E6,result_msis[i,5]*1.E6,result_msis[i,3]*1.E6)
+        re=result_iri[i,5]/300.
+        nu_en_perp=iug_collision_freq2_en_perp(re,result_msis[i,4]*1.E6,result_msis[i,5]*1.E6,result_msis[i,3]*1.E6)
+        nu_en_para=iug_collision_freq2_en_para(re,result_msis[i,4]*1.E6,result_msis[i,5]*1.E6,result_msis[i,3]*1.E6)
         nu_ei_para=iug_collision_freq2_ei_para(result_iri[i,1]*1.E6,result_iri[i,5])
-        r_i=(result_iri[i,3]+result_iri[i,4])/1000.
-        nu_in=iug_collision_freq2_in(r_i,result_msis[i,4]*1.E6,result_msis[i,5]*1.E6, result_msis[i,3]*1.E6, result_iri[i,11]*1.E6, result_iri[i,10]*1.E6, result_iri[i,6]*1.E6)
+        ri=(result_iri[i,3]+result_iri[i,4])/1000.
+        nu_in=iug_collision_freq2_in(ri,result_msis[i,4]*1.E6,result_msis[i,5]*1.E6, result_msis[i,3]*1.E6, result_iri[i,11]*1.E6, result_iri[i,10]*1.E6, result_iri[i,6]*1.E6)
 
 ; result[0,*]: simga_0, parallel conductivity
 ; result[1,*]: sigma_1, pedarsen conductivity
@@ -189,12 +189,12 @@ pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=hei
         result[i,3] = ( result[i,0]*result[i,1] ) $
                       / ( result[i,1]*cos(!dpi/180.*r_i[i])^2. $
                           + result[i,0]*sin(!dpi/180.*r_i[i])^2. )
-        result[i,4]=( result[0,i]*result[i,1]*sin(!dpi/180.*r_i[i])^2. $
+        result[i,4]=( result[i,0]*result[i,1]*sin(!dpi/180.*r_i[i])^2. $
                       + ( result[i,1]^2. + result[i,2]^2.) $
                       *cos(!dpi/180.*r_i[i])^2. ) $
                     /( result[i,1]*cos(!dpi/180.*r_i[i])^2. $
                        + result[i,0]*sin(!dpi/180.*r_i[i])^2. )
-        result[i,5]=( result[i,0]*result[2,i]*sin(!dpi/180.*r_i[i])) $
+        result[i,5]=( result[i,0]*result[i,2]*sin(!dpi/180.*r_i[i])) $
                     /( result[i,1]*cos(!dpi/180.*r_i[i])^2. $
                        + result[i,0]*sin(!dpi/180.*r_i[i])^2. )
         result[i,6] = height_array[i]

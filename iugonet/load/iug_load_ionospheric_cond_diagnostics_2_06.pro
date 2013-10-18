@@ -40,7 +40,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_06
 ;
 ; Calculation based on Kenichi Maeda's equation
 ;
-  result = fltarr(6,num_height)
+  result = fltarr(num_height,6)
 
   glat=44.6
   glon=2.2
@@ -55,7 +55,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_06
   set_plot,'ps'
   device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_2_06.ps',/color
 
-  plot,result[1,*],result[6,*],xtitle="Pedersen Conductivities (S/m)", $
+  plot,result[*,1],result[*,6],xtitle="Pedersen Conductivities (S/m)", $
        ytitle="Altitude (km)",yrange=[0,400],xrange=[1E-8,1E-3],/xlog, $
        linestyle=0, color=0, title="GLAT=44.6, GLON=2.2, on March 21"
   xyouts,5E-6,350,"Solar maximum",color=6
@@ -78,7 +78,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_06
      iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, result=result, algorithm=1
   endfor
 
-  oplot,result[1,*],result[6,*],linestyle=0, color=3
+  oplot,result[*,1],result[*,6],linestyle=0, color=3
 
 ;
 ; Calculation3
@@ -95,7 +95,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_06
      iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, result=result, algorithm=1
   endfor
 
-  oplot,result[1,*],result[6,*],linestyle=0, color=4
+  oplot,result[*,1],result[*,6],linestyle=0, color=4
 
 ;
 ; Calculation4
@@ -112,7 +112,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_06
      iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, result=result, algorithm=1
   endfor
 
-  oplot,result[1,*],result[6,*],linestyle=0, color=5
+  oplot,result[*,1],result[*,6],linestyle=0, color=5
 
 ; Solar maximum, noon
   a=[1.03E-08,1.34E-08,2.70E-08,4.53E-08,7.73E-08,1.24E-07,2.66E-07,5.82E-07,1.08E-06,1.47E-06,1.10E-06,9.37E-07,1.36E-06,1.97E-06,2.97E-06,5.51E-06,8.67E-06,1.42E-05,1.94E-05,2.69E-05,3.75E-05,5.54E-05,9.28E-05,0.000137242,0.000172175,0.00025469,0.000313103,0.000313103,0.000276882,0.000225439,0.000183555,0.000146405,0.000119217,9.91E-05,8.59E-05,7.76E-05,7.15E-05,6.46E-05,7.02E-05,7.63E-05,8.46E-05,8.65E-05,9.03E-05,8.67E-05,8.16E-05,7.68E-05,7.08E-05,6.53E-05,5.89E-05,5.21E-05,4.71E-05,4.16E-05,3.68E-05,3.26E-05,2.94E-05,2.60E-05,2.30E-05,1.99E-05,1.76E-05,1.56E-05]
