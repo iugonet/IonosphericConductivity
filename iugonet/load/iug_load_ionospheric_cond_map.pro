@@ -26,6 +26,14 @@
 ;-
 
 pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, height_bottom=height_bottom, height_top=height_top, height_step=height_step, algorithm=algorithm, resolution=resolution, result=result
+
+;
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+;
   
 ; validate height_bottom 
   if height_bottom lt 80 then begin
@@ -105,8 +113,8 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
 ;
 ;
   iug_create_query_ionospheric_cond_map,height_bottom=height_bottom, heigit_top=height_top, height_step=height_step, resolution=resolution, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm
-  spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db < /tmp/ionospheric_cond_map_query.sql > /tmp/ionospheric_cond_map.result'
-  query_result=file_info('/tmp/ionospheric_cond_map.result')
+  spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db < '+tmp_dir+'ionospheric_cond_map_query.sql > '+tmp_dir+'ionospheric_cond_map.result'
+  query_result=file_info(tmp_dir+'ionospheric_cond_map.result')
 
 ;  exit
 ;
@@ -124,8 +132,8 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
      endfor
   endfor
 
-  set_plot,'ps'
-  device,filename='/tmp/iug_load_ionospheric_cond_map.ps',/color,/encapsulated
+  set_plot, 'ps'
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_map.ps', /color, /encapsulated
 
   map_set, /CYLINDRICAL, 0, 0, /GRID, /CONTINENTS, $  
            TITLE = 'Ionospheric Conductivity'
@@ -145,6 +153,8 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
   contour, result3, glon_list, glat_list, /overplot,/fill,nlevels=nlevels,c_colors=IndGen(nlevels)+1
   map_grid, latdel=10, londel=10, color=240
   map_continents
+
+  device, /close
   set_plot,'x'
 
 end

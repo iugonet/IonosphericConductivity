@@ -206,8 +206,12 @@ pro iug_load_ionospheric_cond_part1, height_bottom=height_bottom, height_top=hei
                        + result[i,0]*sin(!dpi/180.*r_i[i])^2. )
         result[i,6] = height_array[i]
 
+        print,"HOGE=",result[i,0],result[i,1],result[i,2],result[i,3],result[i,4],result[i,5],result[i,6],glat,glon,yyyy,mmdd,ltut,time,algorithm
         iug_insert_ionospheric_cond,sigma_0=result[i,0],sigma_1=result[i,1],sigma_2=result[i,2],sigma_xx=result[i,3],sigma_yy=result[i,4],sigma_xy=result[i,5],height=result[i,6],glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=time,algorithm=algorithm
      endif else begin ; retrieve from DB
+
+        print,"HOGE6"
+        
         openr, unit, tmp_dir+'ionospheric_cond.result', /get_lun
         array=fltarr(7)
         readf,unit,array
