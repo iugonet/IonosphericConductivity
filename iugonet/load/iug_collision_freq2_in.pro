@@ -32,11 +32,6 @@ function iug_collision_freq2_in,r_i,num_n2,num_o2,num_o,no_plus,o2_plus,o_plus
   nu_in_o_plus  = ( 5.4*num_n2*r_i^(-0.20) + 7.0*num_o2*r_i^(0.05) $
                     + 8.9*num_o*r_i^0.5 ) * 1.E-16
 
-  print,"nu_in_no_plus=",nu_in_no_plus
-  print,"nu_in_o2_plus=",nu_in_o2_plus
-  print,"nu_in_o_plus=",nu_in_o_plus
-  print
-
   m_i_no_plus = 30. * m_p
   m_i_o2_plus = 32. * m_p
   m_i_o_plus  = 16. * m_p 
