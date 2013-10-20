@@ -120,15 +120,24 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
 
   result_db = fltarr(n_elements(glat_array)*n_elements(glon_array)*num_height,14)
 
+; Create calculated_table in structure
   if query_result.size ne 0 then begin
-     sed_data = read_csv(infile)
-     print,sed_data
+     skip_line=0
+     sed_data = read_csv(infile, n_table_header=skip_line, count=cnt)
   endif
 
-  record = create_struct('height',0,'glat',0,'glon',0,'flag',0)
+  record = create_struct('height',0,'glat',0,'glon',0,'flag',0)  
+  calculated_table = replicate(record,cnt)
+  for i=0L,cnt-1 do begin
+     calculated_table[i].height = sed_data.field07[i]
+     calculated_table[i].glat = sed_data.field08[i]
+     calculated_table[i].glon = sed_data.field09[i]
+     calculated_table[i].flag = 0 ; do not use
+  endfor
+  
+; Create calc_table in structure
   calc_table = replicate(record,n_elements(glat_array)*n_elements(glon_array)*num_height)
 
-; calc_table - calculated_list
   z = 0
   for i=0L,n_elements(glat_array)-1  do begin
      for j=0L,n_elements(glon_array)-1 do begin
@@ -136,29 +145,37 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
            calc_table[z].height = height_array[k]
            calc_table[z].glat = glat_array[i]
            calc_table[z].glon = glon_array[j]
-           calc_table[z].flag = 0
+           calc_table[z].flag = 1 ; 
            z=z+1
         endfor
      endfor
   endfor
 
-  print,calc_table
+; Compare calc_table & calculated_table
+  for i=0L,n_elements(calc_table)-1 do begin
+     for j=0L,n_elements(calculated_table)-1 do begin
+        if calc_table[i].height eq calculated_table[j].height $
+           and calc_table[i].glat eq calculated_table[j].glat $
+           and calc_table[i].glon eq calculated_table[j].glon then begin
+           
+           calc_table[i].flag = 0 ; skip the calculation, use data in DB
 
-  exit
-;
-  for i=0L,n_elements(glat_array)-1  do begin
-     for j=0L,n_elements(glon_array)-1 do begin
-        for k=0L,num_height-1 do begin
-
-           print,i,j,k
-           iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat_array[i], glon=glon_array[j], yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
-           for l=0L,7-1 do begin
-              result2[i,j,k,l]=result[k,l]
-           endfor
-;           exit
-        endfor
+        endif
      endfor
   endfor
+
+;
+  for i=0L,n_elements(calc_table)-1 do begin
+     if calc_table[i].flag eq 1 then begin
+;        iug_load_ionospheric_cond, height_bottom=calc_table[i].height_bottom, height_top=height_top, height_step=height_step, glat=glat_array[i], glon=glon_array[j], yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
+;           for l=0L,7-1 do begin
+;              result2[i,j,k,l]=result[k,l]
+;           endfor
+        print, calc_table[i].height, calc_table[i].glat, calc_table[i].glon, calc_table[i].flag
+     endif
+  endfor
+
+  exit
 
   set_plot, 'ps'
   device, filename=tmp_dir+'iug_load_ionospheric_cond_map.ps', /color, /encapsulated
