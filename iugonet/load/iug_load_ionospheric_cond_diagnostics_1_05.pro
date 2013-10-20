@@ -35,8 +35,8 @@ pro iug_load_ionospheric_cond_diagnostics_1_05
 
   temperature = [100,400,900,1600,2500,3600,4900]
 
-  set_plot,'ps'
-  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_1_05.ps',/color
+  set_plot, 'ps'
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_05.ps',/color
 
   debye_length_ne1e2 = fltarr(n_elements(temperature))
   debye_length_ne1e4 = fltarr(n_elements(temperature))
@@ -82,8 +82,8 @@ pro iug_load_ionospheric_cond_diagnostics_1_05
   book_debye_length_ne1e6 = [0.07,0.1,0.2,0.3,0.35,0.4,0.5]
   oplot,temperature,book_debye_length_ne1e6,linestyle=1,color=0
 
-  device,/close
-  set_plot,'x'
+  device, /close
+  set_plot, 'x'
 
 ; Ne = 1.E2
   openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_05_ne1e2.txt', /get_lun

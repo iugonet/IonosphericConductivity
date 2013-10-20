@@ -25,6 +25,14 @@
 
 pro iug_load_ionospheric_cond_diagnostics_2_07
 
+;
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+;
+
   height_bottom=100
   height_top=400
   height_step=10
@@ -54,8 +62,8 @@ pro iug_load_ionospheric_cond_diagnostics_2_07
      result2d = iug_height_integrated_cond(result)
   endfor
 
-  set_plot,'ps'
-  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_2_07.ps',/color
+  set_plot, 'ps'
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_2_07.ps', /color
 
   plot,result2d[1,*],height_array[*],xtitle="Local Time (hr)", $
        ytitle="Conductance (S)",yrange=[0.1,100],xrange=[0,24], /ylog, $
@@ -136,7 +144,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_07
   oplot,c,d,linestyle=1,color=0
   oplot,e,f,linestyle=1,color=0
   oplot,g,h,linestyle=0,color=0
-  device,/close
-  set_plot,'x'
+  device, /close
+  set_plot, 'x'
 
 end

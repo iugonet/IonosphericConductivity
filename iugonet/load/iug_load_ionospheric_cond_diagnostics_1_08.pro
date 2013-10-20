@@ -23,6 +23,14 @@
 ; THEMIS> iug_load_ionospheric_cond_diagnostics_1_08
 ;-
 pro iug_load_ionospheric_cond_diagnostics_1_08
+  
+;
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+;   
 
   a=[0,5.6E-10,7.5E-10,8.9E-10,1.0E-9,1.1E-9,1.2E-9,1.3E-9,1.4E-9,1.5E-9,1.8E-9,2.0E-9]
   b=[0,0,0,0,4.9E-10,5.4E-10,5.9E-10,6.2E-10,6.6E-10,7.2E-10,8.6E-10,9.7E-10]
@@ -52,8 +60,8 @@ pro iug_load_ionospheric_cond_diagnostics_1_08
      actual_n2[i] = fn2/2.
   endfor
 
-  set_plot,'ps'
-  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_1_08.ps',/color
+  set_plot, 'ps'
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_08.ps', /color
 
   plot,f[1:11],actual_n2[1:11],xtitle="TEMPERATURES (Ti+Tn) K",ytitle="COLLISION FREQUENCY (cm^3 Hz)",xrange=[300,10000],yrange=[1E-10,1E-8],/ylog,linestyle=0,color=0,title="Charge exchange collision frequencies"
   oplot,f[*],actual_o2[*],linestyle=0,color=0
@@ -77,8 +85,8 @@ pro iug_load_ionospheric_cond_diagnostics_1_08
   oplot,f[*],d[*],linestyle=1,color=0
   oplot,f[*],e[*],linestyle=1,color=0
 
-  device,/close
-  set_plot,'x'
+  device, /close
+  set_plot, 'x'
 
   openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_08_n2.txt', /get_lun
   for i=0L,n_elements(a)-1 do begin

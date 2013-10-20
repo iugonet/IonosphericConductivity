@@ -204,7 +204,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_06
 
   free_lun,unit
 ; epsilon=1.E-1
-  openw, unit, tmp\dir+'iug_load_ionospheric_cond_diagnostics_1_06_epsilon1en1.txt', /get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_06_epsilon1en1.txt', /get_lun
   for i=0L,n_elements(debye_length)-1 do begin
      printf,unit,debye_length(i),book_coulomb_logarithm1en1(i),$
             coulomb_logarithm1en1(i),$

@@ -25,6 +25,14 @@
 
 pro iug_load_ionospheric_cond_diagnostics_1_09
 
+;
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+;
+
   height_bottom=100
   height_top=400
   height_step=10
@@ -158,8 +166,8 @@ pro iug_load_ionospheric_cond_diagnostics_1_09
      result[5,i]=nu_en+nu_ei
   endfor
 
-  set_plot,'ps'
-  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_1_09.ps',/color
+  set_plot, 'ps'
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_09.ps', /color
 
   plot,result[1,*],result[0,*],xtitle="Collision Frequencies and Gyrofrequencies (Hz)",ytitle="Altitude (km)",yrange=[0,400],xrange=[1E-2,1E8],/xlog,linestyle=0,color=0, title="GLAT=44.6, GLON=2.2, Solar-minimum conditions (Sa=75) on March 21"
   oplot, result[2,*],result[0,*],linestyle=0,color=6
@@ -176,7 +184,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_09
   xyouts,2.E1,210,"nu_en",color=1
   xyouts,5.E2,220,"nu_en+nu_ei",color=3
 
-  device,/close
-  set_plot,'x'
+  device, /close
+  set_plot, 'x'
 
 end

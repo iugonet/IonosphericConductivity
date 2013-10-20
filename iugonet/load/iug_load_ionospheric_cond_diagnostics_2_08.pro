@@ -25,6 +25,14 @@
 
 pro iug_load_ionospheric_cond_diagnostics_2_08
 
+;
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+;
+
   height_bottom=100
   height_top=400
   height_step=1
@@ -48,8 +56,8 @@ pro iug_load_ionospheric_cond_diagnostics_2_08
 
   iug_load_iri90,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon,height_bottom=height_bottom,height_top=height_top,height_step=height_step,ssn=ssn,result=result_iri
 
-  set_plot,'ps'
-  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_2_08.ps',/color
+  set_plot, 'ps'
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_2_08.ps', /color
 
   plot,result_iri[*,1]*1E6,result_iri[*,0],xtitle="Electron Density (m^-3)", $
        ytitle="Altitude (km)",yrange=[0,400],xrange=[1E8,1E13],/xlog, $
@@ -121,7 +129,7 @@ h=[84.9903,84.9903,84.9903,85.77,85.77,86.5497,87.3294,88.1092,88.1092,89.6686,9
   oplot,e,f,linestyle=1,color=0
   oplot,g,h,linestyle=1,color=0
 
-  device,/close
-  set_plot,'x'
+  device, /close
+  set_plot, 'x'
 
 end
