@@ -80,7 +80,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_08
   device,/close
   set_plot,'x'
 
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_08_n2.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_08_n2.txt', /get_lun
   for i=0L,n_elements(a)-1 do begin
      if i ge 1 then begin
         printf,unit,a[i],actual_n2[i],(actual_n2[i]-a[i])/a[i]   * 100.,$
@@ -89,7 +89,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_08
   endfor
   free_lun,unit
 
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_08_o2.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_08_o2.txt', /get_lun
   for i=0L,n_elements(b)-1 do begin
      if i ge 4 then begin
         printf,unit,b[i],actual_o2[i],(actual_o2[i]-b[i])/b[i]   * 100.,$
@@ -98,7 +98,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_08
   endfor
   free_lun,unit
 
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_08_o.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_08_o.txt', /get_lun
   for i=0L,n_elements(c)-1 do begin
      if i ge 3 then begin
         printf,unit,c[i],actual_o1[i] ,(actual_o1[i]-c[i])/c[i]   * 100.,$
@@ -107,14 +107,14 @@ pro iug_load_ionospheric_cond_diagnostics_1_08
   endfor
   free_lun,unit
 
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_08_he.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_08_he.txt', /get_lun
   for i=0L,n_elements(d)-1 do begin
      printf,unit,d[i],actual_he[i],(actual_he[i]-d[i])/d[i]   * 100.,$
             format='(e10.2,e10.2,i4)'
   endfor
   free_lun,unit
 
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_08_h.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_08_h.txt', /get_lun
   for i=0L,n_elements(e)-1 do begin
      printf,unit,e[i],actual_h1[i],(actual_h1[i]-e[i])/e[i] * 100.,$
             format='(e10.2,e10.2,i4)'

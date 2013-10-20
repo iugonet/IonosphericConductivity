@@ -24,6 +24,14 @@
 ;-
 
 pro iug_load_ionospheric_cond_diagnostics_1_05
+  
+;
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+;
 
   temperature = [100,400,900,1600,2500,3600,4900]
 
@@ -78,7 +86,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_05
   set_plot,'x'
 
 ; Ne = 1.E2
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_05_ne1e2.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_05_ne1e2.txt', /get_lun
   for i=0L,n_elements(temperature)-1 do begin
      printf,unit,temperature(i),book_debye_length_ne1e2(i),$
             debye_length_ne1e2(i),$
@@ -88,7 +96,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_05
 
   free_lun,unit
 ; Ne = 1.E4
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_05_ne1e4.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_05_ne1e4.txt', /get_lun
   for i=0L,n_elements(temperature)-1 do begin
      printf,unit,temperature(i),book_debye_length_ne1e4(i),$
             debye_length_ne1e4(i),$
@@ -98,7 +106,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_05
 
   free_lun,unit
 ; Ne = 1.E6
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_05_ne1e6.txt',/get_lun
+  openw, unit, tmo_dir+'iug_load_ionospheric_cond_diagnostics_1_05_ne1e6.txt', /get_lun
   for i=0L,n_elements(temperature)-1 do begin
      printf,unit,temperature(i),book_debye_length_ne1e6(i),$
             debye_length_ne1e6(i),$

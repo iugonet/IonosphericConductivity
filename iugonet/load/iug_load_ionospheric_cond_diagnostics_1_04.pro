@@ -23,6 +23,15 @@
 ; THEMIS> iug_load_ionospheric_cond_diagnostics_1_04
 ;-
 pro iug_load_ionospheric_cond_diagnostics_1_04
+  
+;
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+;
+
 
   num_e=[1.0E2,2.5E2,5.0E2,7.5E2,1.0E3,2.5E3,5.0E3,7.5E3,1.0E4,2.5E4,5.0E4,$
      7.5E4,1.0E5,2.5E5,5.0E5,7.5E5,1.0E6,2.5E6,5.0E6]
@@ -78,7 +87,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_04
 ;
 ;
 ;
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_04.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_04.txt', /get_lun
   for i=0L,n_elements(num_e)-1 do begin
      for j=0L,n_elements(temperature)-1 do begin
         printf,unit,expected[j,i],result[i,j],(expected[j,i]-result[i,j])/result[i,j]*100.,format='(e10.2,e10.2,i4)'

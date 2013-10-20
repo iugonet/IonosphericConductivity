@@ -24,6 +24,14 @@
 ;-
 
 pro iug_load_ionospheric_cond_diagnostics_1_02
+  
+;
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+;
 
   te_bottom=100
   te_top=3000
@@ -62,7 +70,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_02
 
 ;
   set_plot,'ps'
-  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_1_02.ps',/color
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_02.ps',/color
   
   plot,te_array[*],nu_e_n2[*],xtitle="Electron Temperature (K)",ytitle="Collision Frequency (Hz)", linestyle=0,xrange=[100,3000],yrange=[1E-9,1E-6],/ylog,color=0,title="Electron Temperature - Collision Frequency, n(*)=1"
   oplot,te_array[*],nu_e_o2[*],linestyle=0,color=0
@@ -104,7 +112,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_02
 ;
 ; n2
 ;
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_02_n2.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_02_n2.txt', /get_lun
   for i=0L,n_elements(book_te_array_n2)-1 do begin
      t_e = book_te_array_n2[i]
      nu_e_n2[i] = 2.33E-11*n2*(1-1.2E-4*t_e)*t_e
@@ -115,7 +123,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_02
 ;
 ; O2
 ;
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_02_o2.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_02_o2.txt', /get_lun
   for i=0L,n_elements(book_te_array_o2)-1 do begin
      t_e = book_te_array_o2[i]
      nu_e_o2[i] = 1.8E-10*o2*(1+3.6E-2*t_e^(1./2.))*t_e^(1./2.)
@@ -126,7 +134,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_02
 ;
 ; O
 ;
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_02_o.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_02_o.txt', /get_lun
   for i=0L,n_elements(book_te_array_o)-1 do begin
      t_e = book_te_array_o[i]
      nu_e_o[i]  = 8.2E-10*o*t_e^(1./2.)
@@ -137,7 +145,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_02
 ;
 ; H
 ;
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_02_h.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_02_h.txt', /get_lun
   for i=0L,n_elements(book_te_array_h)-1 do begin
      t_e = book_te_array_h[i]
      nu_e_h[i]  = 4.5E-9*h*(1-1.35E-4*t_e)*t_e^(1./2.)
@@ -148,7 +156,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_02
 ;
 ; He
 ;
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_02_he.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_02_he.txt', /get_lun
   for i=0L,n_elements(book_te_array_he)-1 do begin
      t_e = book_te_array_he[i]
      nu_e_he[i] = 4.6E-10*he*t_e^(1./2.)

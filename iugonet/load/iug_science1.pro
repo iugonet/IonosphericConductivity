@@ -23,7 +23,7 @@ height_top=600
 height_step=1
 ltut=0
 
-openw,unit,'/tmp/result2d.txt',/get_lun
+openw, unit, '/tmp/result2d.txt',/get_lun
 for i=0L, nsites-1 do begin
    site=iug_abb2coordinate(sites[i])
    iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=site.glat, glon=site.glon, yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time, result=result

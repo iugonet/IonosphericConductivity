@@ -19,6 +19,14 @@
 ;  iug_create_query_ionospheric_cond,1,2000,0,0,100
 ;-
 pro iug_create_query_ionospheric_cond_map,height_bottom=height_bottom, heigit_top=height_top, height_step=height_step, resolution=resolution, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm
+
+;
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+
 ;
   if height_top ne height_bottom then begin
      num_height = (height_top-height_bottom)/height_step+1
@@ -43,7 +51,7 @@ pro iug_create_query_ionospheric_cond_map,height_bottom=height_bottom, heigit_to
      glon_list[i]=-180.+i*resolution
   endfor
 ;
-  openw,unit,'/tmp/ionospheric_cond_map_query.sql',/get_lun ; create query file
+  openw, unit, tmp_dir+'ionospheric_cond_map_query.sql', /get_lun ; create query file
 
   for i=0L,n_elements(glat_list)-1  do begin
      for j=0L,n_elements(glon_list)-1 do begin

@@ -26,6 +26,11 @@ pro iug_load_nrlmsise00, yyyy=yyyy, mmdd=mmdd, height_bottom=height_bottom, heig
 
 ;
   tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+;
 
   yyyy=string(yyyy,format='(i4)')
   mmdd=string(mmdd,format='(i4.4)')
@@ -36,7 +41,7 @@ pro iug_load_nrlmsise00, yyyy=yyyy, mmdd=mmdd, height_bottom=height_bottom, heig
 
   t_struc = time_struct(yyyy_mm_dd)
 
-  openw ,unit, tmp_dir+'nrlmsise00.input',/get_lun ; create parameter file
+  openw, unit, tmp_dir+'nrlmsise00.input', /get_lun ; create parameter file
   printf,unit,height_bottom
   printf,unit,height_top
   printf,unit,height_step

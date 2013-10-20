@@ -21,7 +21,7 @@
 ;  print,iug_f107a(00,01,01)
 ;-
 function iug_f107a,yy,mm,dd
-  openr,unit,'${HOME}/models/ionospheric/iri/iri2012/apf107.dat',/GET_LUN
+  openr, unit, '${HOME}/models/ionospheric/iri/iri2012/apf107.dat', /get_lun
 
   result = 0 
 

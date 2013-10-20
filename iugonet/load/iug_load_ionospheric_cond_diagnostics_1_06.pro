@@ -24,6 +24,14 @@
 ;-
 
 pro iug_load_ionospheric_cond_diagnostics_1_06
+  
+;
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+;
 
   debye_length = [0.1,0.5,1.0,2.0,5.0,10.0,20.0,50.0,100.0]
   m_e = 9.1093897E-28 ; (g)    
@@ -32,7 +40,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_06
 
 ;
   set_plot,'ps'
-  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_1_06.ps',/color
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_06.ps', /color
 
   coulomb_logarithm1en2 = fltarr(n_elements(debye_length))
   coulomb_logarithm5en2 = fltarr(n_elements(debye_length))
@@ -176,7 +184,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_06
   set_plot,'x'
 
 ; epsilon=1.E-2
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_06_epsilon1en2.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_06_epsilon1en2.txt', /get_lun
   for i=0L,n_elements(debye_length)-1 do begin
      printf,unit,debye_length(i),book_coulomb_logarithm1en2(i),$
             coulomb_logarithm1en2(i),$
@@ -186,7 +194,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_06
 
   free_lun,unit
 ; epsilon=5E-2
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_06_epsilon5en2.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_06_epsilon5en2.txt', /get_lun
   for i=0L,n_elements(debye_length)-1 do begin
      printf,unit,debye_length(i),book_coulomb_logarithm5en2(i),$
             coulomb_logarithm5en2(i),$
@@ -196,7 +204,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_06
 
   free_lun,unit
 ; epsilon=1.E-1
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_06_epsilon1en1.txt',/get_lun
+  openw, unit, tmp\dir+'iug_load_ionospheric_cond_diagnostics_1_06_epsilon1en1.txt', /get_lun
   for i=0L,n_elements(debye_length)-1 do begin
      printf,unit,debye_length(i),book_coulomb_logarithm1en1(i),$
             coulomb_logarithm1en1(i),$
@@ -206,7 +214,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_06
 
   free_lun,unit
 ; epsilon=5.E-1
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_06_epsilon5en1.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_06_epsilon5en1.txt', /get_lun
   for i=0L,n_elements(debye_length)-1 do begin
      printf,unit,debye_length(i),book_coulomb_logarithm5en1(i),$
             coulomb_logarithm5en1(i),$
@@ -216,7 +224,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_06
 
   free_lun,unit
 ; epsilon=1.E0
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_06_epsilon1e0.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_06_epsilon1e0.txt', /get_lun
   for i=0L,n_elements(debye_length)-1 do begin
      printf,unit,debye_length(i),book_coulomb_logarithm1e0(i),$
             coulomb_logarithm1e0(i),$
@@ -226,7 +234,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_06
 
   free_lun,unit
 ; epsilon=5.E0
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_06_epsilon5e0.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_06_epsilon5e0.txt', /get_lun
   for i=0L,n_elements(debye_length)-1 do begin
      printf,unit,debye_length(i), book_coulomb_logarithm5e0(i),$
             coulomb_logarithm5e0(i),$
@@ -236,7 +244,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_06
 
   free_lun,unit
 ; epsilon=1.E1
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_06_epsilon1e1.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_06_epsilon1e1.txt', /get_lun
   for i=0L,n_elements(debye_length)-1 do begin           
      printf,unit,debye_length(i), book_coulomb_logarithm1e1(i),$
             coulomb_logarithm1e1(i),$
@@ -246,7 +254,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_06
 
   free_lun,unit
 ; epsilon=5.E1
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_06_epsilon5e1.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_06_epsilon5e1.txt', /get_lun
   for i=0L,n_elements(debye_length)-1 do begin
      printf,unit,debye_length(i),book_coulomb_logarithm5e1(i),$
             coulomb_logarithm5e1(i),$
@@ -256,7 +264,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_06
 
   free_lun,unit
 ; epsilon=1.E2
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_06_epsilon1e2.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_06_epsilon1e2.txt', /get_lun
   for i=0L,n_elements(debye_length)-1 do begin
      printf,unit,debye_length(i),book_coulomb_logarithm1e2(i),$
             coulomb_logarithm1e2(i),$

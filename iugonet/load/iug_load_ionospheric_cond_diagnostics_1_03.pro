@@ -24,11 +24,19 @@
 ;-
 
 pro iug_load_ionospheric_cond_diagnostics_1_03
+  
+;
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+;
 
   num_e = [1E2,2.5E2,5E2,7.5E2,1E3,2.5E3,5.0E3,7.5E3,1E4,2.5E4,5.0E4,7.5E4,1E5,2.5E5,5.0E5,7.5E5,1E6,2.5E6,5.0E6]
 
   set_plot,'ps'
-  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_1_03.ps',/color
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03.ps',/color
 
   nu_ei600 = fltarr(n_elements(num_e))
   nu_ei800 = fltarr(n_elements(num_e))
@@ -134,7 +142,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
   set_plot,'x'
 
 ; te=600
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_03_te0600.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03_te0600.txt', /get_lun
   for i=0L,n_elements(num_e)-1 do begin
      printf,unit,num_e(i),book_nu_ei600(i),nu_ei600(i),$
             (nu_ei600(i) - book_nu_ei600(i))/book_nu_ei600(i)*100., $
@@ -143,7 +151,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
 
   free_lun,unit
 ; te=800
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_03_te0800.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03_te0800.txt', /get_lun
   for i=0L,n_elements(num_e)-1 do begin
      printf,unit,num_e(i),book_nu_ei800(i),nu_ei800(i),$
             (nu_ei800(i) - book_nu_ei800(i))/book_nu_ei800(i)*100., $
@@ -152,7 +160,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
 
   free_lun,unit
 ; te=1000
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_03_te1000.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03_te1000.txt', /get_lun
   for i=0L,n_elements(num_e)-1 do begin
      printf,unit,num_e(i),book_nu_ei1000(i),nu_ei1000(i),$
             (nu_ei1000(i) - book_nu_ei1000(i))/book_nu_ei1000(i)*100., $
@@ -161,7 +169,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
 
   free_lun,unit
 ; te=1200
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_03_te1200.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03_te1200.txt', /get_lun
   for i=0L,n_elements(num_e)-1 do begin
      printf,unit,num_e(i),book_nu_ei1200(i),nu_ei1200(i),$
             (nu_ei1200(i) - book_nu_ei1200(i))/book_nu_ei1200(i)*100., $
@@ -170,7 +178,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
 
   free_lun,unit
 ; te=1400
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_03_te1400.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03_te1400.txt', /get_lun
   for i=0L,n_elements(num_e)-1 do begin
      printf,unit,num_e(i),book_nu_ei1400(i),nu_ei1400(i),$
             (nu_ei1400(i) - book_nu_ei1400(i))/book_nu_ei1400(i)*100., $
@@ -179,7 +187,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
 
   free_lun,unit
 ; te=1600
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_03_te1600.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03_te1600.txt', /get_lun
   for i=0L,n_elements(num_e)-1 do begin
      printf,unit,num_e(i),book_nu_ei1600(i),nu_ei1600(i),$
             (nu_ei1600(i) - book_nu_ei1600(i))/book_nu_ei1600(i)*100., $
@@ -188,7 +196,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
 
   free_lun,unit
 ; te=1800
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_03_te1800.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03_te1800.txt', /get_lun
   for i=0L,n_elements(num_e)-1 do begin
      printf,unit,num_e(i),book_nu_ei1800(i),nu_ei1800(i),$
             (nu_ei1800(i) - book_nu_ei1800(i))/book_nu_ei1800(i)*100., $
@@ -197,7 +205,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
 
   free_lun,unit
 ; te=2000
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_03_te2000.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03_te2000.txt', /get_lun
   for i=0L,n_elements(num_e)-1 do begin
      printf,unit,num_e(i),book_nu_ei2000(i),nu_ei2000(i),$
             (nu_ei2000(i) - book_nu_ei2000(i))/book_nu_ei2000(i)*100., $

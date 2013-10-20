@@ -26,7 +26,15 @@
 
 pro iug_load_iri90,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon,height_bottom=height_bottom,height_top=height_top,height_step=height_step,ssn=ssn,result=result
 
-  openw,unit,'/tmp/input_iri90.txt',/get_lun ; create input file
+  
+;                                                                                                                               
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+
+  openw, unit, tmp_dir+'input_iri90.txt',/get_lun ; create input file
   printf,unit,1 ; 1: STORED IN FILE OUTPUT.IRI
   printf,unit,1 ; 1: STORED IN FILE KONSOL.IRI
   printf,unit,6 ; SELECT YOUR VARIABLE -> 6 ALTITUDE
@@ -47,8 +55,8 @@ pro iug_load_iri90,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon,height_bott
   free_lun, unit
 
 
-  spawn,'cd ${HOME}/models/ionospheric/iri/iri90/fortran_code;rm *.IRI;./iri_test < /tmp/input_iri90.txt'
-  spawn,"cat ${HOME}/models/ionospheric/iri/iri90/fortran_code/OUTPUT.IRI | awk '{if( NR>12 ) print $0}' > /tmp/tmp.txt"
+  spawn,'cd ${HOME}/models/ionospheric/iri/iri90/fortran_code;rm *.IRI;./iri_test < '+tmp_dir+'input_iri90.txt'
+  spawn,"cat ${HOME}/models/ionospheric/iri/iri90/fortran_code/OUTPUT.IRI | awk '{if( NR>12 ) print $0}' > "+tmp_dir+"tmp.txt"
 
   if height_top ne height_bottom then begin
      num_height = (height_top-height_bottom)/height_step+1
@@ -58,7 +66,7 @@ pro iug_load_iri90,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon,height_bott
 
   result = fltarr(num_height,12)
 
-  openr, unit, '/tmp/tmp.txt', /GET_LUN
+  openr, unit, tmp_dir+'tmp.txt', /get_lun
   temp0='' & temp1='' & temp2='' & temp3='' & temp4='' 
   temp5='' & temp6='' & temp7='' & temp8='' & temp9='' 
   temp10='' & temp11=''

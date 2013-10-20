@@ -33,8 +33,16 @@ pro iug_load_iri2012_db,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=g
      num_height = 1 
      height_step = 1 ; height_step=1 is just dummy to execute iri2012. 
   endelse
+  
+;
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+;
 
-  openw,unit,'/tmp/iri2012.input',/get_lun ; create input file
+  openw, unit, tmp_dir+'iri2012.input', /get_lun ; create input file
   printf,unit,0,glat,glon
   printf,unit,yyyy,mmdd,ltut,time
   printf,unit,0
@@ -51,7 +59,7 @@ pro iug_load_iri2012_db,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=g
 
   result = fltarr(15,num_height)
 
-  openr, unit, '/tmp/iri2012.result', /GET_LUN
+  openr, unit, tmp_dir+'iri2012.result', /get_lun
   temp0='' & temp1='' & temp2='' & temp3='' & temp4='' 
   temp5='' & temp6='' & temp7='' & temp8='' & temp9='' 
   temp10='' & temp11='' & temp12='' & temp13='' & temp14=''
@@ -81,8 +89,8 @@ pro iug_load_iri2012_db,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=g
      dd=02
      height=height_bottom+height_step*i
      iug_create_query_iri2012,1,glat,glon,yyyy,mm,dd,ltut,time,height
-     spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/iri2012.db < /tmp/iri2012_query.sql > /tmp/iri2012.result'
-     query_result=file_info('/tmp/iri2012.result')
+     spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/iri2012.db < /tmp/iri2012_query.sql > '+tmp_dir+'iri2012.result'
+     query_result=file_info(tmp_dir+'iri2012.result')
 
      if query_result.size eq 0 then begin ; to store
         iug_insert_iri2012,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1

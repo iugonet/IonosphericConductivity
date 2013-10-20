@@ -65,7 +65,7 @@ if ~size(fns,/type) then begin
 ; ZONAL MEAN TEMPERATURE
 
    if datatype eq "temperature" then begin
-      openr, unit, '${HOME}/models/atmospheric/cira/cira86ascii/twp.lsn', /GET_LUN
+      openr, unit, '${HOME}/models/atmospheric/cira/cira86ascii/twp.lsn', /get_lun
       if month eq 1 then begin  ; Jan
          starts_at_line=7
          ends_at_line=31
@@ -263,7 +263,7 @@ if ~size(fns,/type) then begin
 
 ; ZONAL MEAN ZONAL WIND
    if datatype eq "wind" then begin
-      openr, unit, '${HOME}/models/atmospheric/cira/cira86ascii/twp.lsn', /GET_LUN
+      openr, unit, '${HOME}/models/atmospheric/cira/cira86ascii/twp.lsn', /get_lun
       if month eq 1 then begin  ; Jan
          starts_at_line=39
          ends_at_line=63
@@ -462,7 +462,7 @@ if ~size(fns,/type) then begin
 
 ; ZONAL MEAN PRESSURE
    if datatype eq "pressure" then begin
-      openr, unit, '${HOME}/models/atmospheric/cira/cira86ascii/twp.lsn', /GET_LUN
+      openr, unit, '${HOME}/models/atmospheric/cira/cira86ascii/twp.lsn', /get_lun
       if month eq 1 then begin  ; Jan
          starts_at_line=71
          ends_at_line=91

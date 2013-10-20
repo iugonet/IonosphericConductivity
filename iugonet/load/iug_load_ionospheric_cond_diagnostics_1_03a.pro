@@ -25,6 +25,14 @@
 
 pro iug_load_ionospheric_cond_diagnostics_1_03a
 
+;
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+;
+
    m_p = 1.6726231E-27 ; (kg)   
    m_e = 9.1093897E-31 ; (kg)
 ; alpha0 is from table 9.10 (10^{-24} cm^3)
@@ -270,7 +278,8 @@ pro iug_load_ionospheric_cond_diagnostics_1_03a
 ;
 ;
 ;
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_03a.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03a.txt', /get_lun
+
   printf,unit,expected_no_p_air,actual_no_p_air,(actual_no_p_air-expected_no_p_air)/expected_no_p_air * 100., expected_no_p_air/actual_no_p_air,format='(e10.2,e10.2,i4,e10.2)'
   printf,unit,expected_no_p_o,actual_no_p_o,(actual_no_p_o-expected_no_p_o)/expected_no_p_o * 100.,expected_no_p_o/actual_no_p_o,format='(e10.2,e10.2,i4,e10.2)'
   printf,unit

@@ -5,6 +5,15 @@
 ;-
 
 pro iug_load_ionospheric_cond_diagnostics_1_00
+  
+;
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+;
+
 ;
 ; 
 ;
@@ -20,7 +29,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   algorithm=1
 
   set_plot,'ps'
-  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_1_00_result1.ps',/color
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result1.ps', /color
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy,mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
   plot, result[*,0], result[*,6], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 2000/01/01, LT0"
@@ -43,7 +52,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   device,/close
   set_plot,'x'
 
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_00_result1.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result1.txt', /get_lun
 
   if height_top ne height_bottom then begin
      num_height = (height_top-height_bottom)/height_step+1
@@ -67,7 +76,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   s0_takeda = 3.160E6 & s1_takeda = 2.555E0 & s2_takeda = 3.939E-1
   sxx_takeda = 1.331E1 & syy_takeda = 2.557E0 & sxy_takeda = -8.989E-1
 
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_00_result5.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result5.txt', /get_lun
   printf,unit,"s0=",s0_takeda,result2d[0],(result2d[0]-s0_takeda)/s0_takeda*1.E2, $
          format='(a4,e10.2,e10.2,i5)'
   printf,unit,"s1=",s1_takeda,result2d[1],(result2d[1]-s1_takeda)/s1_takeda*1.E2, $
@@ -120,7 +129,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   device,/close
   set_plot,'x'
 
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_00_result2.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result2.txt', /get_lun
   num_height = (height_top-height_bottom)/height_step+1
   for i=0L,num_height-1 do begin
      printf,unit,height[i], $
@@ -137,7 +146,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   s0_takeda = 7.211E6 & s1_takeda = 2.572E1 & s2_takeda = 2.932E1
   sxx_takeda = 1.340E2 & syy_takeda = 2.581E1 & sxy_takeda = -6.690E1
 
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_00_result6.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result6.txt', /get_lun
   printf,unit,"s0=",s0_takeda,result2d[0],(result2d[0]-s0_takeda)/s0_takeda*1.E2, $
          format='(a4,e10.2,e10.2,i5)'
   printf,unit,"s1=",s1_takeda,result2d[1],(result2d[1]-s1_takeda)/s1_takeda*1.E2, $
@@ -190,7 +199,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   device,/close
   set_plot,'x'
 
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_00_result3.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result3.txt', /get_lun
   num_height = (height_top-height_bottom)/height_step+1
   for i=0L,num_height-1 do begin
      printf,unit,height[i], $
@@ -207,7 +216,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   s0_takeda = 4.487E6 & s1_takeda = 6.596E0 & s2_takeda = 5.005E-1
   sxx_takeda = 3.640E1 & syy_takeda = 6.597E0 & sxy_takeda = -1.176E0
 
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_00_result7.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result7.txt', /get_lun
   printf,unit,"s0=",s0_takeda,result2d[0],(result2d[0]-s0_takeda)/s0_takeda*1.E2, $
          format='(a4,e10.2,e10.2,i5)'
   printf,unit,"s1=",s1_takeda,result2d[1],(result2d[1]-s1_takeda)/s1_takeda*1.E2, $
@@ -260,7 +269,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   device,/close
   set_plot,'x'
 
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_00_result4.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result4.txt', /get_lun
   num_height = (height_top-height_bottom)/height_step+1
   for i=0L,num_height-1 do begin
      printf,unit,height[i], $
@@ -277,7 +286,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   s0_takeda = 7.080E6 & s1_takeda = 3.427E1 & s2_takeda = 3.217E1
   sxx_takeda = 1.891E2 & syy_takeda = 3.437E1 & sxy_takeda = 7.555E1
 
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_00_result8.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result8.txt', /get_lun
   printf,unit,"s0=",s0_takeda,result2d[0],(result2d[0]-s0_takeda)/s0_takeda*1.E2, $
          format='(a4,e10.2,e10.2,i5)'
   printf,unit,"s1=",s1_takeda,result2d[1],(result2d[1]-s1_takeda)/s1_takeda*1.E2, $

@@ -25,7 +25,7 @@
 ;-
 
 function iug_apindex,yy,mm,dd,ut
-  openr,unit,'${HOME}/models/ionospheric/iri/iri2012/apf107.dat',/GET_LUN
+  openr, unit, '${HOME}/models/ionospheric/iri/iri2012/apf107.dat', /get_lun
 
   result = 0
 

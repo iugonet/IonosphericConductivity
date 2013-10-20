@@ -40,7 +40,7 @@ pro iug_load_igrf11_old,height_bottom=height_bottom,height_top=height_top,height
   result_f = fltarr(num_height)
 
   for i=0L,num_height-1 do begin
-     openw,unit,'/tmp/input_igrf11.txt',/get_lun ; create input file
+     openw, unit, '/tmp/input_igrf11.txt', /get_lun ; create input file
      printf,unit,'result.txt' ; Enter name of output file (30 characters maximum)
      printf,unit,1   ; 1 - geodetic (shape of Earth is approximated by a spheroid)
                   ; 2 - geocentric (shape of Earth is approximated by a shere)
@@ -59,7 +59,7 @@ pro iug_load_igrf11_old,height_bottom=height_bottom,height_top=height_top,height
      spawn,'cd ${HOME}/IAGA/vmod; rm result.txt ; rm result2.txt; ./a.out < /tmp/input_igrf11.txt'
      spawn,"cat ${HOME}/IAGA/vmod/result.txt | awk '{if( NR>1 && NR<4){printf(""%6d%6d\n"",$3,$5)}else if( NR>3 && NR<9){printf(""%6d\n"",$3)}}' > ${HOME}/IAGA/vmod/result2.txt"
 
-     openr,unit, '${HOME}/IAGA/vmod/result2.txt', /GET_LUN
+     openr, unit, '${HOME}/IAGA/vmod/result2.txt', /get_lun
      temp0='' & temp1='' & temp2='' & temp3='' & temp4='' & temp5='' & temp6=''
 
      readf,unit,format='(a6,a6)',temp0_0,temp0_1

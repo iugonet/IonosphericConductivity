@@ -8,6 +8,14 @@
 ;-
 
 pro iug_load_iri2012_diagnostics_0
+  
+;
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+;
 
   yyyy = 2000
   mmdd = 101
@@ -37,7 +45,7 @@ pro iug_load_iri2012_diagnostics_0
   device,/close
   set_plot,'x'
 
-  openw,unit,'/tmp/iug_load_iri2012_diagnostics_0_result1.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_iri2012_diagnostics_0_result1.txt', /get_lun
   for i=0L,n_elements(a)-1 do begin
      printf,unit,a[i],result_iri[i,1]*1.e6,b[i],(result_iri[i,1]*1.e6-b[i])/b[i]*100.,format='(i4,e10.2,e10.2,f8.4)'
   endfor
@@ -71,7 +79,7 @@ pro iug_load_iri2012_diagnostics_0
   device,/close
   set_plot,'x'
 
-  openw,unit,'/tmp/iug_load_iri2012_diagnostics_0_result2.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_iri2012_diagnostics_0_result2.txt', /get_lun
   for i=0L,n_elements(a)-1 do begin
      printf,unit,a[i],result_iri[i,1]*1.e6,b[i],(result_iri[i,1]*1.e6-b[i])/b[i]*100.,format='(i4,e10.2,e10.2,f8.4)'
   endfor
@@ -105,7 +113,7 @@ pro iug_load_iri2012_diagnostics_0
   device,/close
   set_plot,'x'
 
-  openw,unit,'/tmp/iug_load_iri2012_diagnostics_0_result3.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_iri2012_diagnostics_0_result3.txt', /get_lun
   for i=0L,n_elements(a)-1 do begin
      printf,unit,a[i],result_iri[i,1]*1.e6,b[i],(result_iri[i,1]*1.e6-b[i])/b[i]*100.,format='(i4,e10.2,e10.2,f8.4)'
   endfor
@@ -139,7 +147,7 @@ pro iug_load_iri2012_diagnostics_0
   device,/close
   set_plot,'x'
 
-  openw,unit,'/tmp/iug_load_iri2012_diagnostics_0_result4.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_iri2012_diagnostics_0_result4.txt', /get_lun
   for i=0L,n_elements(a)-1 do begin
      printf,unit,a[i],result_iri[i,1]*1.e6,b[i],(result_iri[i,1]*1.e6-b[i])/b[i]*100.,format='(i4,e10.2,e10.2,f8.4)'
   endfor

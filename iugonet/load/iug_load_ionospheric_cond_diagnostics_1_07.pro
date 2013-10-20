@@ -23,6 +23,13 @@
 ; THEMIS> iug_load_ionospheric_cond_diagnostics_1_07
 ;-
 pro iug_load_ionospheric_cond_diagnostics_1_07
+  
+;
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
 
   gamma_h=[314.991,355.503,396.034,436.545,477.057,522.041,562.552,603.044,648.028,688.519,733.503,773.994,818.958,859.45,904.414,944.885,989.849,1030.32,1075.28,1115.76,1160.7,1205.66,1246.14,1291.1,1331.55,1376.52,1421.46,1461.93,1506.88,1551.82,1596.76,1637.23,1682.18,1727.12,1767.57,1812.52,1857.46,1902.41,1942.86,1987.8,2032.75,2077.69,2122.63,2167.56,2208.01,2252.97,2293.41,2338.35,2383.29,2428.22,2468.67,2513.61,2558.56,2603.5,2648.43,2688.9,2733.82,2778.77,2823.71,2868.65,2913.58,2954.03,2998.95,3043.9,3088.82,3133.77,3178.71]
 
@@ -80,7 +87,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_07
   endfor
 ;
   set_plot,'ps'
-  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_1_07.ps',/color
+  device,filename = tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_07.ps',/color
 
   plot,gamma_o2[*],actual_h[*],xtitle="TEMPERATURES (Ti+Tn) K",ytitle="COLLISION FREQUENCY RATE COEFFICIENT (cm^3 Hz)",xrange=[300,3300],yrange=[1E-10,1E-8],/ylog,linestyle=0,color=0,title="Charge exchange collision frequencies for the atmospheric gases"
 
@@ -108,35 +115,35 @@ pro iug_load_ionospheric_cond_diagnostics_1_07
   device,/close
   set_plot,'x'
 
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_07_h.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_07_h.txt',/get_lun
   for i=0L,n_elements(gamma_o2)-1 do begin
      printf,unit,expected_o2[i],actual_h[i],(actual_h[i] -expected_o2[i]) $
             /expected_o2[i] * 100., format='(e10.2,e10.2,i4)'
   endfor
   free_lun,unit
 
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_07_he.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_07_he.txt',/get_lun
   for i=0L,n_elements(gamma_o)-1 do begin
      printf,unit,expected_o[i],actual_he[i],(actual_he[i]-expected_o[i]) $
             /expected_o[i] * 100., format='(e10.2,e10.2,i4)'
   endfor
   free_lun,unit
 
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_07_n2.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_07_n2.txt',/get_lun
   for i=0L,n_elements(gamma_n2)-1 do begin
      printf,unit,expected_n2[i],actual_n2[i],(actual_n2[i]-expected_n2[i]) $
             /expected_n2[i] * 100., format='(e10.2,e10.2,i4)'
   endfor
   free_lun,unit
 ; expected_n is not shown in "Aeronomy".
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_07_o.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_07_o.txt',/get_lun
   for i=0L,n_elements(gamma_he)-1 do begin
      printf,unit,expected_he[i],actual_o[i] ,(actual_o[i] -expected_he[i]) $
             /expected_he[i] * 100., format='(e10.2,e10.2,i4)'
   endfor
   free_lun,unit
 
-  openw,unit,'/tmp/iug_load_ionospheric_cond_diagnostics_1_07_o2.txt',/get_lun
+  openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_07_o2.txt',/get_lun
   for i=0L,n_elements(gamma_h)-1 do begin
      printf,unit,expected_h[i],actual_o2[i],(actual_o2[i]-expected_h[i]) $
             /expected_h[i] * 100., format='(e10.2,e10.2,i4)'

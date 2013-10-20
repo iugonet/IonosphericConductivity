@@ -31,8 +31,11 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
      num_height = 1
   endelse
 ;
-  tmp_dir = "/tmp"+string(iug_getpid(),format='(i0)')+"/"
-
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin 
+     file_mkdir, tmp_dir
+  endif
 
   r_d = fltarr(num_height)
   r_i = fltarr(num_height)
@@ -51,7 +54,7 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
 
      if query_result.size eq 0 then begin ; calculate by using model         
 ;;;
-        openw,unit, tmp_dir+'igrf11.input',/get_lun ; create input file
+        openw, unit, tmp_dir+'igrf11.input', /get_lun ; create input file
         printf,unit,'result.txt' ; Enter name of output file (30 characters maximum)
         printf,unit,1 ; 1 - geodetic (shape of Earth is approximated by a spheroid)
                   ; 2 - geocentric (shape of Earth is approximated by a shere)
@@ -70,7 +73,7 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
         spawn,'cd ${HOME}/IAGA/vmod; rm result.txt ; rm result2.txt; ./a.out < /tmp/igrf11.input'
         spawn,"cat ${HOME}/IAGA/vmod/result.txt | awk '{if( NR>1 && NR<4){printf(""%6d%6d%6d\n"",$3,$5,$9)}else if( NR>3 && NR<9){printf(""%6d%6d\n"",$3,$7)}}' > ${HOME}/IAGA/vmod/result2.txt"
 
-        openr,unit, '${HOME}/IAGA/vmod/result2.txt', /GET_LUN
+        openr, unit, '${HOME}/IAGA/vmod/result2.txt', /get_lun
         temp0_0='' & temp0_1=''
         temp1_0='' & temp1_1=''
         temp2='' & temp3='' & temp4='' & temp5='' & temp6=''
