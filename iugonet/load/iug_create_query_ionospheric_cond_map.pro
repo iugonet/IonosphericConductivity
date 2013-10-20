@@ -26,6 +26,7 @@ pro iug_create_query_ionospheric_cond_map,height_bottom=height_bottom, heigit_to
   if file_test(tmp_dir) eq 0 then begin
      file_mkdir, tmp_dir
   endif
+;
 
 ;
   if height_top ne height_bottom then begin
@@ -53,10 +54,13 @@ pro iug_create_query_ionospheric_cond_map,height_bottom=height_bottom, heigit_to
 ;
   openw, unit, tmp_dir+'ionospheric_cond_map_query.sql', /get_lun ; create query file
 
+  printf,unit,'.output '+tmp_dir+'ionospheric_cond_map.result'
+  printf,unit,'.separator " "'
+
   for i=0L,n_elements(glat_list)-1  do begin
      for j=0L,n_elements(glon_list)-1 do begin
         for k=0L,num_height-1 do begin
-           printf,unit,'select * from ionospheric_cond where height=',strtrim(string(height_array(k)),1),' and glat=',strtrim(string(glat_list[i]),1),' and glon=',strtrim(string(glon_list[j]),1),' and yyyy=',strtrim(string(yyyy),1),' and mmdd=',strtrim(string(mmdd),1),' and ltut=',strtrim(string(ltut),1),' and atime=',strtrim(string(time),1),' and algorithm=',strtrim(string(algorithm),1),";"
+           printf,unit,'select * from ionospheric_cond where height='+strtrim(string(height_array(k)),1)+' and glat='+strtrim(string(glat_list[i]),1)+' and glon='+strtrim(string(glon_list[j]),1)+' and yyyy='+strtrim(string(yyyy),1)+' and mmdd='+strtrim(string(mmdd),1)+' and ltut='+strtrim(string(ltut),1)+' and atime='+strtrim(string(time),1)+' and algorithm='+strtrim(string(algorithm),1)+";"
         endfor
      endfor
   endfor

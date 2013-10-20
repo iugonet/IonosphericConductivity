@@ -113,21 +113,36 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
 ;
 ;
   iug_create_query_ionospheric_cond_map,height_bottom=height_bottom, heigit_top=height_top, height_step=height_step, resolution=resolution, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm
-  spawn,'sqlite3 -separator " " ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db < '+tmp_dir+'ionospheric_cond_map_query.sql > '+tmp_dir+'ionospheric_cond_map.result'
+  spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db < '+tmp_dir+'ionospheric_cond_map_query.sql'
   query_result=file_info(tmp_dir+'ionospheric_cond_map.result')
 
-;  exit
+  result_db = fltarr(n_elements(glat_list)*n_elements(glon_list)*num_height,14)
+  
+  if query_result.size ne 0 then begin
+     openr, unit, tmp_dir+'ionospheric_cond_map.result', /get_lun
+
+     while (not eof(unit)) do begin
+        readf, unit, format='(a,a,a,a,a,a,a,a,a,a,a,a,a,a)',s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14
+     endwhile
+     print,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14
+     
+     exit
+     free_lun, unit
+  endif
+
+  exit
 ;
-;
-;
+
   for i=0L,n_elements(glat_list)-1  do begin
      for j=0L,n_elements(glon_list)-1 do begin
         for k=0L,num_height-1 do begin
+
+           print,i,j,k
            iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat_list[i], glon=glon_list[j], yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
            for l=0L,7-1 do begin
               result2[i,j,k,l]=result[k,l]
            endfor
-           exit
+;           exit
         endfor
      endfor
   endfor
