@@ -24,6 +24,9 @@
 
 pro iug_load_nrlmsise00, yyyy=yyyy, mmdd=mmdd, height_bottom=height_bottom, height_top=height_top, height_step=height_step,time=time, glat=glat, glon=glon,result=result
 
+;
+  tmp_dir = "/tmp"+string(iug_getpid(),format='(i0)')+"/"
+
   yyyy=string(yyyy,format='(i4)')
   mmdd=string(mmdd,format='(i4.4)')
   yy=strmid(yyyy,2,2)
@@ -33,7 +36,7 @@ pro iug_load_nrlmsise00, yyyy=yyyy, mmdd=mmdd, height_bottom=height_bottom, heig
 
   t_struc = time_struct(yyyy_mm_dd)
 
-  openw,unit,'/tmp/nrlmsise00.input',/get_lun ; create parameter file
+  openw ,unit, tmp_dir+'nrlmsise00.input',/get_lun ; create parameter file
   printf,unit,height_bottom
   printf,unit,height_top
   printf,unit,height_step
@@ -47,7 +50,7 @@ pro iug_load_nrlmsise00, yyyy=yyyy, mmdd=mmdd, height_bottom=height_bottom, heig
   printf,unit,iug_apindex(yy,mm,dd,time) ; AP
   free_lun, unit
 
-  spawn,'cd ${HOME}/models/atmospheric/msis/nrlmsise00;./nrlmsise00_driver_iugonet.out < /tmp/nrlmsise00.input > /tmp/output_nrlmsise00.txt'
+  spawn,'cd ${HOME}/models/atmospheric/msis/nrlmsise00;./nrlmsise00_driver_iugonet.out < '+tmp_dir+'nrlmsise00.input > '+tmp_dir+'output_nrlmsise00.txt'
 
   if height_top ne height_bottom then begin
      num_height = (height_top-height_bottom)/height_step+1
@@ -57,7 +60,7 @@ pro iug_load_nrlmsise00, yyyy=yyyy, mmdd=mmdd, height_bottom=height_bottom, heig
 
   result = fltarr(num_height,11)
   
-  openr, unit, '/tmp/output_nrlmsise00.txt', /get_lun
+  openr, unit, tmp_dir+'output_nrlmsise00.txt', /get_lun
   temp0='' & temp1='' & temp2='' & temp3='' & temp4='' 
   temp5='' & temp6='' & temp7='' & temp8='' & temp9='' 
   temp10=''

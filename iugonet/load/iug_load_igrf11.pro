@@ -30,6 +30,9 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
   endif else begin
      num_height = 1
   endelse
+;
+  tmp_dir = "/tmp"+string(iug_getpid(),format='(i0)')+"/"
+
 
   r_d = fltarr(num_height)
   r_i = fltarr(num_height)
@@ -48,7 +51,7 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
 
      if query_result.size eq 0 then begin ; calculate by using model         
 ;;;
-        openw,unit,'/tmp/igrf11.input',/get_lun ; create input file
+        openw,unit, tmp_dir+'igrf11.input',/get_lun ; create input file
         printf,unit,'result.txt' ; Enter name of output file (30 characters maximum)
         printf,unit,1 ; 1 - geodetic (shape of Earth is approximated by a spheroid)
                   ; 2 - geocentric (shape of Earth is approximated by a shere)
@@ -132,5 +135,7 @@ pro iug_load_igrf11,height_bottom=height_bottom,height_top=height_top,height_ste
         free_lun, unit
      endelse
   endfor
+
+  
 
 end
