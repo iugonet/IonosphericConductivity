@@ -20,7 +20,7 @@
 ;-
 pro iug_create_query_iri2012,jmag=jmag,lat=lat,lon=lon,yyyy=yyyy,mm=mm,dd=dd,ltut=ltut,atime=atime,height=height
 
-  tmp_dir = '/tmp'+string(iug_getpid(),format='(i0)'+'/'
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)'+'/'
   
   openw, unit, tmp_dir+'iri2012_query.sql',/get_lun ; create query file
   printf,unit,'select * from iri2012 where jmag=',strtrim(string(jmag),1),' and lat=',strtrim(string(lat),1),' and lon=',strtrim(string(lon),1),' and yyyy=',strtrim(string(yyyy),1),' and mm=',strtrim(string(mm),1),' and dd=',strtrim(string(dd),1),' and ltut=',strtrim(string(ltut),1),' and atime=',strtrim(string(atime),1),' and height=',strtrim(string(height),1),";"

@@ -25,7 +25,7 @@
 pro iug_load_nrlmsise00, yyyy=yyyy, mmdd=mmdd, height_bottom=height_bottom, height_top=height_top, height_step=height_step,time=time, glat=glat, glon=glon,result=result
 
 ;
-  tmp_dir = "/tmp"+string(iug_getpid(),format='(i0)')+"/"
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
 
   yyyy=string(yyyy,format='(i4)')
   mmdd=string(mmdd,format='(i4.4)')

@@ -34,7 +34,7 @@ pro iug_load_iri2012,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon
      height_step = 1 ; height_step=1 is just dummy to execute iri2012. 
   endelse
 ;
-  tmp_dir = "/tmp"+string(iug_getpid(),format='(i0)')+"/"
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
 
   openw,unit, tmp_dir+'iri2012.input',/get_lun ; create input file
   printf,unit,0,glat,glon
