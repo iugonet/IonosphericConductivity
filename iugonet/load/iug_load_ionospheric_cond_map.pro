@@ -94,51 +94,64 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
 ;
 ; Calculation based on Kenichi Maeda's equation
 ;
-  glat_list=fltarr(180/resolution+1)
-  glon_list=fltarr(360/resolution+1)
+  glat_array=fltarr(180/resolution+1)
+  glon_array=fltarr(360/resolution+1)
 
-  for i=0L,n_elements(glat_list)-1 do begin
-     glat_list[i]=-90.+i*resolution
+  for i=0L,n_elements(glat_array)-1 do begin
+     glat_array[i]=-90.+i*resolution
   endfor
 
-  for i=0L,n_elements(glon_list)-1 do begin
-     glon_list[i]=-180.+i*resolution
+  for i=0L,n_elements(glon_array)-1 do begin
+     glon_array[i]=-180.+i*resolution
   endfor
 
 
 ;  result = fltarr(num_height,7)
-  result2 = fltarr(n_elements(glat_list),n_elements(glon_list),num_height,7)
+  result2 = fltarr(n_elements(glat_array),n_elements(glon_array),num_height,7)
 
 ;
 ;
 ;
   iug_create_query_ionospheric_cond_map,height_bottom=height_bottom, heigit_top=height_top, height_step=height_step, resolution=resolution, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm
   spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db < '+tmp_dir+'ionospheric_cond_map_query.sql'
-  query_result=file_info(tmp_dir+'ionospheric_cond_map.result')
 
-  result_db = fltarr(n_elements(glat_list)*n_elements(glon_list)*num_height,14)
-  
+  infile = tmp_dir+'ionospheric_cond_map.result'
+  query_result=file_info(infile)
+
+  result_db = fltarr(n_elements(glat_array)*n_elements(glon_array)*num_height,14)
+
   if query_result.size ne 0 then begin
-     openr, unit, tmp_dir+'ionospheric_cond_map.result', /get_lun
-
-     while (not eof(unit)) do begin
-        readf, unit, format='(a,a,a,a,a,a,a,a,a,a,a,a,a,a)',s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14
-     endwhile
-     print,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14
-     
-     exit
-     free_lun, unit
+     sed_data = read_csv(infile)
+     print,sed_data
   endif
+
+  record = create_struct('height',0,'glat',0,'glon',0,'flag',0)
+  calc_table = replicate(record,n_elements(glat_array)*n_elements(glon_array)*num_height)
+
+; calc_table - calculated_list
+  z = 0
+  for i=0L,n_elements(glat_array)-1  do begin
+     for j=0L,n_elements(glon_array)-1 do begin
+        for k=0L,num_height-1 do begin
+           calc_table[z].height = height_array[k]
+           calc_table[z].glat = glat_array[i]
+           calc_table[z].glon = glon_array[j]
+           calc_table[z].flag = 0
+           z=z+1
+        endfor
+     endfor
+  endfor
+
+  print,calc_table
 
   exit
 ;
-
-  for i=0L,n_elements(glat_list)-1  do begin
-     for j=0L,n_elements(glon_list)-1 do begin
+  for i=0L,n_elements(glat_array)-1  do begin
+     for j=0L,n_elements(glon_array)-1 do begin
         for k=0L,num_height-1 do begin
 
            print,i,j,k
-           iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat_list[i], glon=glon_list[j], yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
+           iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat_array[i], glon=glon_array[j], yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
            for l=0L,7-1 do begin
               result2[i,j,k,l]=result[k,l]
            endfor
@@ -154,10 +167,10 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
            TITLE = 'Ionospheric Conductivity'
 
 ; BE CAREFULL
-  result3 = fltarr(n_elements(glon_list),n_elements(glat_list))
+  result3 = fltarr(n_elements(glon_array),n_elements(glat_array))
 
-  for i=0L,n_elements(glat_list)-1 do begin
-     for j=0L,n_elements(glon_list)-1 do begin
+  for i=0L,n_elements(glat_array)-1 do begin
+     for j=0L,n_elements(glon_array)-1 do begin
         result3[j,i]=result2[i,j,0,0]
      endfor
   endfor
@@ -165,7 +178,7 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
   nlevels=12
   LoadCT, 33, NColors=nlevels, Bottom=1
   transparency=50
-  contour, result3, glon_list, glat_list, /overplot,/fill,nlevels=nlevels,c_colors=IndGen(nlevels)+1
+  contour, result3, glon_array, glat_array, /overplot,/fill,nlevels=nlevels,c_colors=IndGen(nlevels)+1
   map_grid, latdel=10, londel=10, color=240
   map_continents
 
