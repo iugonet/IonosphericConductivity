@@ -30,7 +30,7 @@ pro iug_insert_igrf11,coordinate_system=coordinate_system,yyyy=yyyy,glat=glat,gl
 
   openw, unit, tmp_dir+'igrf11_insert.sql', /get_lun ; create query file
 
-  printf,unit,'insert into igrf11 values(',strtrim(string(coordinate_system),1),',',strtrim(string(yyyy),1),',',strtrim(string(glat),1),',',strtrim(string(glon),1),',',strtrim(string(height),1),',',strtrim(string(d_deg),1),',',strtrim(string(d_min),1),',',strtrim(string(i_deg),1),',',strtrim(string(i_min),1),',',strtrim(string(r_h),1),',',strtrim(string(r_x),1),',',strtrim(string(r_y),1),',',strtrim(string(r_z),1),',',strtrim(string(r_f),1),',',strtrim(string(d_sv),1),',',strtrim(string(i_sv),1),',',strtrim(string(h_sv),1),',',strtrim(string(x_sv),1),',',strtrim(string(y_sv),1),',',strtrim(string(z_sv),1),',',strtrim(string(f_sv),1),');'
+  printf,unit,'insert into igrf11 values('+strtrim(string(coordinate_system),1)+','+strtrim(string(yyyy),1)+','+strtrim(string(glat),1)+','+strtrim(string(glon),1)+','+strtrim(string(height),1)+','+strtrim(string(d_deg),1)+','+strtrim(string(d_min),1)+','+strtrim(string(i_deg),1)+','+strtrim(string(i_min),1)+','+strtrim(string(r_h),1)+','+strtrim(string(r_x),1)+','+strtrim(string(r_y),1)+','+strtrim(string(r_z),1)+','+strtrim(string(r_f),1)+','+strtrim(string(d_sv),1)+','+strtrim(string(i_sv),1)+','+strtrim(string(h_sv),1)+','+strtrim(string(x_sv),1)+','+strtrim(string(y_sv),1)+','+strtrim(string(z_sv),1)+','+strtrim(string(f_sv),1)+');'
   free_lun, unit
 
   spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/igrf11.db < '+tmp_dir+'igrf11_insert.sql'

@@ -47,8 +47,8 @@ pro iug_load_igrf11,height=height,yyyy=yyyy,glat=glat,glon=glon,r_d=r_d,r_i=r_i,
   spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/igrf11.db < '+tmp_dir+'igrf11.sql'
   query_result=file_info(tmp_dir+'igrf11.result')
 
-  if query_result.size eq 0 then begin                ; calculate by using model         
-;;;
+  if query_result.size eq 0 then begin                ; calculate by using model
+;
      openw, unit, tmp_dir+'igrf11.input', /get_lun ; create input file
      printf,unit,'result.txt'                      ; Enter name of output file (30 characters maximum)
      printf,unit,1                                 ; 1 - geodetic (shape of Earth is approximated by a spheroid)
