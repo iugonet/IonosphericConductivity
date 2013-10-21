@@ -28,10 +28,10 @@ pro iug_insert_ionospheric_cond,sigma_0=sigma_0,sigma_1=sigma_1,sigma_2=sigma_2,
   endif
 ;
 
-  openw, unit, tmp_dir+'insert_ionospheric_cond.sql', /get_lun ; create query file
+  openw, unit, tmp_dir+'ionospheric_cond_insert.sql', /get_lun ; create query file
   
   printf,unit,'insert into ionospheric_cond values(',strtrim(string(sigma_0),1),',',strtrim(string(sigma_1),1),',',strtrim(string(sigma_2),1),',',strtrim(string(sigma_xx),1),',',strtrim(string(sigma_yy),1),',',strtrim(string(sigma_xy),1),',',strtrim(string(height),1),',',strtrim(string(glat),1),',',strtrim(string(glon),1),',',strtrim(string(yyyy),1),',',strtrim(string(mmdd),1),',',strtrim(string(ltut),1),',',strtrim(string(atime),1),',',strtrim(string(algorithm),1),');'
   free_lun, unit
 
-  spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db < '+tmp_dir+'/insert_ionospheric_cond.sql'
+  spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db < '+tmp_dir+'/ionospheric_cond_insert.sql'
 end
