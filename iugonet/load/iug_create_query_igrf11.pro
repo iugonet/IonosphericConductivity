@@ -28,7 +28,7 @@ pro iug_create_query_igrf11,coordinate_system=coordinate_system,yyyy=yyyy,glat=g
   endif
 ;
 
-  openw, unit, tmp_dir+'igrf11_query.sql',/get_lun ; create query file
+  openw, unit, tmp_dir+'igrf11.sql',/get_lun ; create query file
 
   printf,unit,'.output '+tmp_dir+'igrf11.result'
   printf,unit,'.separator ","'

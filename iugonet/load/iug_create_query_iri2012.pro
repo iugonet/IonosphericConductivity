@@ -22,7 +22,7 @@ pro iug_create_query_iri2012,jmag=jmag,lat=lat,lon=lon,yyyy=yyyy,mm=mm,dd=dd,ltu
 
   tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)'+'/'
   
-  openw, unit, tmp_dir+'iri2012_query.sql',/get_lun ; create query file
+  openw, unit, tmp_dir+'iri2012.sql',/get_lun ; create query file
 
   printf,unit,'.output '+tmp_dir+'iri2012.result'
   printf,unit,'.separator ","'

@@ -22,7 +22,7 @@ pro iug_create_query_ionospheric_cond,height=height,glat=glat,glon=glon,yyyy=yyy
   
   tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
 
-  openw, unit, tmp_dir+'ionospheric_cond_query.sql',/get_lun ; create query file
+  openw, unit, tmp_dir+'ionospheric_cond.sql',/get_lun ; create query file
 
   printf,unit,'.output '+tmp_dir+'ionospheric_cond.result'
   printf,unit,'.separator ","'
