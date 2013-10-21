@@ -79,19 +79,19 @@ pro iug_load_ionospheric_cond_diagnostics_1_09
   for i=0L,num_height-1 do begin
      if algorithm eq 1 then begin
 ; t_e,n2,o2,o,h,he                                                              
-        nu_en=iug_collision_freq1_en(result_iri[i,5],result_msis[i,4],$
+        nu_en=iug_collision_freq1_en(result_iri[i,13],result_msis[i,4],$
                                      result_msis[i,5],result_msis[i,3],$
                                      result_msis[i,7],result_msis[i,2])
-        nu_ei=iug_collision_freq1_ei(result_iri[i,1],result_iri[i,5])
+        nu_ei=iug_collision_freq1_ei(result_iri[i,9],result_iri[i,13])
         nu_e=nu_en+nu_ei
         nu_i=iug_collision_freq1_in(result_msis[i,2],result_msis[i,3],$
                                    result_msis[i,4],result_msis[i,5],$
                                    result_msis[i,6],result_msis[i,7],$
                                    result_msis[i,8],result_msis[i,9],$
-                                   result_iri[i,6],result_iri[i,7],$
-                                   result_iri[i,8],result_iri[i,9],$
-                                   result_iri[i,10],result_iri[i,11])
-        iug_collision_freq1_in_reso,tn=result_iri[i,3],ti=result_iri[i,4],$
+                                   result_iri[i,14],result_iri[i,15],$
+                                   result_iri[i,16],result_iri[i,17],$
+                                   result_iri[i,18],result_iri[i,19])
+        iug_collision_freq1_in_reso,tn=result_iri[i,11],ti=result_iri[i,12],$
                                     nh1=result_msis[i,7],$
                                     no1=result_msis[i,3],$
                                     nn1=result_msis[i,8],$
@@ -102,7 +102,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_09
                                     fn1_reso=fn1_reso,fhe_reso=fhe_reso,$
                                     fo2_reso=fo2_reso,fn2_reso=fn2_reso
         nu_in_reso[i] = fh1_reso+fo1_reso+fn1_reso+fhe_reso+fo2_reso+fn2_reso
-        iug_collision_freq1_in_exchange,tn=result_iri[i,3],ti=result_iri[i,4],$
+        iug_collision_freq1_in_exchange,tn=result_iri[i,11],ti=result_iri[i,12],$
                                         nh1=result_msis[i,7],$
                                         no1=result_msis[i,3],$
                                         nn1=result_msis[8,8],$
@@ -119,32 +119,32 @@ pro iug_load_ionospheric_cond_diagnostics_1_09
                          +fhe_exchange+fo2_exchange+fn2_exchange
      endif
      if algorithm eq 2 then begin
-        r_e=result_iri[i,5]/300.
+        r_e=result_iri[i,13]/300.
         nu_en_para=iug_collision_freq2_en_para(r_e,result_msis[i,4]*1E6,result_msis[i,5]*1E6,result_msis[i,3]*1E6)
-        nu_ei_para=iug_collision_freq2_ei_para(result_iri[i,1]*1E6,result_iri[i,5])
+        nu_ei_para=iug_collision_freq2_ei_para(result_iri[i,9]*1E6,result_iri[i,13])
         nu_e_para=nu_en_para+nu_ei_para
         nu_e=nu_e_para
         nu_en_perp=iug_collision_freq2_en_perp(r_e,result_msis[i,4]*1E6,result_msis[i,5]*1E6,result_msis[i,3]*1E6)
 
-        r_i=(result_iri[i,3]+result_iri[i,4])/1000.
-        nu_i=iug_collision_freq2_in(r_i,result_msis[i,4]*1E6,result_msis[i,5]*1E6,result_msis[i,3]*1E6,result_iri[i,11]*1E6,result_iri[i,10]*1E6,result_iri[i,6]*1E6)
+        r_i=(result_iri[i,11]+result_iri[i,12])/1000.
+        nu_i=iug_collision_freq2_in(r_i,result_msis[i,4]*1E6,result_msis[i,5]*1E6,result_msis[i,3]*1E6,result_iri[i,19]*1E6,result_iri[i,18]*1E6,result_iri[i,14]*1E6)
      endif
 
-;     m_i= ( (16*m_p*result_iri[i,6]/100-m_e)*result_iri[i,2] $
-;           + (14*m_p*result_iri[i,7]/100-m_e)*result_iri[i,2] $
-;           + (1.*m_p*result_iri[i,8]/100.-m_e)*result_iri[i,2] $
-;           + (4.*m_p*result_iri[i,9]/100.-m_e)*result_iri[i,2] $
-;           + (32.*m_p*result_iri[i,10]/100.-m_e)*result_iri[i,2] $
-;           + (30.*m_p*result_iri[i,11]/100.-m_e)*result_iri[i,2] ) $
-;          /result_iri[i,2]
-     num_o_p = result_iri[i,1]*1.E6*result_iri[i,6] /100. ; O+            
-     num_n_p = result_iri[i,1]*1.E6*result_iri[i,7] /100. ; N+            
-     num_h_p = result_iri[i,1]*1.E6*result_iri[i,8] /100. ; H+            
-     num_he_p= result_iri[i,1]*1.E6*result_iri[i,9] /100. ; He+           
-     num_o2_p= result_iri[i,1]*1.E6*result_iri[i,10]/100. ; O2+           
-     num_no_p= result_iri[i,1]*1.E6*result_iri[i,11]/100. ; NO+           
-     num_cluster_p = result_iri[i,1]*1.E6*result_iri[i,12]/100. ; Cluster+
-     num_ions= result_iri[i,1]*1.E6                             ; Ne/m-3    
+;     m_i= ( (16*m_p*result_iri[i,14]/100-m_e)*result_iri[i,10] $
+;           + (14*m_p*result_iri[i,15]/100-m_e)*result_iri[i,10] $
+;           + (1.*m_p*result_iri[i,16]/100.-m_e)*result_iri[i,10] $
+;           + (4.*m_p*result_iri[i,17]/100.-m_e)*result_iri[i,10] $
+;           + (32.*m_p*result_iri[i,18]/100.-m_e)*result_iri[i,10] $
+;           + (30.*m_p*result_iri[i,19]/100.-m_e)*result_iri[i,10] ) $
+;          /result_iri[i,10]
+     num_o_p = result_iri[i,9]*1.E6*result_iri[i,14] /100. ; O+            
+     num_n_p = result_iri[i,9]*1.E6*result_iri[i,15] /100. ; N+            
+     num_h_p = result_iri[i,9]*1.E6*result_iri[i,16] /100. ; H+            
+     num_he_p= result_iri[i,9]*1.E6*result_iri[i,17] /100. ; He+           
+     num_o2_p= result_iri[i,9]*1.E6*result_iri[i,18]/100. ; O2+           
+     num_no_p= result_iri[i,9]*1.E6*result_iri[i,19]/100. ; NO+           
+     num_cluster_p = result_iri[i,9]*1.E6*result_iri[i,20]/100. ; Cluster+
+     num_ions= result_iri[i,9]*1.E6                             ; Ne/m-3    
 
      m_i = ( 16.* num_o_p $
            + 14.* num_n_p $

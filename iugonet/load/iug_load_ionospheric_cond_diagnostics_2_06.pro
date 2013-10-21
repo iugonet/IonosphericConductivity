@@ -24,6 +24,14 @@
 ;-
 
 pro iug_load_ionospheric_cond_diagnostics_2_06
+  
+;
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+;
 
   height_bottom=100
   height_top=400
@@ -52,8 +60,8 @@ pro iug_load_ionospheric_cond_diagnostics_2_06
      iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, result=result,algorithm=1
   endfor
 
-  set_plot,'ps'
-  device,filename='/tmp/iug_load_ionospheric_cond_diagnostics_2_06.ps',/color
+  set_plot, 'ps'
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_2_06.ps', /color
 
   plot,result[*,1],result[*,6],xtitle="Pedersen Conductivities (S/m)", $
        ytitle="Altitude (km)",yrange=[0,400],xrange=[1E-8,1E-3],/xlog, $
@@ -135,7 +143,7 @@ h=[80.8162,81.9125,80.9736,82.0772,83.1624,84.2514,92.5052,94.5989,99.7799,101.8
   oplot,e,f,linestyle=1,color=0
   oplot,g,h,linestyle=1,color=0
 
-  device,/close
-  set_plot,'x'
+  device, /close
+  set_plot, 'x'
 
 end

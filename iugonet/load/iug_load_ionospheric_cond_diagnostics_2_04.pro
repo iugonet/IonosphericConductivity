@@ -79,31 +79,31 @@ pro iug_load_ionospheric_cond_diagnostics_2_04
   result = fltarr(6,num_height)
 
   for i=0L,num_height-1 do begin
-     r_e=result_iri[i,5]/300.
+     r_e=result_iri[i,13]/300.
      nu_en_perp=iug_collision_freq2_en_perp(r_e,result_msis[i,4]*1E6,result_msis[i,5]*1E6,result_msis[i,3]*1E6)
      nu_en_para=iug_collision_freq2_en_para(r_e,result_msis[i,4]*1E6,result_msis[i,5]*1E6,result_msis[i,3]*1E6)
-     nu_ei_para=iug_collision_freq2_ei_para(result_iri[i,1]*1E6,result_iri[i,5])
+     nu_ei_para=iug_collision_freq2_ei_para(result_iri[i,9]*1E6,result_iri[i,13])
      nu_e_para=nu_en_para+nu_ei_para
      nu_e=nu_e_para
 
-     r_i=(result_iri[i,3]+result_iri[i,4])/1000.
-     nu_i=iug_collision_freq2_in(r_i,result_msis[i,4]*1.E6,result_msis[i,5]*1E6,result_msis[i,3]*1.E6,result_iri[i,11]*1.E6,result_iri[i,10]*1.E6,result_iri[i,6]*1.E6)
+     r_i=(result_iri[i,11]+result_iri[i,12])/1000.
+     nu_i=iug_collision_freq2_in(r_i,result_msis[i,4]*1.E6,result_msis[i,5]*1E6,result_msis[i,3]*1.E6,result_iri[i,19]*1.E6,result_iri[i,18]*1.E6,result_iri[i,14]*1.E6)
      
-; "O+=",result_iri[i,6]                                                        
-; "N+=",result_iri[i,7]                                                        
-; "H+=",result_iri[i,8]                                                        
-; "He+=",result_iri[i,9]                                                       
-; "O2+=",result_iri[i,10]                                                      
-; "NO+=",result_iri[i,11]                                                      
-; "Clust+=",result_iri[i,12]
-     num_o_p = result_iri[i,1]*1.E6*result_iri[i,6] /100.       ; O+
-     num_n_p = result_iri[i,1]*1.E6*result_iri[i,7] /100.       ; N+
-     num_h_p = result_iri[i,1]*1.E6*result_iri[i,8] /100.       ; H+
-     num_he_p= result_iri[i,1]*1.E6*result_iri[i,9] /100.       ; He+       
-     num_o2_p= result_iri[i,1]*1.E6*result_iri[i,10]/100.       ; O2+      
-     num_no_p= result_iri[i,1]*1.E6*result_iri[i,11]/100.       ; NO+        
-     num_cluster_p = result_iri[i,1]*1.E6*result_iri[i,12]/100. ; Cluster+   
-     num_ions= result_iri[i,1]*1.E6 ; Ne/m-3     
+; "O+=",result_iri[i,14]                                                        
+; "N+=",result_iri[i,15]                                                        
+; "H+=",result_iri[i,16]                                                        
+; "He+=",result_iri[i,17]                                                       
+; "O2+=",result_iri[i,18]                                                      
+; "NO+=",result_iri[i,19]                                                      
+; "Clust+=",result_iri[i,20]
+     num_o_p = result_iri[i,9]*1.E6*result_iri[i,14] /100.       ; O+
+     num_n_p = result_iri[i,9]*1.E6*result_iri[i,15] /100.       ; N+
+     num_h_p = result_iri[i,9]*1.E6*result_iri[i,16] /100.       ; H+
+     num_he_p= result_iri[i,9]*1.E6*result_iri[i,17] /100.       ; He+       
+     num_o2_p= result_iri[i,9]*1.E6*result_iri[i,18]/100.       ; O2+      
+     num_no_p= result_iri[i,9]*1.E6*result_iri[i,19]/100.       ; NO+        
+     num_cluster_p = result_iri[i,9]*1.E6*result_iri[i,20]/100. ; Cluster+   
+     num_ions= result_iri[i,9]*1.E6 ; Ne/m-3     
 
      m_i = ( 16.* num_o_p $
            + 14.* num_n_p $

@@ -59,7 +59,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_03
   set_plot, 'ps'
   device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_2_03.ps', /color
 
-  plot,result_iri[*,1]*1E6,result_iri[*,0],xtitle="Electron Density (m^-3)", $
+  plot,result_iri[*,9]*1E6,result_iri[*,8],xtitle="Electron Density (m^-3)", $
        ytitle="Altitude (km)",yrange=[0,400],xrange=[1E8,1E13],/xlog, $
        linestyle=0, color=0, title="GLAT=44.6, GLON=2.2, on March 21, by IRI2012"
   xyouts,7E11,350,"Solar maximum",color=6
@@ -78,7 +78,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_03
 
   iug_load_iri2012_array, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=glat, glon=glon, height_bottom=height_bottom, height_top=height_top, height_step=height_step, result=result_iri
 
-  oplot,result_iri[*,1]*1E6,result_iri[*,0],linestyle=0, color=3
+  oplot,result_iri[*,9]*1E6,result_iri[*,8],linestyle=0, color=3
 
 ;
 ; Calculation3
@@ -91,7 +91,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_03
 
   iug_load_iri2012_array, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=glat, glon=glon, height_bottom=height_bottom, height_top=height_top, height_step=height_step, result=result_iri
 
-  oplot,result_iri[*,1]*1E6,result_iri[*,0],linestyle=0, color=4
+  oplot,result_iri[*,9]*1E6,result_iri[*,8],linestyle=0, color=4
 
 ;
 ; Calculation4
@@ -104,7 +104,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_03
 
   iug_load_iri2012_array, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=glat, glon=glon, height_bottom=height_bottom, height_top=height_top, height_step=height_step, result=result_iri
 
-  oplot,result_iri[*,1]*1E6,result_iri[*,0],linestyle=0, color=5
+  oplot,result_iri[*,9]*1E6,result_iri[*,8],linestyle=0, color=5
 
 ; Solar maximum, noon
   a=[1.04E+08,1.21E+08,1.42E+08,1.67E+08,1.92E+08,2.21E+08,2.59E+08,3.03E+08,3.49E+08,4.09E+08,4.79E+08,5.52E+08,6.47E+08,7.45E+08,8.73E+08,1.02E+09,1.16E+09,1.34E+09,1.57E+09,1.80E+09,2.11E+09,2.51E+09,3.08E+09,3.85E+09,4.87E+09,5.98E+09,7.82E+09,1.04E+10,1.36E+10,1.83E+10,2.55E+10,3.39E+10,4.65E+10,5.99E+10,7.70E+10,9.61E+10,1.24E+11,1.49E+11,1.78E+11,1.70E+11,1.65E+11,1.73E+11,1.90E+11,2.09E+11,2.26E+11,2.49E+11,2.69E+11,2.91E+11,3.10E+11,3.36E+11,3.64E+11,3.94E+11,4.13E+11,4.62E+11,5.32E+11,6.04E+11,6.85E+11,7.78E+11,8.69E+11,9.71E+11,1.08E+12,1.21E+12,1.33E+12,1.47E+12,1.56E+12,1.69E+12,1.77E+12,1.86E+12,1.92E+12,1.98E+12,2.02E+12,2.02E+12,2.02E+12,1.99E+12,1.96E+12,1.90E+12,1.79E+12,1.76E+12,1.71E+12]

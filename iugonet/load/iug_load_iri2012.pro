@@ -30,7 +30,7 @@
 pro iug_load_iri2012, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=glat, glon=glon, height=height, result=result
 
 ;validate height
-  if height lt 80 then begin
+  if height lt 60 then begin
      dprint,"Satisfy 'height >=80 (km)'."
      return
   endif

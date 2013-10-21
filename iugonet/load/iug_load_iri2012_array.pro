@@ -29,7 +29,7 @@
 pro iug_load_iri2012_array, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=glat, glon=glon, height_bottom=height_bottom, height_top=height_top, height_step=height_step, result=result
 
 ;validate height
-  if height_bottom lt 80 then begin
+  if height_bottom lt 60 then begin
      dprint,"Satisfy 'height >=80 (km)'."
      return
   endif
@@ -39,7 +39,7 @@ pro iug_load_iri2012_array, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=gla
   endif
 ;
 ;validate height
-  if height_top lt 80 then begin
+  if height_top lt 60 then begin
      dprint,"Satisfy 'height >=80 (km)'."
      return
   endif
