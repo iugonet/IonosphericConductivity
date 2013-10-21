@@ -79,8 +79,10 @@ pro iug_load_iri2012, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=glat, glo
      temp28 = '' & temp29 = '' & temp30 = '' & temp31 = '' & temp32 = ''
      temp33 = '' 
      
-     readf,unit,format='(a6,a8,a7,a6,a6,a6,a4,a4,a4,a4,a4,a4,a4,a6,a4)',temp0,temp1,temp2,temp3,temp4,temp5,temp6,temp7,temp8,temp9,temp10,temp11,temp12,temp13,temp14
-
+     readf,unit,format='(a6,a8,a7,a6,a6,a6,a4,a4,a4,a4,a4,a4,a4,a6,a4)',temp8,temp9,temp10,temp11,temp12,temp13,temp14,temp15,temp16,temp17,temp18,temp19,temp20,temp21,temp22
+; To be implemented
+; temp23, temp24, temp25, temp26, temp27, temp28, temp29, temp30,
+; temp31, temp32, temp33
 
      result[0] = 1              ; jmag
      result[1] = glat           ; lat
