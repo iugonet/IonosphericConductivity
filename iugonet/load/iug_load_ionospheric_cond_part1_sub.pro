@@ -112,7 +112,7 @@ pro iug_load_ionospheric_cond_part1_sub, height=height, glat=glat, glon=glon, yy
 ;
 ; IGRF11
 ; 
-  iug_load_igrf11, height_bottom=height, height_top=height, height_step=0, yyyy=yyyy, glat=glat, glon=glon, r_d=r_d, r_i=r_i, r_h=r_h,r_x=r_x,r_y=r_y,r_z=r_z,r_f=r_f
+  iug_load_igrf11_array, height_bottom=height, height_top=height, height_step=0, yyyy=yyyy, glat=glat, glon=glon, r_d=r_d, r_i=r_i, r_h=r_h,r_x=r_x,r_y=r_y,r_z=r_z,r_f=r_f
 
 ;
 ; Calculation based on Kenichi Maeda's equation
