@@ -69,68 +69,62 @@ pro iug_load_iri2012, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=glat, glo
      
      spawn,'cd ${HOME}/models/ionospheric/iri/iri2012;./iritest < '+tmp_dir+'iri2012.input'
      spawn,"cat ${HOME}/models/ionospheric/iri/iri2012/fort.7 | awk '{if( NR>27 ) print $0}' > "+tmp_dir+"iri2012.result"
-     result = fltarr(26)
+     result = fltarr(34)
 
      openr, unit, tmp_dir+'iri2012.result', /get_lun
-     temp0 = '' & temp1 = '' & temp2 = '' & temp3 = '' & temp4 = '' 
-     temp5 = '' & temp6='' & temp7 = '' & temp8 = '' & temp9 = '' 
-     temp10 = '' & temp11 = '' & temp12 = '' & temp13 = '' & temp14 = ''
-     temp15 = '' & temp16 = '' & temp17 = '' & temp18 = '' & temp19 = '' & temp20 = ''
-     temp21 = '' & temp22 = '' & temp23 = '' & temp24 = '' & temp25 = ''
+     temp8 = '' & temp9 = '' & temp10 = '' & temp11 = '' & temp12 = '' 
+     temp13 = '' & temp14 = ''& temp15 = '' & temp16 = '' & temp17 = ''
+     temp18 = '' & temp19 = '' & temp20 = '' & temp21 = '' & temp22 = ''
+     temp23 = '' & temp24 = '' & temp25 = '' & temp26 = '' & temp27 = ''
+     temp28 = '' & temp29 = '' & temp30 = '' & temp31 = '' & temp32 = ''
+     temp33 = '' 
      
      readf,unit,format='(a6,a8,a7,a6,a6,a6,a4,a4,a4,a4,a4,a4,a4,a6,a4)',temp0,temp1,temp2,temp3,temp4,temp5,temp6,temp7,temp8,temp9,temp10,temp11,temp12,temp13,temp14
 
-     result[0] = temp0          ; alt
-     result[1] = temp1          ; Ne/cm-3
-     result[2] = temp2          ; Ne/NmF2
-     result[3] = temp3          ; Tn/K
-     result[4] = temp4          ; Ti/K
-     result[5] = temp5          ; Te/K
-     result[6] = temp6          ; O+
-     result[7] = temp7          ; N+
-     result[8] = temp8          ; H+
-     result[9] = temp9          ; He+
-     result[10] = temp10        ; O2+
-     result[11] = temp11        ; NO+
-     result[12] = temp12        ; Clust
-     result[13] = temp13        ; TEC
-     result[14] = temp14        ; t/%
-     result[15] = temp15        ; NmF2
-     result[16] = temp16        ; NmF1
-     result[17] = temp17        ; NmE
-     result[18] = temp18        ; hmF2
-     result[19] = temp19        ; hmF1
-     result[20] = temp20        ; hmE
-     result[21] = temp21        ; sza
-     result[22] = temp22        ; dip
-     result[23] = temp23        ; modip
-     result[24] = temp24        ; rz12
-     result[25] = temp25        ; ig12
+
+     result[0] = 1              ; jmag
+     result[1] = glat           ; lat
+     result[2] = glon           ; lon
+     result[3] = yyyy           ; yyyy
+     result[4] = mm             ; mm
+     result[5] = dd             ; dd
+     result[6] = ltut           ; ltut
+     result[7] = time           ; atime
+     result[8] = temp8          ; alt
+     result[9] = temp9          ; Ne/cm-3
+     result[10] = temp10        ; Ne/NmF2
+     result[11] = temp11        ; Tn/K
+     result[12] = temp12        ; Ti/K
+     result[13] = temp13        ; Te/K
+     result[14] = temp14        ; O+
+     result[15] = temp15        ; N+
+     result[16] = temp16        ; H+
+     result[17] = temp17        ; He+
+     result[18] = temp18        ; O2+
+     result[19] = temp19        ; NO+
+     result[20] = temp20        ; Clust
+     result[21] = temp21        ; TEC
+     result[22] = temp22        ; t/%
+     result[23] = temp23        ; NmF2
+     result[24] = temp24        ; NmF1
+     result[25] = temp25        ; NmE
+     result[26] = temp26        ; hmF2
+     result[27] = temp27        ; hmF1
+     result[28] = temp28        ; hmE
+     result[29] = temp29        ; sza
+     result[30] = temp30        ; dip
+     result[31] = temp31        ; modip
+     result[32] = temp32        ; rz12
+     result[33] = temp33        ; ig12
 
      free_lun, unit
 
-     iug_insert_iri2012, jmag=1, lat=glat, lon=glon, yyyy=yyyy, mm=mm, dd=dd, ltut=ltut, atime=time, height=result[0], ine=result[1], ner=result[2], tnk=result[3], tik=result[4], tek=result[5], io1=result[6], in1=result[7], ih1=result[8], ihe=result[9], io2=result[10], ino=result[11], icl=result[12], tec=result[13], tpe=result[14], NmF2=result[15], NmF1=result[16], NmE=result[17], hmF2=result[18], hmF1=result[19], hmE=result[20], sza=result[21], dip=result[22], modip=result[23], rz12=result[24], ig12=result[25]
+     iug_insert_iri2012, jmag=result[0], lat=result[1], lon=result[2], yyyy=result[3], mm=result[4], dd=result[5], ltut=result[6], atime=result[7], height=result[8], ine=result[9], ner=result[10], tnk=result[11], tik=result[12], tek=result[13], io1=result[14], in1=result[15], ih1=result[16], ihe=result[17], io2=result[18], ino=result[19], icl=result[20], tec=result[21], tpe=result[22], NmF2=result[23], NmF1=result[24], NmE=result[25], hmF2=result[26], hmF1=result[27], hmE=result[28], sza=result[29], dip=result[30], modip=result[31], rz12=result[32], ig12=result[33]
 
   endif else begin
      openr, unit, tmp_dir+'iri2012.result', /get_lun
-     array = fltarr(15)
-     readf, unit, array
-
-     temp0 = array(0)
-     temp1 = array(1)
-     temp2 = array(2)
-     temp3 = array(3)
-     temp4 = array(4)
-     temp5 = array(5)
-     temp6 = array(6)
-     temp7 = array(7)
-     temp8 = array(8)
-     temp9 = array(9)
-     temp10 = array(10)
-     temp11 = array(11)
-     temp12 = array(12)
-     temp13 = array(13)
-     temp14 = array(14)
+     result = fltarr(34)
+     readf, unit, result
 
      free_lun, unit
   endelse
