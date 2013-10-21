@@ -126,16 +126,16 @@ pro iug_load_ionospheric_cond_part1_sub, height=height, glat=glat, glon=glon, yy
 
   if query_result.size eq 0 then begin ; calculate by using model        
 ;;;
-     nu_en=iug_collision_freq1_en(result_iri[0,5],result_msis[0,4],result_msis[0,5],result_msis[0,3],result_msis[0,7],result_msis[0,2])
-     nu_ei=iug_collision_freq1_ei(result_iri[0,1],result_iri[0,5])
+     nu_en=iug_collision_freq1_en(result_iri[0,13],result_msis[0,4],result_msis[0,5],result_msis[0,3],result_msis[0,7],result_msis[0,2])
+     nu_ei=iug_collision_freq1_ei(result_iri[0,9],result_iri[0,13])
      nu_e=nu_en+nu_ei
      nu_i=iug_collision_freq1_in(result_msis[0,2],result_msis[0,3],$
                                  result_msis[0,4],result_msis[0,5],$
                                  result_msis[0,6],result_msis[0,7],$
                                  result_msis[0,8],result_msis[0,9],$
-                                 result_iri[0,6],result_iri[0,7],$
-                                 result_iri[0,8],result_iri[0,9],$
-                                 result_iri[0,10],result_iri[0,11])
+                                 result_iri[0,14],result_iri[0,15],$
+                                 result_iri[0,16],result_iri[0,17],$
+                                 result_iri[0,18],result_iri[0,19])
 ; result[0,*]: simga_0, parallel conductivity
 ; result[1,*]: sigma_1, pedarsen conductivity
 ; result[2,*]: sigma_2, hole conductivity
@@ -144,17 +144,17 @@ pro iug_load_ionospheric_cond_part1_sub, height=height, glat=glat, glon=glon, yy
 ; result[5,*]: sigma_xy, hole conductivity
 ; result[6,*]: height
 
-     num_ions= result_iri[0,1]*1.E6                          ; Ne/m-3
-     num_o_p = result_iri[0,1]*1.E6*result_iri[0,6] /100.    ; O+
-     num_n_p = result_iri[0,1]*1.E6*result_iri[0,7] /100.    ; N+
-     num_h_p = result_iri[0,1]*1.E6*result_iri[0,8] /100.    ; H+
-     num_he_p= result_iri[0,1]*1.E6*result_iri[0,9] /100.    ; He+
-     num_o2_p= result_iri[0,1]*1.E6*result_iri[0,10]/100.    ; O2+
-     num_no_p= result_iri[0,1]*1.E6*result_iri[0,11]/100.    ; NO+
-     if result_iri[0,12] eq -1 then begin                    ; Cluster+
+     num_ions= result_iri[0,9]*1.E6                          ; Ne/m-3
+     num_o_p = result_iri[0,9]*1.E6*result_iri[0,14] /100.    ; O+
+     num_n_p = result_iri[0,9]*1.E6*result_iri[0,15] /100.    ; N+
+     num_h_p = result_iri[0,9]*1.E6*result_iri[0,16] /100.    ; H+
+     num_he_p= result_iri[0,9]*1.E6*result_iri[0,17] /100.    ; He+
+     num_o2_p= result_iri[0,9]*1.E6*result_iri[0,18]/100.    ; O2+
+     num_no_p= result_iri[0,9]*1.E6*result_iri[0,19]/100.    ; NO+
+     if result_iri[0,20] eq -1 then begin                    ; Cluster+
         num_cluster_p = 0.
      endif else begin
-        num_cluster_p = result_iri[0,1]*1.E6*result_iri[0,12]/100. 
+        num_cluster_p = result_iri[0,9]*1.E6*result_iri[0,20]/100. 
      endelse
      
      m_i = ( 16.* num_o_p $
@@ -171,7 +171,7 @@ pro iug_load_ionospheric_cond_part1_sub, height=height, glat=glat, glon=glon, yy
      
      denominator =   (1.+kappa)^2*nu_e^2. + omega_e^2.
      
-     result[0] = e_charge^2. * ( result_iri(0,1) * 1.E6 )/(m_e * nu_e)
+     result[0] = e_charge^2. * ( result_iri(0,9) * 1.E6 )/(m_e * nu_e)
      result[1] = ( (1.+kappa)*nu_e^2.  )/denominator * result[0]
      result[2] = ( omega_e*nu_e )       /denominator * result[0]
 ; 2 dimensional conductivity
@@ -186,7 +186,7 @@ pro iug_load_ionospheric_cond_part1_sub, height=height, glat=glat, glon=glon, yy
      result[5]=( result[0]*result[2]*sin(!dpi/180.*r_i[0])) $
                  /( result[1]*cos(!dpi/180.*r_i[0])^2. $
                     + result[0]*sin(!dpi/180.*r_i[0])^2. )
-     
+
      iug_insert_ionospheric_cond,sigma_0=result[0],sigma_1=result[1],sigma_2=result[2],sigma_xx=result[3],sigma_yy=result[4],sigma_xy=result[5],height=height,glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=time,algorithm=algorithm
   endif else begin              ; retrieve from DB
      openr, unit, tmp_dir+'ionospheric_cond.result', /get_lun
@@ -200,7 +200,7 @@ pro iug_load_ionospheric_cond_part1_sub, height=height, glat=glat, glon=glon, yy
      result[4] = array(4)
      result[5] = array(5)
      result[6] = array(6)
-     
+
      free_lun, unit
   endelse
 

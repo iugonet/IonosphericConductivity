@@ -167,17 +167,14 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
 ;
   for i=0L,n_elements(calc_table)-1 do begin
      if calc_table[i].flag eq 1 then begin
-
-;        iug_load_ionospheric_cond, height_bottom=calc_table[i].height_bottom, height_top=height_top, height_step=height_step, glat=glat_array[i], glon=glon_array[j], yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
+        iug_load_ionospheric_cond_part1_sub, height=calc_table[i].height, glat=calc_table[i].glat, glon=calc_table[i].glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, result=result
 ;           for l=0L,7-1 do begin
 ;              result2[i,j,k,l]=result[k,l]
 ;           endfor
-
-        print, calc_table[i].height, calc_table[i].glat, calc_table[i].glon, calc_table[i].flag
      endif
   endfor
 
-  exit
+  
 
   set_plot, 'ps'
   device, filename=tmp_dir+'iug_load_ionospheric_cond_map.ps', /color, /encapsulated
