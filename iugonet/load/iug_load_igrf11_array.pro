@@ -58,7 +58,7 @@ pro iug_load_igrf11_array, height_bottom=height_bottom, height_top=height_top, h
   if file_test(tmp_dir) eq 0 then begin 
      file_mkdir, tmp_dir
   endif
-
+;
   r_d = fltarr(num_height)
   r_i = fltarr(num_height)
   r_h = fltarr(num_height)

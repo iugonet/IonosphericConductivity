@@ -54,7 +54,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_03
   time=12
   yyyy=1987
 
-  iug_load_iri2012,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon,height_bottom=height_bottom,height_top=height_top,height_step=height_step,result=result_iri
+  iug_load_iri2012_array, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=glat, glon=glon, height_bottom=height_bottom, height_top=height_top, height_step=height_step, result=result_iri
 
   set_plot, 'ps'
   device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_2_03.ps', /color
@@ -76,7 +76,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_03
   time=12
   yyyy=1991
 
-  iug_load_iri2012,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon,height_bottom=height_bottom,height_top=height_top,height_step=height_step,result=result_iri
+  iug_load_iri2012_array, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=glat, glon=glon, height_bottom=height_bottom, height_top=height_top, height_step=height_step, result=result_iri
 
   oplot,result_iri[*,1]*1E6,result_iri[*,0],linestyle=0, color=3
 
@@ -89,7 +89,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_03
   time=0
   yyyy=1987
 
-  iug_load_iri2012,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon,height_bottom=height_bottom,height_top=height_top,height_step=height_step,result=result_iri
+  iug_load_iri2012_array, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=glat, glon=glon, height_bottom=height_bottom, height_top=height_top, height_step=height_step, result=result_iri
 
   oplot,result_iri[*,1]*1E6,result_iri[*,0],linestyle=0, color=4
 
@@ -102,7 +102,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_03
   time=0
   yyyy=1991
 
-  iug_load_iri2012,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon,height_bottom=height_bottom,height_top=height_top,height_step=height_step,result=result_iri
+  iug_load_iri2012_array, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=glat, glon=glon, height_bottom=height_bottom, height_top=height_top, height_step=height_step, result=result_iri
 
   oplot,result_iri[*,1]*1E6,result_iri[*,0],linestyle=0, color=5
 

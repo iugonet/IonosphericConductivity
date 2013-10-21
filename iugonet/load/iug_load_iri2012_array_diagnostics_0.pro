@@ -7,7 +7,7 @@
 ;
 ;-
 
-pro iug_load_iri2012_diagnostics_0
+pro iug_load_iri2012_array_diagnostics_0
   
 ;
   tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
@@ -27,7 +27,7 @@ pro iug_load_iri2012_diagnostics_0
   height_top = 400
   height_step = 10
 
-  iug_load_iri2012,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon,height_bottom=height_bottom,height_top=height_top,height_step=height_step,result=result_iri
+  iug_load_iri2012_array, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=glat, glon=glon, height_bottom=height_bottom, height_top=height_top, height_step=height_step, result=result_iri
 
 ; 2000-01-01, LT0, (0,0) by
 ; http://ccmc.gsfc.nasa.gov/modelweb/models/iri_vitmo.php 

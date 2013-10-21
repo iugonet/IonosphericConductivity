@@ -25,7 +25,7 @@
 ;
 ;-
 
-pro iug_load_iri2012_db,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon,height_bottom=height_bottom,height_top=height_top,height_step=height_step,result=result
+pro iug_load_iri2012_db, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=glat, glon=glon, height_bottom=height_bottom, height_top=height_top, height_step=height_step, result=result
 
   if height_top ne height_bottom then begin
      num_height = (height_top-height_bottom)/height_step+1

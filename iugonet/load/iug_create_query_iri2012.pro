@@ -18,9 +18,15 @@
 ;EXAMPLE:
 ;  iug_create_query_iri2012,1,2000,0,0,100
 ;-
-pro iug_create_query_iri2012,jmag=jmag,lat=lat,lon=lon,yyyy=yyyy,mm=mm,dd=dd,ltut=ltut,atime=atime,height=height
+pro iug_create_query_iri2012, jmag=jmag, lat=lat, lon=lon, yyyy=yyyy, mm=mm, dd=dd, ltut=ltut, atime=atime, height=height
 
-  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)'+'/'
+;  
+  tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+;
   
   openw, unit, tmp_dir+'iri2012.sql',/get_lun ; create query file
 

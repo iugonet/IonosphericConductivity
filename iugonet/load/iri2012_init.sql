@@ -14,13 +14,14 @@ create table iri2012 (
        ti int not null, -- Ti/K
        te int not null, -- Te/K
        io int not null, -- O+
+       in1 int not null, -- N+
        ih int not null, -- H+
-       ihe int not null, -- N+
+       ihe int not null, -- N+       
        io2 int not null, -- He+
        ino int not null, -- H+
        icl int not null, -- O2+
        tec real not null,  -- TEC
-       t int not null, -- t/%
+       tpe int not null, -- t/%
        NmF2 real not null, -- Peak Densities/cm-3: NmF2 
        NmF1 real not null, -- NmF1
        NmE real not null, -- NmE

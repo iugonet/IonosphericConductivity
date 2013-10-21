@@ -61,7 +61,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_04
   m_p = 1.6726231E-27                ; (kg)  
 
 ; Calculation of IRI2012 model
-  iug_load_iri2012,yyyy=yyyy,mmdd=mmdd,ltut=ltut,time=time,glat=glat,glon=glon,height_bottom=height_bottom,height_top=height_top,height_step=height_step,result=result_iri
+  iug_load_iri2012_array, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=glat, glon=glon, height_bottom=height_bottom, height_top=height_top, height_step=height_step, result=result_iri
 
 ;
 ; Calculation of NRLMSISE for getting composition of atmosphere
