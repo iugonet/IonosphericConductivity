@@ -157,7 +157,7 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
         if calc_table[i].height eq calculated_table[j].height $
            and calc_table[i].glat eq calculated_table[j].glat $
            and calc_table[i].glon eq calculated_table[j].glon then begin
-           
+
            calc_table[i].flag = 0 ; skip the calculation, use data in DB
 
         endif
@@ -167,10 +167,12 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
 ;
   for i=0L,n_elements(calc_table)-1 do begin
      if calc_table[i].flag eq 1 then begin
+
 ;        iug_load_ionospheric_cond, height_bottom=calc_table[i].height_bottom, height_top=height_top, height_step=height_step, glat=glat_array[i], glon=glon_array[j], yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
 ;           for l=0L,7-1 do begin
 ;              result2[i,j,k,l]=result[k,l]
 ;           endfor
+
         print, calc_table[i].height, calc_table[i].glat, calc_table[i].glon, calc_table[i].flag
      endif
   endfor

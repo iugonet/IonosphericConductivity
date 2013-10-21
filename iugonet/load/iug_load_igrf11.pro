@@ -82,11 +82,19 @@ pro iug_load_igrf11,height=height,yyyy=yyyy,glat=glat,glon=glon,r_d=r_d,r_i=r_i,
      readf,unit,format='(a6,a6)',temp4,temp11
      readf,unit,format='(a6,a6)',temp5,temp12
      readf,unit,format='(a6,a6)',temp6,temp13
+
+     temp0_0 = float(temp0_0) 
+     temp0_1 = float(temp0_1)
+     temp1_0 = float(temp1_0)
+     temp1_1 = float(temp1_1)
+
      if( temp0_0>0 ) then begin
         r_d=temp0_0+temp0_1/60. ; D
+        print,"HOGE1"
      endif
      if( temp0_0<0 ) then begin
         r_d=temp0_0-temp0_1/60. ; D
+        print,"HOGE2"
      endif
      if( temp1_0>0 ) then begin
         r_i=temp1_0+temp1_1/60. ; I
@@ -120,18 +128,9 @@ pro iug_load_igrf11,height=height,yyyy=yyyy,glat=glat,glon=glon,r_d=r_d,r_i=r_i,
      temp1_0 = array(7)
      temp1_1 = array(8)
      
-     if( temp0_0>0 ) then begin
-        r_d=temp0_0+temp0_1/60. ; D
-     endif
-     if( temp0_0<0 ) then begin
-        r_d=temp0_0-temp0_1/60. ; D
-     endif
-     if( temp1_0>0 ) then begin
-        r_i=temp1_0+temp1_1/60. ; I
-     endif
-     if( temp1_0<0 ) then begin
-        r_i=temp1_0-temp1_1/60. ; I
-     endif
+     r_d = temp0_0 + sign(temp0_0)*temp0_1/60. ; D
+     r_i = temp1_0 + sign(temp1_0)*temp1_1/60. ; I
+
      r_h = array(9)
      r_x = array(10)
      r_y = array(11)
