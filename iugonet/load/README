@@ -1,8 +1,8 @@
 # for initialize DATABASE
-sqlite3 igrf11.db < igrf11.sql
-sqlite3 iri2012.db < iri2012.sql
-sqlite3 nrlmsise00.db < nrlmsise00.sql
-sqlite3 ionospheric_cond.db < ionospheric_cond.sql
+sqlite3 igrf11.db < igrf11_init.sql
+sqlite3 iri2012.db < iri2012_init.sql
+sqlite3 nrlmsise00.db < nrlmsise00_init.sql
+sqlite3 ionospheric_cond.db < ionospheric_cond_init.sql
 
 # To check inside DATABASE (in case of igrf11) 
 $ sqlite3 igrf11.db
