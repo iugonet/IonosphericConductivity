@@ -99,6 +99,13 @@ pro iug_load_igrf11,height=height,yyyy=yyyy,glat=glat,glon=glon,r_d=r_d,r_i=r_i,
      r_y=temp4               ; Y
      r_z=temp5               ; Z
      r_f=temp6               ; F
+
+     print,"HO",temp0_0
+     print,"HO2",temp0_1
+     print,"r_d=",r_d
+     print,"AO",temp1_0
+     print,"AO2",temp1_1
+     print,"r_i=",r_i
      free_lun, unit
 ;
      iug_insert_igrf11,coordinate_system=1,yyyy=yyyy,glat=glat,glon=glon,height=height,d_deg=temp0_0,d_min=temp0_1,i_deg=temp1_0,i_min=temp1_1,r_h=r_h,r_x=r_x,r_y=r_y,r_z=r_z,r_f=r_f,d_sv=temp7,i_sv=temp8,h_sv=temp9,x_sv=temp10,y_sv=temp11,z_sv=temp12,f_sv=temp13
