@@ -29,8 +29,8 @@
 ; THEMIS> print,station
 ; THEMIS> HEIGHT=80
 ; THEMIS> iug_load_ionospheric_cond_part1_sub, height=height, $
-;         glat=station.glat,
-;glon=station.glon,yyyy=2000,mmdd=130,ltut=0,time=12,result=result
+;         glat=station.glat, ;glon=station.glon, yyyy=2000, mmdd=130,
+;         ltut=0, time=12, result=result
 ; THEMIS>
 ; THEMIS> plot, result[1,*], result[0,*], xtitle="Conductivity !9s!30 (S/m)", 
 ;         ytitle="Height (km)", xrange=[0,1], yrange=[HEIGHT_BOTTOM,HEIGHT_TOP], /xlog

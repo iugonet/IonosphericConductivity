@@ -126,7 +126,7 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
      sed_data = read_csv(infile, n_table_header=skip_line, count=cnt)
   endif
 
-  record = create_struct('height',0,'glat',0,'glon',0,'flag',0)  
+  record = create_struct('height',0.,'glat',0.,'glon',0.,'flag',0.)  
   calculated_table = replicate(record,cnt)
   for i=0L,cnt-1 do begin
      calculated_table[i].height = sed_data.field07[i]
@@ -174,31 +174,242 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, h
      endif
   endfor
 
-  
+; Read DB
+  if query_result.size ne 0 then begin
+     skip_line=0
+     result_csv = read_csv(infile, n_table_header=skip_line, count=cnt)
+  endif
 
-  set_plot, 'ps'
-  device, filename=tmp_dir+'iug_load_ionospheric_cond_map.ps', /color, /encapsulated
+  record = create_struct('sigma_0',0.,'sigma_1',0.,'sigma_2',0., $
+                         'sigma_xx',0.,'sigma_yy',0.,'sigma_xy',0., $
+                         'height',0.,'glat',0.,'glon',0., $
+                         'yyyy',0., 'mmdd',0., 'ltut',0., 'atime',0., 'algorithm',0.)
+  result_table = replicate(record, cnt)
 
-  map_set, /CYLINDRICAL, 0, 0, /GRID, /CONTINENTS, $  
-           TITLE = 'Ionospheric Conductivity'
+;  print, result_csv.field01
+ ; print, result_csv.field02[0]
+;  stop
 
-; BE CAREFULL
-  result3 = fltarr(n_elements(glon_array),n_elements(glat_array))
-
-  for i=0L,n_elements(glat_array)-1 do begin
-     for j=0L,n_elements(glon_array)-1 do begin
-        result3[j,i]=result2[i,j,0,0]
-     endfor
+  for i=0L, cnt-1 do begin
+     result_table[i].sigma_0   = result_csv.field01[i]
+     result_table[i].sigma_1   = result_csv.field02[i]
+     result_table[i].sigma_2   = result_csv.field03[i]
+     result_table[i].sigma_xx  = result_csv.field04[i]
+     result_table[i].sigma_yy  = result_csv.field05[i]
+     result_table[i].sigma_xy  = result_csv.field06[i]
+     result_table[i].height    = result_csv.field07[i]
+     result_table[i].glat      = result_csv.field08[i]
+     result_table[i].glon      = result_csv.field09[i]
+     result_table[i].yyyy      = result_csv.field10[i]
+     result_table[i].mmdd      = result_csv.field11[i]
+     result_table[i].ltut      = result_csv.field12[i]
+     result_table[i].atime     = result_csv.field13[i]
+     result_table[i].algorithm = result_csv.field14[i]
   endfor
 
-  nlevels=12
-  LoadCT, 33, NColors=nlevels, Bottom=1
-  transparency=50
-  contour, result3, glon_array, glat_array, /overplot,/fill,nlevels=nlevels,c_colors=IndGen(nlevels)+1
-  map_grid, latdel=10, londel=10, color=240
-  map_continents
 
-  device, /close
-  set_plot,'x'
+; sigma_0
+  for i=0L, n_elements(height_array)-1 do begin
+
+     result_plot = fltarr( n_elements(glon_array), n_elements(glat_array) )
+     
+     for j=0L, cnt-1 do begin
+        for k=0L, n_elements(glat_array)-1 do begin
+           for l=0L, n_elements(glon_array)-1 do begin
+              if result_table[j].height eq height_array(i) and result_table[j].glat eq glat_array[k] and result_table[j].glon eq glon_array[l] then begin
+                 result_plot(l,k) = result_table[j].sigma_0
+              endif
+           endfor
+        endfor
+     endfor
+
+     set_plot, 'ps'
+     str_height=string(height_array[i], format='(i4.4)')
+     str_yyyy=string(yyyy, format='(i4.4)')
+     str_mmdd=string(mmdd, format='(i4.4)')
+     device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_height+'_sigma_0.ps', /color, /encapsulated
+
+     map_set, /CYLINDRICAL, 0, 0, /GRID, /CONTINENTS, TITLE = 'Ionospheric Conductivity'
+
+     nlevels = 12
+     LoadCT, 33, NColors=nlevels, Bottom=1
+     transparency = 50
+     contour, result_plot, glon_array, glat_array,  /overplot, /fill, nlevels=nlevels, c_colors=IndGen(nlevels)+1
+     map_grid, latdel=10, londel=10, color=240
+     map_continents
+     
+     device, /close
+     set_plot, 'x'
+  endfor
+
+; sigma_1
+  for i=0L, n_elements(height_array)-1 do begin
+
+     result_plot = fltarr( n_elements(glon_array), n_elements(glat_array) )
+     
+     for j=0L, cnt-1 do begin
+        for k=0L, n_elements(glat_array)-1 do begin
+           for l=0L, n_elements(glon_array)-1 do begin
+              if result_table[j].height eq height_array(i) and result_table[j].glat eq glat_array[k] and result_table[j].glon eq glon_array[l] then begin
+                 result_plot(l,k) = result_table[j].sigma_1
+              endif
+           endfor
+        endfor
+     endfor
+
+     set_plot, 'ps'
+     str_height=string(height_array[i], format='(i4.4)')
+     str_yyyy=string(yyyy, format='(i4.4)')
+     str_mmdd=string(mmdd, format='(i4.4)')
+     device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_height+'_sigma_1.ps', /color, /encapsulated
+
+     map_set, /CYLINDRICAL, 0, 0, /GRID, /CONTINENTS, TITLE = 'Ionospheric Conductivity'
+
+     nlevels = 12
+     LoadCT, 33, NColors=nlevels, Bottom=1
+     transparency = 50
+     contour, result_plot, glon_array, glat_array,  /overplot, /fill, nlevels=nlevels, c_colors=IndGen(nlevels)+1
+     map_grid, latdel=10, londel=10, color=240
+     map_continents
+     
+     device, /close
+     set_plot, 'x'
+  endfor
+
+; sigma_2
+  for i=0L, n_elements(height_array)-1 do begin
+
+     result_plot = fltarr( n_elements(glon_array), n_elements(glat_array) )
+     
+     for j=0L, cnt-1 do begin
+        for k=0L, n_elements(glat_array)-1 do begin
+           for l=0L, n_elements(glon_array)-1 do begin
+              if result_table[j].height eq height_array(i) and result_table[j].glat eq glat_array[k] and result_table[j].glon eq glon_array[l] then begin
+                 result_plot(l,k) = result_table[j].sigma_2
+              endif
+           endfor
+        endfor
+     endfor
+
+     set_plot, 'ps'
+     str_height=string(height_array[i], format='(i4.4)')
+     str_yyyy=string(yyyy, format='(i4.4)')
+     str_mmdd=string(mmdd, format='(i4.4)')
+     device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_height+'_sigma_2.ps', /color, /encapsulated
+
+     map_set, /CYLINDRICAL, 0, 0, /GRID, /CONTINENTS, TITLE = 'Ionospheric Conductivity'
+
+     nlevels = 12
+     LoadCT, 33, NColors=nlevels, Bottom=1
+     transparency = 50
+     contour, result_plot, glon_array, glat_array,  /overplot, /fill, nlevels=nlevels, c_colors=IndGen(nlevels)+1
+     map_grid, latdel=10, londel=10, color=240
+     map_continents
+     
+     device, /close
+     set_plot, 'x'
+  endfor
+
+; sigma_xx
+  for i=0L, n_elements(height_array)-1 do begin
+
+     result_plot = fltarr( n_elements(glon_array), n_elements(glat_array) )
+     
+     for j=0L, cnt-1 do begin
+        for k=0L, n_elements(glat_array)-1 do begin
+           for l=0L, n_elements(glon_array)-1 do begin
+              if result_table[j].height eq height_array(i) and result_table[j].glat eq glat_array[k] and result_table[j].glon eq glon_array[l] then begin
+                 result_plot(l,k) = result_table[j].sigma_xx
+              endif
+           endfor
+        endfor
+     endfor
+
+     set_plot, 'ps'
+     str_height=string(height_array[i], format='(i4.4)')
+     str_yyyy=string(yyyy, format='(i4.4)')
+     str_mmdd=string(mmdd, format='(i4.4)')
+     device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_height+'_sigma_xx.ps', /color, /encapsulated
+
+     map_set, /CYLINDRICAL, 0, 0, /GRID, /CONTINENTS, TITLE = 'Ionospheric Conductivity'
+
+     nlevels = 12
+     LoadCT, 33, NColors=nlevels, Bottom=1
+     transparency = 50
+     contour, result_plot, glon_array, glat_array,  /overplot, /fill, nlevels=nlevels, c_colors=IndGen(nlevels)+1
+     map_grid, latdel=10, londel=10, color=240
+     map_continents
+     
+     device, /close
+     set_plot, 'x'
+  endfor
+
+; sigma_yy
+  for i=0L, n_elements(height_array)-1 do begin
+
+     result_plot = fltarr( n_elements(glon_array), n_elements(glat_array) )
+     
+     for j=0L, cnt-1 do begin
+        for k=0L, n_elements(glat_array)-1 do begin
+           for l=0L, n_elements(glon_array)-1 do begin
+              if result_table[j].height eq height_array(i) and result_table[j].glat eq glat_array[k] and result_table[j].glon eq glon_array[l] then begin
+                 result_plot(l,k) = result_table[j].sigma_yy
+              endif
+           endfor
+        endfor
+     endfor
+
+     set_plot, 'ps'
+     str_height=string(height_array[i], format='(i4.4)')
+     str_yyyy=string(yyyy, format='(i4.4)')
+     str_mmdd=string(mmdd, format='(i4.4)')
+     device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_height+'_sigma_yy.ps', /color, /encapsulated
+
+     map_set, /CYLINDRICAL, 0, 0, /GRID, /CONTINENTS, TITLE = 'Ionospheric Conductivity'
+
+     nlevels = 12
+     LoadCT, 33, NColors=nlevels, Bottom=1
+     transparency = 50
+     contour, result_plot, glon_array, glat_array,  /overplot, /fill, nlevels=nlevels, c_colors=IndGen(nlevels)+1
+     map_grid, latdel=10, londel=10, color=240
+     map_continents
+     
+     device, /close
+     set_plot, 'x'
+  endfor
+
+; sigma_xy
+  for i=0L, n_elements(height_array)-1 do begin
+
+     result_plot = fltarr( n_elements(glon_array), n_elements(glat_array) )
+     
+     for j=0L, cnt-1 do begin
+        for k=0L, n_elements(glat_array)-1 do begin
+           for l=0L, n_elements(glon_array)-1 do begin
+              if result_table[j].height eq height_array(i) and result_table[j].glat eq glat_array[k] and result_table[j].glon eq glon_array[l] then begin
+                 result_plot(l,k) = result_table[j].sigma_xy
+              endif
+           endfor
+        endfor
+     endfor
+
+     set_plot, 'ps'
+     str_height=string(height_array[i], format='(i4.4)')
+     str_yyyy=string(yyyy, format='(i4.4)')
+     str_mmdd=string(mmdd, format='(i4.4)')
+     device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_height+'_sigma_xy.ps', /color, /encapsulated
+
+     map_set, /CYLINDRICAL, 0, 0, /GRID, /CONTINENTS, TITLE = 'Ionospheric Conductivity'
+
+     nlevels = 12
+     LoadCT, 33, NColors=nlevels, Bottom=1
+     transparency = 50
+     contour, result_plot, glon_array, glat_array,  /overplot, /fill, nlevels=nlevels, c_colors=IndGen(nlevels)+1
+     map_grid, latdel=10, londel=10, color=240
+     map_continents
+     
+     device, /close
+     set_plot, 'x'
+  endfor
 
 end
