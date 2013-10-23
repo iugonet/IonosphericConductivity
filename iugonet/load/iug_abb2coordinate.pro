@@ -27,7 +27,8 @@
 ;print,result.glon
 ;
 ;-
-function iug_abb2coordinate,abb
+function iug_abb2coordinate, abb
+
   abb = strupcase(abb)
 
   obj = obj_new('IDLjavaObject$IugWdcObservatory', 'IugWdcObservatory')

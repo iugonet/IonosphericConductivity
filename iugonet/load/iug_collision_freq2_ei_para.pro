@@ -21,10 +21,11 @@
 ;print,iug_collision_freq2_ei_para(1,1)
 ;
 ;-
-function iug_collision_freq2_ei_para,ni,te
 
-  coulomb_logarithm=16.33+0.5*alog(te^3./ni)
-  return,(1.84E-6)*coulomb_logarithm*ni*te^(-3./2.)
+function iug_collision_freq2_ei_para, ni, te
+
+  coulomb_logarithm = 16.33+0.5*alog(te^3./ni)
+  return, (1.84E-6)*coulomb_logarithm*ni*te^(-3./2.)
 
 end
 

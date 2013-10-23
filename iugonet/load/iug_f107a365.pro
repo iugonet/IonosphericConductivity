@@ -19,7 +19,8 @@
 ;EXAMPLE:
 ;  print,iug_f107a365(00,01,01)
 ;-
-function iug_f107a365,yy,mm,dd
+
+function iug_f107a365, yy, mm, dd
 
   openr, unit, '${HOME}/models/ionospheric/iri/iri2012/apf107.dat', /get_lun
   
@@ -29,7 +30,9 @@ function iug_f107a365,yy,mm,dd
         return,temp15
      endif
   endfor
-  free_lun,unit
 
-  return,0
+  free_lun, unit
+
+  return, 0
+
 end

@@ -20,6 +20,7 @@
 ;EXAMPLE:
 ;  print, iug_collision_freq1_in(1,1,1,1,1,1)
 ;-
+
 function iug_collision_freq1_in,num_he,num_o,num_n2,num_o2,$
                                 num_ar,num_h,num_n,num_nh3,$
                                 num_o_p,num_n_p,num_h_p,$

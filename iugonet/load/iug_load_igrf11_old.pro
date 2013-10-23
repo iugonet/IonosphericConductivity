@@ -23,7 +23,11 @@
 ;
 ;-
 
-pro iug_load_igrf11_old,height_bottom=height_bottom,height_top=height_top,height_step=height_step,yyyy=yyyy,glat=glat, glon=glon,result_d=result_d,result_i=result_i,result_h=result_h,result_x=result_x,result_y=result_y,result_z=result_z,result_f=result_f
+pro iug_load_igrf11_old, yyyy=yyyy, $
+                         glat=glat, glon=glon, $
+                         height_bottom=height_bottom, height_top=height_top, height_step=height_step, $
+                         result_d=result_d, result_i=result_i, result_h=result_h, $
+                         result_x=result_x, result_y=result_y, result_z=result_z,result_f=result_f
 
   if height_top ne height_bottom then begin
      num_height = (height_top-height_bottom)/height_step+1

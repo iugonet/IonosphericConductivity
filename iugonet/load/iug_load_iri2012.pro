@@ -121,7 +121,17 @@ pro iug_load_iri2012, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=glat, glo
 
      free_lun, unit
 
-     iug_insert_iri2012, jmag=result[0], lat=result[1], lon=result[2], yyyy=result[3], mm=result[4], dd=result[5], ltut=result[6], atime=result[7], height=result[8], ine=result[9], ner=result[10], tnk=result[11], tik=result[12], tek=result[13], io1=result[14], in1=result[15], ih1=result[16], ihe=result[17], io2=result[18], ino=result[19], icl=result[20], tec=result[21], tpe=result[22], NmF2=result[23], NmF1=result[24], NmE=result[25], hmF2=result[26], hmF1=result[27], hmE=result[28], sza=result[29], dip=result[30], modip=result[31], rz12=result[32], ig12=result[33]
+     iug_insert_iri2012, jmag=result[0], lat=result[1], lon=result[2], $
+                         yyyy=result[3], mm=result[4], dd=result[5], ltut=result[6], atime=result[7], $
+                         height=result[8], $
+                         ine=result[9], ner=result[10], $
+                         tnk=result[11], tik=result[12], tek=result[13], $
+                         io1=result[14], in1=result[15], ih1=result[16], $
+                         ihe=result[17], io2=result[18], ino=result[19], icl=result[20], $
+                         tec=result[21], tpe=result[22], $
+                         NmF2=result[23], NmF1=result[24], NmE=result[25], $
+                         hmF2=result[26], hmF1=result[27], hmE=result[28], $
+                         sza=result[29], dip=result[30], modip=result[31], rz12=result[32], ig12=result[33]
 
   endif else begin
      openr, unit, tmp_dir+'iri2012.result', /get_lun

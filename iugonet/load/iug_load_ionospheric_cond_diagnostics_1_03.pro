@@ -35,8 +35,8 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
 
   num_e = [1E2,2.5E2,5E2,7.5E2,1E3,2.5E3,5.0E3,7.5E3,1E4,2.5E4,5.0E4,7.5E4,1E5,2.5E5,5.0E5,7.5E5,1E6,2.5E6,5.0E6]
 
-  set_plot,'ps'
-  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03.ps',/color
+  set_plot, 'ps'
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03.ps', /color
 
   nu_ei600 = fltarr(n_elements(num_e))
   nu_ei800 = fltarr(n_elements(num_e))
@@ -50,64 +50,64 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
 ; Te=600 (K)
   te = 600
   for i=0L,n_elements(num_e)-1 do begin
-     nu_ei600[i] = iug_collision_freq1_ei(num_e[i],te)
+     nu_ei600[i] = iug_collision_freq1_ei(num_e[i], te)
   endfor
 
-  plot,num_e,nu_ei600,xtitle="Number of Electrons",ytitle="Frequency (Hz)",title="Electron Collision Frequencies with Positive Ions",/xlog,xrange=[1E2,1E7],/ylog,yrange=[1E-1,1E5],linestyle=0,color=0
-  xyouts,3E2,1E4,'  solid line - by Koyama'
-  xyouts,3E2,3E3,'dotted line - by Aeronomy pt. A'
-  xyouts,7E4,1E1,'From top to bottom,'
-  xyouts,7E4,5E0,'Te=  600,  800, 1000, 1200, '
-  xyouts,7E4,2.5E0,'    1400, 1600, 1800, 2000 K'
+  plot, num_e, nu_ei600, xtitle="Number of Electrons", ytitle="Frequency (Hz)", title="Electron Collision Frequencies with Positive Ions", /xlog,xrange=[1E2,1E7], /ylog, yrange=[1E-1,1E5], linestyle=0, color=0
+  xyouts, 3E2, 1E4, '  solid line - by Koyama'
+  xyouts, 3E2, 3E3, 'dotted line - by Aeronomy pt. A'
+  xyouts, 7E4, 1E1, 'From top to bottom,'
+  xyouts, 7E4, 5E0, 'Te=  600,  800, 1000, 1200, '
+  xyouts, 7E4, 2.5E0, '    1400, 1600, 1800, 2000 K'
 ; Te=800 (K)
   te = 800
   for i=0L,n_elements(num_e)-1 do begin
-     nu_ei800[i] = iug_collision_freq1_ei(num_e[i],te)
+     nu_ei800[i] = iug_collision_freq1_ei(num_e[i], te)
   endfor
 
-  oplot,num_e,nu_ei800,linestyle=0,color=0
+  oplot, num_e, nu_ei800, linestyle=0, color=0
 ; Te=1000 (K)
   te = 1000
   for i=0L,n_elements(num_e)-1 do begin
-     nu_ei1000[i] = iug_collision_freq1_ei(num_e[i],te)
+     nu_ei1000[i] = iug_collision_freq1_ei(num_e[i], te)
   endfor
 
-  oplot,num_e,nu_ei1000,linestyle=0,color=0
+  oplot, num_e, nu_ei1000, linestyle=0, color=0
 ; Te=1200 (K)
   te = 1200
   for i=0L,n_elements(num_e)-1 do begin
-     nu_ei1200[i] = iug_collision_freq1_ei(num_e[i],te)
+     nu_ei1200[i] = iug_collision_freq1_ei(num_e[i], te)
   endfor
 
-  oplot,num_e,nu_ei1200,linestyle=0,color=0
+  oplot, num_e, nu_ei1200, linestyle=0, color=0
 ; Te=1400 (K)
   te = 1400
   for i=0L,n_elements(num_e)-1 do begin
-     nu_ei1400[i] = iug_collision_freq1_ei(num_e[i],te)
+     nu_ei1400[i] = iug_collision_freq1_ei(num_e[i], te)
   endfor
 
-  oplot,num_e,nu_ei1400,linestyle=0,color=0
+  oplot, num_e, nu_ei1400, linestyle=0, color=0
 ; Te=1600 (K)
   te = 1600
   for i=0L,n_elements(num_e)-1 do begin
-     nu_ei1600[i] = iug_collision_freq1_ei(num_e[i],te)
+     nu_ei1600[i] = iug_collision_freq1_ei(num_e[i], te)
   endfor
 
-  oplot,num_e,nu_ei1600,linestyle=0,color=0
+  oplot, num_e, nu_ei1600, linestyle=0, color=0
 ; Te=1800 (K)
   te = 1800
   for i=0L,n_elements(num_e)-1 do begin
-     nu_ei1800[i] = iug_collision_freq1_ei(num_e[i],te)
+     nu_ei1800[i] = iug_collision_freq1_ei(num_e[i], te)
   endfor
 
-  oplot,num_e,nu_ei1800,linestyle=0,color=0
+  oplot, num_e, nu_ei1800, linestyle=0, color=0
 ; Te=2000 (K)
   te = 2000
   for i=0L,n_elements(num_e)-1 do begin
-     nu_ei2000[i] = iug_collision_freq1_ei(num_e[i],te)
+     nu_ei2000[i] = iug_collision_freq1_ei(num_e[i], te)
   endfor
 
-  oplot,num_e,nu_ei2000,linestyle=0,color=0
+  oplot, num_e, nu_ei2000, linestyle=0, color=0
 
 ;
 ; plot the data of the book
@@ -138,18 +138,18 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
   book_nu_ei2000 = [7.5E-2,1.8E-1,3.6E-1,5.3E-1,7.0E-1,1.7,3.3,5.0,6.6,1.6E1,3.1E1,4.6E1,6.1E1,1.5E2,2.9E2,4.3E2,5.6E2,1.4E3,2.6E3]
   oplot,num_e,book_nu_ei2000,linestyle=1,color=0
 
-  device,/close
-  set_plot,'x'
+  device, /close
+  set_plot, 'x'
 
 ; te=600
   openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03_te0600.txt', /get_lun
   for i=0L,n_elements(num_e)-1 do begin
-     printf,unit,num_e(i),book_nu_ei600(i),nu_ei600(i),$
+     printf, unit, num_e(i), book_nu_ei600(i),nu_ei600(i),$
             (nu_ei600(i) - book_nu_ei600(i))/book_nu_ei600(i)*100., $
             format='(e10.2,e10.2,e10.2,i4)'
   endfor
 
-  free_lun,unit
+  free_lun, unit
 ; te=800
   openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03_te0800.txt', /get_lun
   for i=0L,n_elements(num_e)-1 do begin
@@ -158,7 +158,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
             format='(e10.2,e10.2,e10.2,i4)'
   endfor
 
-  free_lun,unit
+  free_lun, unit
 ; te=1000
   openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03_te1000.txt', /get_lun
   for i=0L,n_elements(num_e)-1 do begin
@@ -167,7 +167,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
             format='(e10.2,e10.2,e10.2,i4)'
   endfor
 
-  free_lun,unit
+  free_lun, unit
 ; te=1200
   openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03_te1200.txt', /get_lun
   for i=0L,n_elements(num_e)-1 do begin
@@ -176,7 +176,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
             format='(e10.2,e10.2,e10.2,i4)'
   endfor
 
-  free_lun,unit
+  free_lun, unit
 ; te=1400
   openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03_te1400.txt', /get_lun
   for i=0L,n_elements(num_e)-1 do begin
@@ -185,7 +185,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
             format='(e10.2,e10.2,e10.2,i4)'
   endfor
 
-  free_lun,unit
+  free_lun, unit
 ; te=1600
   openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03_te1600.txt', /get_lun
   for i=0L,n_elements(num_e)-1 do begin
@@ -194,7 +194,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
             format='(e10.2,e10.2,e10.2,i4)'
   endfor
 
-  free_lun,unit
+  free_lun, unit
 ; te=1800
   openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03_te1800.txt', /get_lun
   for i=0L,n_elements(num_e)-1 do begin
@@ -203,7 +203,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
             format='(e10.2,e10.2,e10.2,i4)'
   endfor
 
-  free_lun,unit
+  free_lun, unit
 ; te=2000
   openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03_te2000.txt', /get_lun
   for i=0L,n_elements(num_e)-1 do begin
@@ -212,6 +212,6 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
             format='(e10.2,e10.2,e10.2,i4)'
   endfor
 
-  free_lun,unit
+  free_lun, unit
 
 end

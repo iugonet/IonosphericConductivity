@@ -32,10 +32,9 @@ pro iug_load_ionospheric_cond_diagnostics_1_04
   endif
 ;
 
-
-  num_e=[1.0E2,2.5E2,5.0E2,7.5E2,1.0E3,2.5E3,5.0E3,7.5E3,1.0E4,2.5E4,5.0E4,$
-     7.5E4,1.0E5,2.5E5,5.0E5,7.5E5,1.0E6,2.5E6,5.0E6]
-  temperature=[600,800,1000,1200,1400,1600,1800,2000]
+  num_e = [1.0E2,2.5E2,5.0E2,7.5E2,1.0E3,2.5E3,5.0E3,7.5E3,1.0E4,2.5E4,5.0E4,$
+           7.5E4,1.0E5,2.5E5,5.0E5,7.5E5,1.0E6,2.5E6,5.0E6]
+  temperature = [600,800,1000,1200,1400,1600,1800,2000]
   result = fltarr(n_elements(num_e),n_elements(temperature))
 
   for i=0L,n_elements(num_e)-1 do begin
@@ -45,15 +44,17 @@ pro iug_load_ionospheric_cond_diagnostics_1_04
   endfor
 
   set_plot, 'ps'
-  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_04.ps',/color
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_04.ps', /color
 
-  plot,temperature[*],result[0,*],xtitle="Temperature (K)",ytitle="Collision Frequency (Hz)",yrange=[1E-2,1E5],xrange=[600,2000],/ylog,linestyle=0,color=0, title="ELECTRON COLLISION FREQUENCIES WITH POSITIVE IONS"
+  plot, temperature[*], result[0,*], xtitle="Temperature (K)", ytitle="Collision Frequency (Hz)", $
+        yrange=[1E-2,1E5],xrange=[600,2000], /ylog, linestyle=0, color=0, $
+        title="ELECTRON COLLISION FREQUENCIES WITH POSITIVE IONS"
   for i=0L,n_elements(num_e)-1 do begin
      oplot,temperature[*],result[i,*],linestyle=0,color=0
   endfor
-  xyouts,1100,2E5,"From top to bottom, ne=1.0E2 to ne=5.0E6",color=0
-  xyouts,1100,7E4,"  solid line - Actual    by Koyama",color=0
-  xyouts,1100,4E4,"dotted line - Expected by Aeronomy pt. A",color=0
+  xyouts, 1100, 2E5, "From top to bottom, ne=1.0E2 to ne=5.0E6",color=0
+  xyouts, 1100, 7E4, "  solid line - Actual    by Koyama",color=0
+  xyouts, 1100, 4E4, "dotted line - Expected by Aeronomy pt. A",color=0
 
 ;
 ; 
@@ -79,7 +80,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_04
               [1.4E4,9.4E3,6.9E3,5.4E3,4.3E3,3.6E3,3.4E3,2.6E3]]
 
   for i=0L,n_elements(num_e)-1 do begin
-     oplot,temperature[*],result[i,*],linestyle=1,color=0
+     oplot, temperature[*], result[i,*], linestyle=1, color=0
   endfor
 
   device, /close
@@ -90,11 +91,11 @@ pro iug_load_ionospheric_cond_diagnostics_1_04
   openw, unit, tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_04.txt', /get_lun
   for i=0L,n_elements(num_e)-1 do begin
      for j=0L,n_elements(temperature)-1 do begin
-        printf,unit,expected[j,i],result[i,j],(expected[j,i]-result[i,j])/result[i,j]*100.,format='(e10.2,e10.2,i4)'
+        printf, unit, expected[j,i], result[i,j], (expected[j,i]-result[i,j])/result[i,j]*100., format='(e10.2,e10.2,i4)'
      endfor
-     printf,unit,""
+     printf, unit, ""
   endfor
 
-  free_lun,unit
+  free_lun, unit
 
 end

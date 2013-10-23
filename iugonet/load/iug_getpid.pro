@@ -18,9 +18,11 @@
 ;EXAMPLE:
 ;  print,iug_getpid()
 ;-
+
 function iug_getpid
   
-  pid = call_external(!dlm_path+'/libidl.so','getpid',/cdecl)
+  pid = call_external(!dlm_path+'/libidl.so', 'getpid', /cdecl)
 
-  return,pid
+  return, pid
+
 end

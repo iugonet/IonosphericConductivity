@@ -24,8 +24,10 @@
 ;
 ;-
 
-pro iug_load_igrf11_array, height_bottom=height_bottom, height_top=height_top, height_step=height_step, yyyy=yyyy, glat=glat, glon=glon, r_d=r_d, r_i=r_i, r_h=r_h, r_x=r_x, r_y=r_y, r_z=r_z, r_f=r_f
-  
+pro iug_load_igrf11_array, yyyy=yyyy, glat=glat, glon=glon, $
+                           height_bottom=height_bottom, height_top=height_top, height_step=height_step, $
+                           r_d=r_d, r_i=r_i, r_h=r_h, r_x=r_x, r_y=r_y, r_z=r_z, r_f=r_f
+
 ; validate height_bottom
   if height_bottom lt 80 then begin
      dprint,"Satisfy 'height >=80 (km)'."

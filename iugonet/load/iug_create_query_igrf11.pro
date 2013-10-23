@@ -18,7 +18,8 @@
 ;EXAMPLE:
 ;  iug_create_query_igrf11,1,2000,0,0,100
 ;-
-pro iug_create_query_igrf11,coordinate_system=coordinate_system,yyyy=yyyy,glat=glat,glon=glon,height=height
+
+pro iug_create_query_igrf11, yyyy=yyyy, glat=glat, glon=glon, height=height, coordinate_system=coordinate_system 
 
 ;  
   tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
@@ -30,9 +31,10 @@ pro iug_create_query_igrf11,coordinate_system=coordinate_system,yyyy=yyyy,glat=g
 
   openw, unit, tmp_dir+'igrf11.sql',/get_lun ; create query file
 
-  printf,unit,'.output '+tmp_dir+'igrf11.result'
-  printf,unit,'.separator ","'
+  printf, unit, '.output '+tmp_dir+'igrf11.result'
+  printf, unit, '.separator ","'
 
-  printf,unit,'select * from igrf11 where coordinate_system='+strtrim(string(coordinate_system),1)+' and yyyy='+strtrim(string(yyyy),1)+' and glat='+strtrim(string(glat),1)+' and glon='+strtrim(string(glon),1)+' and height='+strtrim(string(height),1)+";"
+  printf, unit, 'select * from igrf11 where coordinate_system='+strtrim(string(coordinate_system),1)+' and yyyy='+strtrim(string(yyyy),1)+' and glat='+strtrim(string(glat),1)+' and glon='+strtrim(string(glon),1)+' and height='+strtrim(string(height),1)+";"
   free_lun, unit
+
 end

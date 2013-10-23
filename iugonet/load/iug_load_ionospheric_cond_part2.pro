@@ -52,7 +52,8 @@
 ; time=12, result=result
 ;-
 
-pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, result=result
+pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=height_top, height_step=height_step, $
+                                     glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, result=result
 
   algorithm=2
 ; validate height_bottom
@@ -112,6 +113,11 @@ pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=hei
 
 ;
   tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
+  result_file_test = file_test(tmp_dir)
+  if file_test(tmp_dir) eq 0 then begin
+     file_mkdir, tmp_dir
+  endif
+;
 
 ; definition of physical constants 
   e_charge = 1.60217733E-19          ; (C)
@@ -119,18 +125,24 @@ pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=hei
   m_p = 1.6726231E-27                ; (kg)
 
 ; Calculation of IRI2012 model
-  iug_load_iri2012_array, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=glat, glon=glon, height_bottom=height_bottom, height_top=height_top, height_step=height_step, result=result_iri
+  iug_load_iri2012_array, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
+                          glat=glat, glon=glon, $
+                          height_bottom=height_bottom, height_top=height_top, height_step=height_step, $
+                          result=result_iri
 
 ;
 ; Calculation of NRLMSISE for getting composition of atmosphere
 ;
-  iug_load_nrlmsise00, yyyy=yyyy, mmdd=mmdd, height_bottom=height_bottom,height_top=height_top, height_step=height_step,time=time,glat=glat,glon=glon,result=result_msis
-
+  iug_load_nrlmsise00, yyyy=yyyy, mmdd=mmdd, time=time, $
+                       glat=glat, glon=glon, $
+                       height_bottom=height_bottom,height_top=height_top, height_step=height_step, $
+                       result=result_msis
 ;
 ; IGRF11
 ; 
-  iug_load_igrf11_array, height_bottom=height_bottom, height_top=height_top, height_step=height_step, yyyy=yyyy, glat=glat, glon=glon, r_d=r_d, r_i=r_i, r_h=r_h,r_x=r_x,r_y=r_y,r_z=r_z,r_f=r_f
-
+  iug_load_igrf11_array, yyyy=yyyy, glat=glat, glon=glon, $
+                         height_bottom=height_bottom, height_top=height_top, height_step=height_step, $
+                         r_d=r_d, r_i=r_i, r_h=r_h,r_x=r_x,r_y=r_y,r_z=r_z,r_f=r_f
 ;
 ; Calculation based on Kenichi Maeda's equation
 ;
@@ -138,19 +150,24 @@ pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=hei
 
   for i=0L,num_height-1 do begin
 ;;;
-     height=height_bottom+height_step*i
-     iug_create_query_ionospheric_cond,height=height,glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=time,algorithm=algorithm
-     spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db < '+tmp_dir+'ionospheric_cond.sql'
-     query_result=file_info(tmp_dir+'ionospheric_cond.result')
+     height = height_bottom+height_step*i
+     iug_create_query_ionospheric_cond, yyyy=yyyy, mmdd=mmdd, ltut=ltut, atime=time, $
+                                        glat=glat, glon=glon, height=height, algorithm=algorithm
+     spawn, 'sqlite3 ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db < '+tmp_dir+'ionospheric_cond.sql'
+     query_result = file_info(tmp_dir+'ionospheric_cond.result')
 
      if query_result.size eq 0 then begin ; calculate by using model    
 ;;;
-        re=result_iri[i,13]/300.
-        nu_en_perp=iug_collision_freq2_en_perp(re,result_msis[i,4]*1.E6,result_msis[i,5]*1.E6,result_msis[i,3]*1.E6)
-        nu_en_para=iug_collision_freq2_en_para(re,result_msis[i,4]*1.E6,result_msis[i,5]*1.E6,result_msis[i,3]*1.E6)
-        nu_ei_para=iug_collision_freq2_ei_para(result_iri[i,9]*1.E6,result_iri[i,13])
-        ri=(result_iri[i,11]+result_iri[i,12])/1000.
-        nu_in=iug_collision_freq2_in(ri,result_msis[i,4]*1.E6,result_msis[i,5]*1.E6, result_msis[i,3]*1.E6, result_iri[i,19]*1.E6, result_iri[i,18]*1.E6, result_iri[i,14]*1.E6)
+        re = result_iri[i,13]/300.
+        nu_en_perp = iug_collision_freq2_en_perp(re,result_msis[i,4]*1.E6, $
+                                                 result_msis[i,5]*1.E6,result_msis[i,3]*1.E6)
+        nu_en_para = iug_collision_freq2_en_para(re,result_msis[i,4]*1.E6, $
+                                                 result_msis[i,5]*1.E6,result_msis[i,3]*1.E6)
+        nu_ei_para = iug_collision_freq2_ei_para(result_iri[i,9]*1.E6,result_iri[i,13])
+        ri = (result_iri[i,11]+result_iri[i,12])/1000.
+        nu_in = iug_collision_freq2_in(ri,result_msis[i,4]*1.E6, $
+                                       result_msis[i,5]*1.E6, result_msis[i,3]*1.E6, result_iri[i,19]*1.E6, $
+                                       result_iri[i,18]*1.E6, result_iri[i,14]*1.E6)
 
 ; result[0,*]: simga_0, parallel conductivity
 ; result[1,*]: sigma_1, pedarsen conductivity
@@ -160,14 +177,14 @@ pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=hei
 ; result[5,*]: sigma_xy, hole conductivity
 ; result[6,*]: height
         
-        num_o_p = result_iri[i,9]*1.E6*result_iri[i,14] /100.    ; O+
-        num_n_p = result_iri[i,9]*1.E6*result_iri[i,15] /100.    ; N+
-        num_h_p = result_iri[i,9]*1.E6*result_iri[i,16] /100.    ; H+
-        num_he_p= result_iri[i,9]*1.E6*result_iri[i,17] /100.    ; He+
-        num_o2_p= result_iri[i,9]*1.E6*result_iri[i,18]/100.    ; O2+
-        num_no_p= result_iri[i,9]*1.E6*result_iri[i,19]/100.    ; NO+
+        num_o_p = result_iri[i,9]*1.E6*result_iri[i,14] /100.      ; O+
+        num_n_p = result_iri[i,9]*1.E6*result_iri[i,15] /100.      ; N+
+        num_h_p = result_iri[i,9]*1.E6*result_iri[i,16] /100.      ; H+
+        num_he_p = result_iri[i,9]*1.E6*result_iri[i,17] /100.     ; He+
+        num_o2_p = result_iri[i,9]*1.E6*result_iri[i,18]/100.      ; O2+
+        num_no_p = result_iri[i,9]*1.E6*result_iri[i,19]/100.      ; NO+
         num_cluster_p = result_iri[i,9]*1.E6*result_iri[i,20]/100. ; Cluster+
-        num_ions= result_iri[i,17]*1.E6                             ; Ne/m-3
+        num_ions = result_iri[i,17]*1.E6                           ; Ne/m-3
 
         m_i = ( 16.* num_o_p $
                 + 14.* num_n_p $
@@ -202,7 +219,10 @@ pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=hei
                        + result[i,0]*sin(!dpi/180.*r_i[i])^2. )
         result[i,6] = height_array[i]
 
-       iug_insert_ionospheric_cond,sigma_0=result[i,0],sigma_1=result[i,1],sigma_2=result[i,2],sigma_xx=result[i,3],sigma_yy=result[i,4],sigma_xy=result[i,5],height=result[i,6],glat=glat,glon=glon,yyyy=yyyy,mmdd=mmdd,ltut=ltut,atime=time,algorithm=algorithm
+       iug_insert_ionospheric_cond, sigma_0=result[i,0], sigma_1=result[i,1], sigma_2=result[i,2], $
+                                    sigma_xx=result[i,3], sigma_yy=result[i,4], sigma_xy=result[i,5], $
+                                    height=result[i,6], glat=glat, glon=glon, $
+                                    yyyy=yyyy, mmdd=mmdd, ltut=ltut, atime=time, algorithm=algorithm
 
      endif else begin           ; retrieve from DB
         openr, unit, tmp_dir+'ionospheric_cond.result', /get_lun
@@ -218,6 +238,7 @@ pro iug_load_ionospheric_cond_part2, height_bottom=height_bottom, height_top=hei
         result[i,6] = array(6)
 
         free_lun, unit
+
      endelse
   endfor
 

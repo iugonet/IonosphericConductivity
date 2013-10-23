@@ -6,12 +6,13 @@
 ;EXAMPLE:
 ;
 ;-
-pro iug_collision_freq1_in_reso,tn=tn,ti=ti,$
-                                nh1=nh1,no1=no1,nn1=nn1,$
-                                nhe=nhe,no2=no2,nn2=nn2,$
-                                fh1_reso=fh1_reso,fo1_reso=fo1_reso,$
-                                fn1_reso=fn1_reso,fhe_reso=fhe_reso,$
-                                fo2_reso=fo2_reso,fn2_reso=fn2_reso
+
+pro iug_collision_freq1_in_reso, tn=tn, ti=ti,$
+                                 nh1=nh1, no1=no1, nn1=nn1,$
+                                 nhe=nhe, no2=no2, nn2=nn2,$
+                                 fh1_reso=fh1_reso, fo1_reso=fo1_reso,$
+                                 fn1_reso=fn1_reso, fhe_reso=fhe_reso,$
+                                 fo2_reso=fo2_reso, fn2_reso=fn2_reso
 ;
   fh1_reso=0. & fo1_reso=0. & fn1_reso=0. 
   fhe_reso=0. & fo2_reso=0. & fn2_reso=0.

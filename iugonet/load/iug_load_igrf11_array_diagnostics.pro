@@ -1,3 +1,22 @@
+; docformat = 'IDL'
+
+;+
+;
+;Name: IUG_LOAD_IGRF11_ARRAY_DIAGNOSTICS
+;
+;INPUTS:
+;
+;KEYWORD PARAMETERS:
+;
+;Code:
+;Yukinobu KOYAMA, 4/25/2012
+;
+;Modifications:
+;Yukinobu KOYAMA,10/21/2013
+;
+;Acknowledment:
+;-
+
 pro iug_load_igrf11_array_diagnostics
   ; initialize
   spawn,'mv ${UDASPLUS_HOME}/iugonet/load/igrf11.db ${UDASPLUS_HOME}/iugonet/load/igrf11.db.tmp' ; escape for testing

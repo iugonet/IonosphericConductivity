@@ -20,6 +20,7 @@
 ;EXAMPLE:
 ;  
 ;-
+
 pro iug_collision_freq1_in_exchange,tn=tn,ti=ti,$
                                     nh1=nh1,no1=no1,nn1=nn1,$
                                     nhe=nhe,no2=no2,nn2=nn2,$

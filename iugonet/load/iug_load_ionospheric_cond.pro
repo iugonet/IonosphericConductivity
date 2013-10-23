@@ -56,7 +56,10 @@
 ; result=result
 ;-
 
-pro iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top, height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
+pro iug_load_ionospheric_cond, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
+                               glat=glat, glon=glon, $
+                               height_bottom=height_bottom, height_top=height_top, height_step=height_step, $
+                               algorithm=algorithm, result=result
 
 ; validate height_bottom
   if height_bottom lt 80 then begin

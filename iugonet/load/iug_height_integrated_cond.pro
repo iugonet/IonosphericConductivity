@@ -30,7 +30,8 @@
 ;MODIFICATION HISTORY:
 ;      Yukinobu KOYAMA, 04/24/2012
 ;-
-function iug_height_integrated_cond,cond_prof
+function iug_height_integrated_cond, cond_prof
+
   result = fltarr(6)
   nary = size(cond_prof)
 
@@ -70,5 +71,6 @@ function iug_height_integrated_cond,cond_prof
                  *(cond_prof[6,i+1]-cond_prof[6,i])*1.E3/2.
   endfor
 
-  return,result
+  return, result
+
 end

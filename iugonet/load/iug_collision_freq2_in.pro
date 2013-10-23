@@ -21,7 +21,9 @@
 ;EXAMPLE:
 ;  print, iug_collision_freq2_in(1,1,1,1,1,1,1)
 ;-
-function iug_collision_freq2_in,r_i,num_n2,num_o2,num_o,no_plus,o2_plus,o_plus
+
+function iug_collision_freq2_in, r_i, num_n2, num_o2, num_o, no_plus, o2_plus, o_plus
+
 ; definition of physical constants 
   m_p = 1.6726231E-27                ; (kg)
   
@@ -46,4 +48,5 @@ function iug_collision_freq2_in,r_i,num_n2,num_o2,num_o,no_plus,o2_plus,o_plus
              + m_i_o_plus * o_plus )
 
   return, nu_in
+
 end

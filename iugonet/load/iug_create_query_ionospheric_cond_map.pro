@@ -18,7 +18,9 @@
 ;EXAMPLE:
 ;  iug_create_query_ionospheric_cond,1,2000,0,0,100
 ;-
-pro iug_create_query_ionospheric_cond_map,height_bottom=height_bottom, heigit_top=height_top, height_step=height_step, resolution=resolution, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm
+pro iug_create_query_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
+   height_bottom=height_bottom, heigit_top=height_top, height_step=height_step, $
+   resolution=resolution, algorithm=algorithm
 
 ;
   tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'

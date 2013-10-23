@@ -26,7 +26,10 @@
 ;
 ;-
 
-pro iug_load_iri2012_array, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=glat, glon=glon, height_bottom=height_bottom, height_top=height_top, height_step=height_step, result=result
+pro iug_load_iri2012_array, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
+                            glat=glat, glon=glon, $
+                            height_bottom=height_bottom, height_top=height_top, height_step=height_step, $
+                            result=result
 
 ;validate height
   if height_bottom lt 60 then begin
@@ -61,24 +64,24 @@ pro iug_load_iri2012_array, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=gla
      file_mkdir, tmp_dir
   endif
 ;
-  mmdd = string(mmdd,format='(i4.4)')
-  mm = strmid(mmdd,0,2)
-  dd = strmid(mmdd,2,2)
+  mmdd = string(mmdd, format='(i4.4)')
+  mm = strmid(mmdd, 0, 2)
+  dd = strmid(mmdd, 2, 2)
 
   openw, unit, tmp_dir+'iri2012.input', /get_lun ; create input file
-  printf,unit,0,glat,glon
-  printf,unit,format='(i8,i8,i8,i8)',yyyy,mmdd,ltut,time
-  printf,unit,0
-  printf,unit,0
-  printf,unit,0
-  printf,unit,1
-  printf,unit,height_bottom,height_top,height_step
-  printf,unit,0
-  printf,unit,0
+  printf, unit, 0, glat, glon
+  printf, unit, format='(i8,i8,i8,i8)',yyyy, mmdd, ltut, time
+  printf, unit, 0
+  printf, unit, 0
+  printf, unit, 0
+  printf, unit, 1
+  printf, unit, height_bottom, height_top, height_step
+  printf, unit, 0
+  printf, unit, 0
   free_lun, unit
 
-  spawn,'cd ${HOME}/models/ionospheric/iri/iri2012;./iritest < '+tmp_dir+'iri2012.input'
-  spawn,"cat ${HOME}/models/ionospheric/iri/iri2012/fort.7 | awk '{if( NR>27 ) print $0}' > "+tmp_dir+"iri2012.result"
+  spawn, 'cd ${HOME}/models/ionospheric/iri/iri2012;./iritest < '+tmp_dir+'iri2012.input'
+  spawn, "cat ${HOME}/models/ionospheric/iri/iri2012/fort.7 | awk '{if( NR>27 ) print $0}' > "+tmp_dir+"iri2012.result"
 
   result = fltarr(num_height,34)
 

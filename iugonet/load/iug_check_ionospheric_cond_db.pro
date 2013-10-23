@@ -7,7 +7,10 @@
 ;
 ;-
 
-function iug_check_ionospheric_cond_db,height,glat,glon,yyyy,mmdd,ltut,atime,algorithm
+function iug_check_ionospheric_cond_db, yyyy, mmdd, ltut, atime, $
+                                        height, glat, glon, $
+                                        algorithm
+
   sigma_0 = 0. & sigma_1 = 0. & sigma_2 = 0.
   sigma_xx = 0. & sigma_yy = 0. & sigma_xy = 0.
 ;
