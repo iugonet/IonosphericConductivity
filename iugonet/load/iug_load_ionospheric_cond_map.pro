@@ -98,8 +98,8 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
 ;
 ; Calculation based on Kenichi Maeda's equation
 ;
-  glat_array=fltarr(180/resolution+1)
-  glon_array=fltarr(360/resolution+1)
+  glat_array = fltarr(180/resolution+1)
+  glon_array = fltarr(360/resolution+1)
 
   for i=0L,n_elements(glat_array)-1 do begin
      glat_array[i]=-90.+i*resolution
@@ -122,13 +122,13 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
 
 ; calc_table in structure
   record = create_struct('height', 0., 'glat', 0., 'glon', 0., 'flag', 0.)
-  calc_table = replicate(record, n_elements(glat_array)*n_elements(glon_array)*num_height)
+  calc_table = replicate(record, n_elements(glat_array)*n_elements(glon_array)*n_elements(height_array))
 
-  z = 0
+  z = 0L
 
   for i=0L,n_elements(glat_array)-1  do begin
      for j=0L,n_elements(glon_array)-1 do begin
-        for k=0L,num_height-1 do begin
+        for k=0L,n_elements(height_array)-1 do begin
            calc_table[z].height = height_array[k]
            calc_table[z].glat = glat_array[i]
            calc_table[z].glon = glon_array[j]
@@ -218,36 +218,36 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
 ; ploting
   for m=0L, 5 do begin          ; for sigma_0, sigma_1, sigma_2, sigma_xx, sigma_yy, sigma_xy
 
-     if m eq 0 then begin
-        str_title = 'Ionospheric Conductivity Profile, sigma_0'
-        str_sigma_type = 'sigma_0'
-     endif else if m eq 1 then begin
-        str_title = 'Ionospheric Conductivity Profile, sigma_1'
-        str_sigma_type = 'sigma_1'
-     endif else if m eq 2 then begin
-        str_title = 'Ionospheric Conductivity Profile, sigma_2'
-        str_sigma_type = 'sigma_2'
-     endif else if m eq 3 then begin
-        str_title = 'Ionospheric Conductivity Profile, sigma_xx'
-        str_sigma_type = 'sigma_xx'
-     endif else if m eq 4 then begin
-        str_title = 'Ionospheric Conductivity Profile, sigma_yy'
-        str_sigma_type = 'sigma_yy'
-     endif else if m eq 5 then begin
-        str_title = 'Ionospheric Conductivity Profile, sigma_xy'
-        str_sigma_type = 'sigma_xy'
-     endif
-
      if ltut eq 0 then begin
         str_ltut='LT'
      endif else begin
         str_ltut='UT'
      endelse
 
-
      str_yyyy = string(yyyy, format='(i4.4)')
      str_mmdd = string(mmdd, format='(i4.4)')
      str_time = string(time, format='(i2.2)')
+
+     if m eq 0 then begin
+        str_title = 'Ionospheric Conductivity, sigma_0, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+'
+        str_sigma_type = 'sigma_0'
+     endif else if m eq 1 then begin
+        str_title = 'Ionospheric Conductivity, sigma_1, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+'
+        str_sigma_type = 'sigma_1'
+     endif else if m eq 2 then begin
+        str_title = 'Ionospheric Conductivity, sigma_2, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+'
+        str_sigma_type = 'sigma_2'
+     endif else if m eq 3 then begin
+        str_title = 'Ionospheric Conductivity, sigma_xx, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+'
+        str_sigma_type = 'sigma_xx'
+     endif else if m eq 4 then begin
+        str_title = 'Ionospheric Conductivity, sigma_yy, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+'
+        str_sigma_type = 'sigma_yy'
+     endif else if m eq 5 then begin
+        str_title = 'Ionospheric Conductivity, sigma_xy, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+'
+        str_sigma_type = 'sigma_xy'
+     endif
+
 
      for i=0L, n_elements(height_array)-1 do begin
 
@@ -277,7 +277,6 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
               endfor
            endfor
         endfor
-
 ;
 ;        glat=-90 and glat=90 can to work well. To stay away from it.
 ;
@@ -290,12 +289,15 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
 
         device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_ltut+str_time+'_'+str_height+'_'+str_sigma_type+'.eps', /color, /encapsulated
 
-        map_set, /isotropic, /cylindrical, 0, 0, title = str_title
+;        
+        map_set, /isotropic, /cylindrical, 0, 0, title = str_title, latlab="hoge", lonlab="HOGE"
 
         nlevels = 24
         loadct, 33, ncolors=nlevels, bottom=1
         transparency = 50
-        contour, result_plot, glon_array, glat_array, /overplot, /cell_fill, nlevels=nlevels, c_colors=IndGen(nlevels)
+        contour, result_plot, glon_array, glat_array, XTITLE='Longitude', /overplot, /cell_fill, nlevels=nlevels, c_colors=IndGen(nlevels), ytitle="Latitude", zaxis=1
+; color bar
+        colorbar, ncolors=nlevels, position=[0.10, 0.05, 0.90, 0.07], range=[0,200], bottom=3, divisions=4
         map_grid, latdel=10, londel=10, color=240
         map_continents
 
