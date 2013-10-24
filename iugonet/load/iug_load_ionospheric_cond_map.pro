@@ -120,9 +120,7 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
   infile = tmp_dir+'ionospheric_cond_map.result'
   query_result=file_info(infile)
 
-  result_db = fltarr(n_elements(glat_array)*n_elements(glon_array)*num_height,14)
-
-; Create calc_table in structure
+; calc_table in structure
   record = create_struct('height', 0., 'glat', 0., 'glon', 0., 'flag', 0.)
   calc_table = replicate(record, n_elements(glat_array)*n_elements(glon_array)*num_height)
 
@@ -140,14 +138,14 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
      endfor
   endfor
 
-; Create calculated_table in structure
+; calculated_table in structure
   if query_result.size ne 0 then begin
      skip_line=0
      sed_data = read_csv(infile, n_table_header=skip_line, count=cnt)
 
      calculated_table = replicate(record,cnt)
 
-     if query_result.size eq 0 then begin
+     if query_result.size ne 0 then begin
         for i=0L,cnt-1 do begin
            calculated_table[i].height = sed_data.field07[i]
            calculated_table[i].glat = sed_data.field08[i]
@@ -180,6 +178,15 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
   endfor
 
 ; Read DB
+  iug_create_query_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
+                                         height_bottom=height_bottom, heigit_top=height_top, height_step=height_step, $
+                                         resolution=resolution, algorithm=algorithm
+  spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db < '+tmp_dir+'ionospheric_cond_map_query.sql'
+
+  infile = tmp_dir+'ionospheric_cond_map.result'
+  query_result=file_info(infile)
+  print, "query_result.size=",query_result.size
+  
   if query_result.size ne 0 then begin
      skip_line=0
      result_csv = read_csv(infile, n_table_header=skip_line, count=cnt)
@@ -271,17 +278,24 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
            endfor
         endfor
 
+;
+;        glat=-90 and glat=90 can to work well. To stay away from it.
+;
+        glat_array(0) = glat_array(0) + 0.1 ; -90 to -89
+        glat_array(n_elements(glat_array)-1) = glat_array(n_elements(glat_array)-1) - 0.1 ; +90 to +89
+;
+
         set_plot, 'ps'
         str_height = string(height_array[i], format='(i4.4)')
 
-        device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_ltut+str_time+'_'+str_height+'_'+str_sigma_type+'.ps', /color, /encapsulated
+        device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_ltut+str_time+'_'+str_height+'_'+str_sigma_type+'.eps', /color, /encapsulated
 
-        map_set, /isotropic, /cylindrical, 0, 0, title = str_title 
+        map_set, /isotropic, /cylindrical, 0, 0, title = str_title
 
         nlevels = 24
-        LoadCT, 33, ncolors=nlevels, bottom=1
+        loadct, 33, ncolors=nlevels, bottom=1
         transparency = 50
-        contour, result_plot, glon_array, glat_array, /overplot, /fill,nlevels=nlevels, c_colors=IndGen(nlevels), /closed
+        contour, result_plot, glon_array, glat_array, /overplot, /cell_fill, nlevels=nlevels, c_colors=IndGen(nlevels)
         map_grid, latdel=10, londel=10, color=240
         map_continents
 
@@ -289,8 +303,6 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
         set_plot, 'x'
 
         print, result_plot
-
-        stop
      endfor
   endfor
 
