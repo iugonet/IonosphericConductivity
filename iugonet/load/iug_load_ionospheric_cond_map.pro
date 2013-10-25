@@ -295,9 +295,9 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
         nlevels = 24
         loadct, 33, ncolors=nlevels, bottom=1
         transparency = 50
-        contour, result_plot, glon_array, glat_array, XTITLE='Longitude', /overplot, /cell_fill, nlevels=nlevels, c_colors=IndGen(nlevels), ytitle="Latitude", zaxis=1
+        contour, result_plot, glon_array, glat_array, xtitle='Longitude', /overplot, /cell_fill, nlevels=nlevels, c_colors=IndGen(nlevels), ytitle="Latitude", zaxis=1, xstyle=1
 ; color bar
-        colorbar, ncolors=nlevels, position=[0.10, 0.05, 0.90, 0.07], range=[0,200], bottom=3, divisions=4
+        colorbar, ncolors=nlevels, position=[0.15, 0.93, 0.82, 0.95], range=[0,200], bottom=3, divisions=4, vertical="vertical", right="right"
         map_grid, latdel=10, londel=10, color=240
         map_continents
 
