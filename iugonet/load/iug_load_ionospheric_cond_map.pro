@@ -300,7 +300,7 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
         loadct, 33, ncolors=nlevels, bottom=1
         transparency = 50
 
-        contour, result_plot, glon_array, glat_array4plot, /overplot, /cell_fill, nlevels=nlevels, c_colors=IndGen(nlevels), position=[0.0,0.0,0.93,0.93]
+        contour, alog10(result_plot), glon_array, glat_array4plot, /overplot, /cell_fill, nlevels=nlevels, c_colors=IndGen(nlevels), position=[0.0,0.0,0.93,0.93]
 ;, zaxis=1, xstyle=1
 ; color bar
         colorbar, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90], range=[1e-10,1e1], bottom=1, divisions=4, vertical="vertical", right="right", format='(e8.1)'
