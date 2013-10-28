@@ -229,22 +229,22 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
      str_time = string(time, format='(i2.2)')
 
      if m eq 0 then begin
-        str_title = 'Ionospheric Conductivity, sigma_0, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+'
+        str_title = 'Ionospheric Conductivity, sigma_0, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time
         str_sigma_type = 'sigma_0'
      endif else if m eq 1 then begin
-        str_title = 'Ionospheric Conductivity, sigma_1, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+'
+        str_title = 'Ionospheric Conductivity, sigma_1, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time
         str_sigma_type = 'sigma_1'
      endif else if m eq 2 then begin
-        str_title = 'Ionospheric Conductivity, sigma_2, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+'
+        str_title = 'Ionospheric Conductivity, sigma_2, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time
         str_sigma_type = 'sigma_2'
      endif else if m eq 3 then begin
-        str_title = 'Ionospheric Conductivity, sigma_xx, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+'
+        str_title = 'Ionospheric Conductivity, sigma_xx, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time
         str_sigma_type = 'sigma_xx'
      endif else if m eq 4 then begin
-        str_title = 'Ionospheric Conductivity, sigma_yy, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+'
+        str_title = 'Ionospheric Conductivity, sigma_yy, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time
         str_sigma_type = 'sigma_yy'
      endif else if m eq 5 then begin
-        str_title = 'Ionospheric Conductivity, sigma_xy, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+'
+        str_title = 'Ionospheric Conductivity, sigma_xy, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time
         str_sigma_type = 'sigma_xy'
      endif
 
@@ -290,21 +290,30 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
         device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_ltut+str_time+'_'+str_height+'_'+str_sigma_type+'.eps', /color, /encapsulated
 
 ;        
-        map_set, /isotropic, /cylindrical, 0, 0, title = str_title, latlab="hoge", lonlab="HOGE"
+        map_set, /isotropic, /cylindrical, 0, 0, title = str_title, position=[0.07,0.05,0.87,0.85]
 
         nlevels = 24
         loadct, 33, ncolors=nlevels, bottom=1
         transparency = 50
-        contour, result_plot, glon_array, glat_array, xtitle='Longitude', /overplot, /cell_fill, nlevels=nlevels, c_colors=IndGen(nlevels), ytitle="Latitude", zaxis=1, xstyle=1
+
+        contour, result_plot, glon_array, glat_array, /overplot, /cell_fill, nlevels=nlevels, c_colors=IndGen(nlevels), position=[0.0,0.0,0.93,0.93]
+;, zaxis=1, xstyle=1
 ; color bar
-        colorbar, ncolors=nlevels, position=[0.15, 0.93, 0.82, 0.95], range=[0,200], bottom=3, divisions=4, vertical="vertical", right="right"
+        colorbar, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90], range=[1e-10,1e1], bottom=1, divisions=4, vertical="vertical", right="right", format='(e8.1)'
         map_grid, latdel=10, londel=10, color=240
         map_continents
 
         device, /close
         set_plot, 'x'
+; txt
+        openw, unit, tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_ltut+str_time+'_'+str_height+'_'+str_sigma_type+'.txt', /get_lun
+        printf, unit, result_plot
+        printf, unit, glon_array
+        printf, unit, glat_array
+        free_lun, unit
 
-        print, result_plot
+        print, max(result_plot)
+
      endfor
   endfor
 
