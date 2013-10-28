@@ -1,0 +1,31 @@
+; docformat = 'IDL'
+
+;+
+;
+;Name:
+;IUG_LOAD_IONOSPHERIC_COND_MAP
+;
+;Purpose:
+;
+;Syntax:
+;
+;Keywords:
+;
+;Code:
+;Yukinobu KOYAMA, 05/05/2012
+;
+;Modifications:
+;Yukinobu KOYAMA, 10/23/2013
+;
+;Acknowledgment:
+;
+;EXAMPLE:
+; IDL> thm_init
+; THEMIS> iug_load_ionospheric_cond_map, yyyy=1987, mmdd=101, ltut=0, time=12,
+; height_bottom=100, height_top=120, height_step=20, algorithm=1, 
+; reso_lat=30, reso_lon=30, result=result
+;-
+
+pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
+                                   height_bottom=height_bottom, height_top=height_top, height_step=height_step, $
+                                   algorithm=algorithm, reso_lat=reso_lat, reso_lon=reso_lon, result=result

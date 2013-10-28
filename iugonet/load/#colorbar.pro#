@@ -1,0 +1,125 @@
+ixels THEN BEGIN
+      oldDevice = !D.NAME
+
+         ; What kind of computer are we using? SET_PLOT to appropriate
+         ; display device.
+
+      thisOS = !VERSION.OS_FAMILY
+      thisOS = STRMID(thisOS, 0, 3)
+      thisOS = STRUPCASE(thisOS)
+      CASE thisOS of
+         'MAC': SET_PLOT, thisOS
+         'WIN': SET_PLOT, thisOS
+         ELSE: SET_PLOT, 'X'
+      ENDCASE
+
+         ; Here is how many colors we should use.
+
+      ncolors = !D.TABLE_SIZE
+      SET_PLOT, oldDevice
+   ENDIF ELSE ncolors = !D.TABLE_SIZE
+ENDIF
+IF N_ELEMENTS(bottom) EQ 0 THEN bottom = 0B
+IF N_ELEMENTS(charsize) EQ 0 THEN charsize = 1.0
+IF N_ELEMENTS(format) EQ 0 THEN format = '(I5)'
+IF N_ELEMENTS(color) EQ 0 THEN color = !P.Color
+IF N_ELEMENTS(minrange) EQ 0 THEN minrange = 0
+IF N_ELEMENTS(maxrange) EQ 0 THEN maxrange = ncolors
+IF N_ELEMENTS(ticklen) EQ 0 THEN ticklen = 0.2
+IF N_ELEMENTS(minor) EQ 0 THEN minor = 2
+IF N_ELEMENTS(range) NE 0 THEN BEGIN
+   minrange = range[0]
+   maxrange = range[1]
+ENDIF
+IF N_ELEMENTS(divisions) EQ 0 THEN divisions = 6
+IF N_ELEMENTS(font) EQ 0 THEN font = !P.Font
+IF N_ELEMENTS(title) EQ 0 THEN title = ''
+
+; You can't have a format set *and* use ticknames.
+IF N_ELEMENTS(ticknames) NE 0 THEN format = ""
+
+IF KEYWORD_SET(vertical) THEN BEGIN
+   bar = REPLICATE(1B,20) # BINDGEN(ncolors)
+   IF Keyword_Set(invertcolors) THEN bar = Reverse(bar, 2)
+   IF N_ELEMENTS(position) EQ 0 THEN BEGIN
+      position = [0.88, 0.1, 0.95, 0.9]
+   ENDIF ELSE BEGIN
+      IF position[2]-position[0] GT position[3]-position[1] THEN BEGIN
+         position = [position[1], position[0], position[3], position[2]]
+      ENDIF
+      IF position[0] GE position[2] THEN Message, "Position coordinates can't be reconciled."
+      IF position[1] GE position[3] THEN Message, "Position coordinates can't be reconciled."
+   ENDELSE
+ENDIF ELSE BEGIN
+   bar = BINDGEN(ncolors) # REPLICATE(1B, 20)
+   IF Keyword_Set(invertcolors) THEN bar = Reverse(bar, 1)
+   IF N_ELEMENTS(position) EQ 0 THEN BEGIN
+      position = [0.1, 0.88, 0.9, 0.95]
+   ENDIF ELSE BEGIN
+      IF position[3]-position[1] GT position[2]-position[0] THEN BEGIN
+         position = [position[1], position[0], position[3], position[2]]
+      ENDIF
+      IF position[0] GE position[2] THEN Message, "Position coordinates can't be reconciled."
+      IF position[1] GE position[3] THEN Message, "Position coordinates can't be reconciled."
+   ENDELSE
+ENDELSE
+
+   ; Scale the color bar.
+
+ bar = BYTSCL(bar, TOP=(ncolors-1 < (255-bottom))) + bottom
+ IF Keyword_Set(reverse) THEN BEGIN
+   IF Keyword_Set(vertical) THEN bar = Reverse(bar,2) ELSE bar = Reverse(bar,1)
+ENDIF
+
+   ; Get starting locations in NORMAL coordinates.
+
+xstart = position(0)
+ystart = position(1)
+
+   ; Get the size of the bar in NORMAL coordinates.
+
+xsize = (position(2) - position(0))
+ysize = (position(3) - position(1))
+
+   ; Display the color bar in the window. Sizing is
+   ; different for PostScript and regular display.
+
+IF scalablePixels THEN BEGIN
+
+   TV, bar, xstart, ystart, XSIZE=xsize, YSIZE=ysize, /Normal
+
+ENDIF ELSE BEGIN
+
+   bar = CONGRID(bar, CEIL(xsize*!D.X_VSize), CEIL(ysize*!D.Y_VSize), /INTERP)
+
+        ; Decomposed color off if device supports it.
+
+   CASE  StrUpCase(!D.NAME) OF
+        'X': BEGIN
+            IF thisRelease GE 5.2 THEN Device, Get_Decomposed=thisDecomposed
+            Device, Decomposed=0
+         ENDCASE
+        'WIN': BEGIN
+            IF thisRelease GE 5.2 THEN Device, Get_Decomposed=thisDecomposed
+            Device, Decomposed=0
+         ENDCASE
+        'MAC': BEGIN
+            IF thisRelease GE 5.2 THEN Device, Get_Decomposed=thisDecomposed
+            Device, Decomposed=0
+         ENDCASE
+        ELSE:
+     ENDCASE
+
+   TV, bar, xstart, ystart, /Normal
+
+      ; Restore Decomposed state if necessary.
+
+   CASE StrUpCase(!D.NAME) OF
+      'X': BEGIN
+         IF thisRelease GE 5.2 THEN Device, Decomposed=thisDecomposed
+      ENDCASE
+      'WIN': BEGIN
+         IF thisRelease GE 5.2 THEN Device, Decomposed=thisDecomposed
+      ENDCASE
+      'MAC': BEGIN
+         IF thisRelease GE 5.2 THEN Device, 
