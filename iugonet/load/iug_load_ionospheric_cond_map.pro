@@ -23,12 +23,12 @@
 ; IDL> thm_init
 ; THEMIS> iug_load_ionospheric_cond_map, yyyy=1987, mmdd=101, ltut=0, time=12,
 ; height_bottom=100, height_top=120, height_step=20, algorithm=1, 
-; resolution=30, result=result
+; reso_lat=30, reso_lon=30, result=result
 ;-
 
 pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
                                    height_bottom=height_bottom, height_top=height_top, height_step=height_step, $
-                                   algorithm=algorithm, resolution=resolution, result=result
+                                   algorithm=algorithm, reso_lat=reso_lat, reso_lon=reso_lon, result=result
 ;
   tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
   result_file_test = file_test(tmp_dir)
@@ -98,15 +98,15 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
 ;
 ; Calculation based on Kenichi Maeda's equation
 ;
-  glat_array = fltarr(180/resolution+1)
-  glon_array = fltarr(360/resolution+1)
+  glat_array = fltarr(180/reso_lat+1)
+  glon_array = fltarr(360/reso_lon+1)
 
   for i=0L,n_elements(glat_array)-1 do begin
-     glat_array[i]=-90.+i*resolution
+     glat_array[i]=-90.+i*reso_lat
   endfor
 
   for i=0L,n_elements(glon_array)-1 do begin
-     glon_array[i]=-180.+i*resolution
+     glon_array[i]=-180.+i*reso_lon
   endfor
 
 ;
@@ -114,7 +114,7 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
 ;
   iug_create_query_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
                                          height_bottom=height_bottom, heigit_top=height_top, height_step=height_step, $
-                                         resolution=resolution, algorithm=algorithm
+                                         reso_lat=reso_lat, reso_lon=reso_lon, algorithm=algorithm
   spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db < '+tmp_dir+'ionospheric_cond_map_query.sql'
 
   infile = tmp_dir+'ionospheric_cond_map.result'
@@ -180,7 +180,7 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
 ; Read DB
   iug_create_query_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
                                          height_bottom=height_bottom, heigit_top=height_top, height_step=height_step, $
-                                         resolution=resolution, algorithm=algorithm
+                                         reso_lat=reso_lat, reso_lon=reso_lon, algorithm=algorithm
   spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db < '+tmp_dir+'ionospheric_cond_map_query.sql'
 
   infile = tmp_dir+'ionospheric_cond_map.result'

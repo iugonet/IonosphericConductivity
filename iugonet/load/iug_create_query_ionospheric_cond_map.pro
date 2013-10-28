@@ -20,7 +20,7 @@
 ;-
 pro iug_create_query_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
    height_bottom=height_bottom, heigit_top=height_top, height_step=height_step, $
-   resolution=resolution, algorithm=algorithm
+   reso_lat=reso_lat, reso_lon=reso_lon, algorithm=algorithm
 
 ;
   tmp_dir = '/tmp/'+string(iug_getpid(),format='(i0)')+'/'
@@ -43,15 +43,15 @@ pro iug_create_query_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time
      height_array(i)=height_bottom+height_step*i
   endfor
 ;
-  glat_array=fltarr(180/resolution+1)
-  glon_array=fltarr(360/resolution+1)
+  glat_array=fltarr(180/reso_lat+1)
+  glon_array=fltarr(360/reso_lon+1)
 
   for i=0L,n_elements(glat_array)-1 do begin
-     glat_array[i]=-90.+i*resolution
+     glat_array[i]=-90.+i*reso_lat
   endfor
 
   for i=0L,n_elements(glon_array)-1 do begin
-     glon_array[i]=-180.+i*resolution
+     glon_array[i]=-180.+i*reso_lon
   endfor
 ;
   openw, unit, tmp_dir+'ionospheric_cond_map_query.sql', /get_lun ; create query file
