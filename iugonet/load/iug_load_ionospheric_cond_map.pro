@@ -215,6 +215,13 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
      result_table[i].algorithm = result_csv.field14[i]
   endfor
 
+;
+; Just before ploting. glat=-90 and glat=90 can to work well. To stay away from it.
+;
+  glat_array(0) = glat_array(0) + 0.1                                                     ; -90 to -89
+  glat_array(n_elements(glat_array)-1) = glat_array(n_elements(glat_array)-1) - 0.1       ; +90 to +89
+
+
 ; ploting
   for m=0L, 5 do begin          ; for sigma_0, sigma_1, sigma_2, sigma_xx, sigma_yy, sigma_xy
 
@@ -278,11 +285,6 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
            endfor
         endfor
 ;
-;        glat=-90 and glat=90 can to work well. To stay away from it.
-;
-        glat_array(0) = glat_array(0) + 0.1 ; -90 to -89
-        glat_array(n_elements(glat_array)-1) = glat_array(n_elements(glat_array)-1) - 0.1 ; +90 to +89
-;
 
         set_plot, 'ps'
         str_height = string(height_array[i], format='(i4.4)')
@@ -308,8 +310,8 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
 ; txt
         openw, unit, tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_ltut+str_time+'_'+str_height+'_'+str_sigma_type+'.txt', /get_lun
         printf, unit, result_plot
-        printf, unit, glon_array
-        printf, unit, glat_array
+        printf, unit, "GLON_ARRAY=",glon_array
+        printf, unit, "GLAT_ARRAY=",glat_array
         free_lun, unit
 
         print, max(result_plot)
