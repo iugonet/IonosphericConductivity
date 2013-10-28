@@ -218,8 +218,9 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
 ;
 ; Just before ploting. glat=-90 and glat=90 can to work well. To stay away from it.
 ;
-  glat_array(0) = glat_array(0) + 0.1                                                     ; -90 to -89
-  glat_array(n_elements(glat_array)-1) = glat_array(n_elements(glat_array)-1) - 0.1       ; +90 to +89
+  glat_array4plot = glat_array
+  glat_array4plot(0) = glat_array4plot(0) + 0.1                           ; -90 to -89
+  glat_array4plot(n_elements(glat_array4plot)-1) = glat_array4plot(n_elements(glat_array4plot)-1) - 0.1 ; +90 to +89
 
 
 ; ploting
@@ -235,29 +236,30 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
      str_mmdd = string(mmdd, format='(i4.4)')
      str_time = string(time, format='(i2.2)')
 
-     if m eq 0 then begin
-        str_title = 'Ionospheric Conductivity, sigma_0, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time
-        str_sigma_type = 'sigma_0'
-     endif else if m eq 1 then begin
-        str_title = 'Ionospheric Conductivity, sigma_1, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time
-        str_sigma_type = 'sigma_1'
-     endif else if m eq 2 then begin
-        str_title = 'Ionospheric Conductivity, sigma_2, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time
-        str_sigma_type = 'sigma_2'
-     endif else if m eq 3 then begin
-        str_title = 'Ionospheric Conductivity, sigma_xx, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time
-        str_sigma_type = 'sigma_xx'
-     endif else if m eq 4 then begin
-        str_title = 'Ionospheric Conductivity, sigma_yy, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time
-        str_sigma_type = 'sigma_yy'
-     endif else if m eq 5 then begin
-        str_title = 'Ionospheric Conductivity, sigma_xy, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time
-        str_sigma_type = 'sigma_xy'
-     endif
-
-
      for i=0L, n_elements(height_array)-1 do begin
 
+        str_height = string(height_array(i), format='(i4.4)')
+
+        if m eq 0 then begin
+           str_title = 'Ionospheric Conductivity, sigma_0, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
+           str_sigma_type = 'sigma_0'
+        endif else if m eq 1 then begin
+           str_title = 'Ionospheric Conductivity, sigma_1, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
+           str_sigma_type = 'sigma_1'
+        endif else if m eq 2 then begin
+           str_title = 'Ionospheric Conductivity, sigma_2, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
+           str_sigma_type = 'sigma_2'
+        endif else if m eq 3 then begin
+           str_title = 'Ionospheric Conductivity, sigma_xx, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
+           str_sigma_type = 'sigma_xx'
+        endif else if m eq 4 then begin
+           str_title = 'Ionospheric Conductivity, sigma_yy, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
+           str_sigma_type = 'sigma_yy'
+        endif else if m eq 5 then begin
+           str_title = 'Ionospheric Conductivity, sigma_xy, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
+           str_sigma_type = 'sigma_xy'
+        endif
+        
         result_plot = fltarr(n_elements(glon_array), n_elements(glat_array) )
 
         for j=0L, cnt-1 do begin
@@ -298,7 +300,7 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
         loadct, 33, ncolors=nlevels, bottom=1
         transparency = 50
 
-        contour, result_plot, glon_array, glat_array, /overplot, /cell_fill, nlevels=nlevels, c_colors=IndGen(nlevels), position=[0.0,0.0,0.93,0.93]
+        contour, result_plot, glon_array, glat_array4plot, /overplot, /cell_fill, nlevels=nlevels, c_colors=IndGen(nlevels), position=[0.0,0.0,0.93,0.93]
 ;, zaxis=1, xstyle=1
 ; color bar
         colorbar, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90], range=[1e-10,1e1], bottom=1, divisions=4, vertical="vertical", right="right", format='(e8.1)'
