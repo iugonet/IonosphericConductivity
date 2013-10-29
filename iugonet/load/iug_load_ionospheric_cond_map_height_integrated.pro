@@ -195,7 +195,7 @@ pro iug_load_ionospheric_cond_map_height_integrated, yyyy=yyyy, mmdd=mmdd, ltut=
 
         if i gt 0 then begin
            result_plot_height_integrated = result_plot_height_integrated $
-                                           + (result_plot + result_plot_lower) * height_step
+                                           + (result_plot + result_plot_lower) /2. * height_step * 1.E3
         endif
 
         result_plot_lower = result_plot
@@ -225,7 +225,7 @@ pro iug_load_ionospheric_cond_map_height_integrated, yyyy=yyyy, mmdd=mmdd, ltut=
      set_plot, 'x'
 ; txt
      openw, unit, tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_time+str_ltut+'_'+str_height+'_'+str_sigma_type+'.txt', /get_lun
-     printf, unit, result_plot
+     printf, unit, result_plot_height_integrated
      printf, unit, "GLON_ARRAY=",glon_array
      printf, unit, "GLAT_ARRAY=",glat_array
      free_lun, unit
