@@ -240,22 +240,22 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
         str_height = string(height_array(i), format='(i4.4)')
 
         if m eq 0 then begin
-           str_title = 'Ionospheric Conductivity, sigma_0, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', ('+str_height+' km)'
+           str_title = 'Ionospheric Conductivity, sigma_0, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
            str_sigma_type = 'sigma_0'
         endif else if m eq 1 then begin
-           str_title = 'Ionospheric Conductivity, sigma_1, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', ('+str_height+' km)'
+           str_title = 'Ionospheric Conductivity, sigma_1, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
            str_sigma_type = 'sigma_1'
         endif else if m eq 2 then begin
-           str_title = 'Ionospheric Conductivity, sigma_2, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', ('+str_height+' km)'
+           str_title = 'Ionospheric Conductivity, sigma_2, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
            str_sigma_type = 'sigma_2'
         endif else if m eq 3 then begin
-           str_title = 'Ionospheric Conductivity, sigma_xx, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', ('+str_height+' km)'
+           str_title = 'Ionospheric Conductivity, sigma_xx, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
            str_sigma_type = 'sigma_xx'
         endif else if m eq 4 then begin
-           str_title = 'Ionospheric Conductivity, sigma_yy, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', ('+str_height+' km)'
+           str_title = 'Ionospheric Conductivity, sigma_yy, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
            str_sigma_type = 'sigma_yy'
         endif else if m eq 5 then begin
-           str_title = 'Ionospheric Conductivity, sigma_xy, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', ('+str_height+' km)'
+           str_title = 'Ionospheric Conductivity, sigma_xy, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
            str_sigma_type = 'sigma_xy'
         endif
         
