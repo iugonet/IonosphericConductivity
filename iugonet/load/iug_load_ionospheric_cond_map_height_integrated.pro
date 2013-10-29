@@ -108,6 +108,9 @@ pro iug_load_ionospheric_cond_map_height_integrated, yyyy=yyyy, mmdd=mmdd, ltut=
   str_height_range = string(height_bottom, format='(i4.4)')+'-'+string(height_top, format='(i4.4)')+'-'+string(height_step, format='(i4.4)')
   str_height = str_height_range
 
+  print, str_height
+  stop
+
 ; ploting
   for m=0L, 5 do begin          ; for sigma_0, sigma_1, sigma_2, sigma_xx, sigma_yy, sigma_xy
 
@@ -120,7 +123,6 @@ pro iug_load_ionospheric_cond_map_height_integrated, yyyy=yyyy, mmdd=mmdd, ltut=
      str_yyyy = string(yyyy, format='(i4.4)')
      str_mmdd = string(mmdd, format='(i4.4)')
      str_time = string(time, format='(i2.2)')
-
 
      if m eq 0 then begin
         str_title = 'Ionospheric Conductivity, sigma_0, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
@@ -144,7 +146,7 @@ pro iug_load_ionospheric_cond_map_height_integrated, yyyy=yyyy, mmdd=mmdd, ltut=
 
      for i=0L, n_elements(height_array)-1 do begin
         
-                result_plot = fltarr(n_elements(glon_array), n_elements(glat_array) )
+        result_plot = fltarr(n_elements(glon_array), n_elements(glat_array) )
 
         for j=0L, cnt-1 do begin
            for k=0L, n_elements(glat_array)-1 do begin
@@ -170,36 +172,37 @@ pro iug_load_ionospheric_cond_map_height_integrated, yyyy=yyyy, mmdd=mmdd, ltut=
               endfor
            endfor
         endfor
-;
-        set_plot, 'ps'
-        str_height = string(height_array[i], format='(i4.4)')
+     endfor
 
-        device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_ltut+str_time+'_'+str_height+'_'+str_sigma_type+'.eps', /color, /encapsulated
+;
+     set_plot, 'ps'
+
+     device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_ltut+str_time+'_'+str_height+'_'+str_sigma_type+'.eps', /color, /encapsulated
 
 ;        
-        map_set, /isotropic, /cylindrical, 0, 0, title = str_title, position=[0.07,0.05,0.87,0.85]
+     map_set, /isotropic, /cylindrical, 0, 0, title = str_title, position=[0.07,0.05,0.87,0.85]
 
-        nlevels = 24
-        loadct, 33, ncolors=nlevels, bottom=1
-        transparency = 50
+     nlevels = 24
+     loadct, 33, ncolors=nlevels, bottom=1
+     transparency = 50
 
-        contour, alog10(result_plot), glon_array, glat_array4plot, /overplot, /cell_fill, nlevels=nlevels, c_colors=IndGen(nlevels), position=[0.0,0.0,0.93,0.93]
+     contour, alog10(result_plot), glon_array, glat_array4plot, /overplot, /cell_fill, nlevels=nlevels, c_colors=IndGen(nlevels), position=[0.0,0.0,0.93,0.93]
 ;, zaxis=1, xstyle=1
 ; color bar
-        colorbar, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90], range=[1e-10,1e1], bottom=1, divisions=4, vertical="vertical", right="right", format='(e8.1)'
-        map_grid, latdel=10, londel=10, color=240
-        map_continents
+     colorbar, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90], range=[1e-10,1e1], bottom=1, divisions=4, vertical="vertical", right="right", format='(e8.1)'
+     map_grid, latdel=10, londel=10, color=240
+     map_continents
 
-        device, /close
-        set_plot, 'x'
+     device, /close
+     set_plot, 'x'
 ; txt
-        openw, unit, tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_ltut+str_time+'_'+str_height+'_'+str_sigma_type+'.txt', /get_lun
-        printf, unit, result_plot
-        printf, unit, "GLON_ARRAY=",glon_array
-        printf, unit, "GLAT_ARRAY=",glat_array
-        free_lun, unit
+     openw, unit, tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_ltut+str_time+'_'+str_height+'_'+str_sigma_type+'.txt', /get_lun
+     printf, unit, result_plot
+     printf, unit, "GLON_ARRAY=",glon_array
+     printf, unit, "GLAT_ARRAY=",glat_array
+     free_lun, unit
 
-        print, max(result_plot)
-     endfor
+     print, max(result_plot)
+
   endfor
 end

@@ -185,7 +185,6 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
 
   infile = tmp_dir+'ionospheric_cond_map.result'
   query_result=file_info(infile)
-  print, "query_result.size=",query_result.size
   
   if query_result.size ne 0 then begin
      skip_line=0
@@ -316,7 +315,6 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
         printf, unit, "GLAT_ARRAY=",glat_array
         free_lun, unit
 
-        print, max(result_plot)
 
      endfor
   endfor
