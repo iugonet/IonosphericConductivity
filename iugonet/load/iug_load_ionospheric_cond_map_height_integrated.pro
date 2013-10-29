@@ -89,29 +89,45 @@ pro iug_load_ionospheric_cond_map_height_integrated, yyyy=yyyy, mmdd=mmdd, ltut=
      num_height = 1
   endelse
 
+  height_array = fltarr(num_height)
+
+  for i=0L, num_height-1 do begin
+     height_array(i) = height_bottom+height_step * 1
+  endfor
+;
+; Calculation based on Kenichi Maeda's equation
+;
+  glat_array = fltarr(180/reso_lat+1)
+  glon_array = fltarr(360/reso_lon+1)
+
+  for i=0L,n_elements(glat_array)-1 do begin
+     glat_array[i]=-90.+i*reso_lat
+  endfor
+
+  for i=0L,n_elements(glon_array)-1 do begin
+     glon_array[i]=-180.+i*reso_lon
+  endfor
+
+;
+;
+;
   iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
                                  height_bottom=height_bottom, height_top=height_top, height_step=height_step, $
                                  algorithm=algorithm, reso_lat=reso_lat, reso_lon=reso_lon, result=result
 
-  
-  print, size(result)
-  print, "HOGE", result.sigma_0
-  print, "HOGE", result.sigma_1
-  print, "HOGE", result.sigma_2
-  print, "HOGE", result.sigma_xx
-  print, "HOGE", result.sigma_yy
-  print, "HOGE", result.sigma_xy
-  print, "HOGE", result.height
-  print, "HOGE", result.glat
-  print, "HOGE", result.glon
-
-  str_height_range = string(height_bottom, format='(i4.4)')+'-'+string(height_top, format='(i4.4)')+'-'+string(height_step, format='(i4.4)')
+  str_height_range = string(height_bottom, format='(i4.4)')+'-'+string(height_top, format='(i4.4)')
   str_height = str_height_range
 
-  print, str_height
-  stop
+  result_table = result
 
-; ploting
+;
+; Just before ploting. glat=-90 and glat=90 can to work well. To stay away from it.
+;
+  glat_array4plot = glat_array
+  glat_array4plot(0) = glat_array4plot(0) + 0.1                           ; -90 to -89
+  glat_array4plot(n_elements(glat_array4plot)-1) = glat_array4plot(n_elements(glat_array4plot)-1) - 0.1 ; +90 to +89
+
+; plotting
   for m=0L, 5 do begin          ; for sigma_0, sigma_1, sigma_2, sigma_xx, sigma_yy, sigma_xy
 
      if ltut eq 0 then begin
@@ -125,28 +141,32 @@ pro iug_load_ionospheric_cond_map_height_integrated, yyyy=yyyy, mmdd=mmdd, ltut=
      str_time = string(time, format='(i2.2)')
 
      if m eq 0 then begin
-        str_title = 'Ionospheric Conductivity, sigma_0, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
+        str_title = 'Height Integrated Ionospheric Conductivity, sigma_0, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+' ('+str_height+' km)'
         str_sigma_type = 'sigma_0'
      endif else if m eq 1 then begin
-        str_title = 'Ionospheric Conductivity, sigma_1, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
+        str_title = 'Heignt Integrated Ionospheric Conductivity, sigma_1, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+' ('+str_height+' km)'
         str_sigma_type = 'sigma_1'
      endif else if m eq 2 then begin
-        str_title = 'Ionospheric Conductivity, sigma_2, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
+        str_title = 'Height Integrated Ionospheric Conductivity, sigma_2, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+' ('+str_height+' km)'
         str_sigma_type = 'sigma_2'
      endif else if m eq 3 then begin
-        str_title = 'Ionospheric Conductivity, sigma_xx, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
+        str_title = 'Height Integrated Ionospheric Conductivity, sigma_xx, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+' ('+str_height+' km)'
         str_sigma_type = 'sigma_xx'
      endif else if m eq 4 then begin
-        str_title = 'Ionospheric Conductivity, sigma_yy, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
+        str_title = 'Height Integrated Ionospheric Conductivity, sigma_yy, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+' ('+str_height+' km)'
         str_sigma_type = 'sigma_yy'
      endif else if m eq 5 then begin
-        str_title = 'Ionospheric Conductivity, sigma_xy, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
+        str_title = 'Heignt Integrated Ionospheric Conductivity, sigma_xy, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+' ('+str_height+' km)'
         str_sigma_type = 'sigma_xy'
      endif
 
+     result_plot_height_integrated = fltarr(n_elements(glon_array), n_elements(glat_array))
+
      for i=0L, n_elements(height_array)-1 do begin
-        
-        result_plot = fltarr(n_elements(glon_array), n_elements(glat_array) )
+
+        result_plot = fltarr(n_elements(glon_array), n_elements(glat_array))
+
+        cnt = n_elements(result_table)
 
         for j=0L, cnt-1 do begin
            for k=0L, n_elements(glat_array)-1 do begin
@@ -154,7 +174,7 @@ pro iug_load_ionospheric_cond_map_height_integrated, yyyy=yyyy, mmdd=mmdd, ltut=
                  if result_table[j].height eq height_array(i) $
                     and result_table[j].glat eq glat_array[k] $
                     and result_table[j].glon eq glon_array[l] then begin
-                    
+
                     if m eq 0 then begin
                        result_plot(l,k) = result_table[j].sigma_0
                     endif else if m eq 1 then begin
@@ -172,21 +192,29 @@ pro iug_load_ionospheric_cond_map_height_integrated, yyyy=yyyy, mmdd=mmdd, ltut=
               endfor
            endfor
         endfor
+
+        if i gt 0 then begin
+           result_plot_height_integrated = result_plot_height_integrated $
+                                           + (result_plot + result_plot_lower) * height_step
+        endif
+
+        result_plot_lower = result_plot
      endfor
 
 ;
      set_plot, 'ps'
 
-     device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_ltut+str_time+'_'+str_height+'_'+str_sigma_type+'.eps', /color, /encapsulated
+     device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_time+str_ltut+'_'+str_height+'_'+str_sigma_type+'.eps', /color, /encapsulated
 
-;        
+;
      map_set, /isotropic, /cylindrical, 0, 0, title = str_title, position=[0.07,0.05,0.87,0.85]
 
      nlevels = 24
      loadct, 33, ncolors=nlevels, bottom=1
      transparency = 50
 
-     contour, alog10(result_plot), glon_array, glat_array4plot, /overplot, /cell_fill, nlevels=nlevels, c_colors=IndGen(nlevels), position=[0.0,0.0,0.93,0.93]
+     contour, alog10(result_plot_height_integrated), glon_array, glat_array4plot, $
+              /overplot, /cell_fill, nlevels=nlevels, c_colors=IndGen(nlevels), position=[0.0,0.0,0.93,0.93]
 ;, zaxis=1, xstyle=1
 ; color bar
      colorbar, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90], range=[1e-10,1e1], bottom=1, divisions=4, vertical="vertical", right="right", format='(e8.1)'
@@ -196,7 +224,7 @@ pro iug_load_ionospheric_cond_map_height_integrated, yyyy=yyyy, mmdd=mmdd, ltut=
      device, /close
      set_plot, 'x'
 ; txt
-     openw, unit, tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_ltut+str_time+'_'+str_height+'_'+str_sigma_type+'.txt', /get_lun
+     openw, unit, tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_time+str_ltut+'_'+str_height+'_'+str_sigma_type+'.txt', /get_lun
      printf, unit, result_plot
      printf, unit, "GLON_ARRAY=",glon_array
      printf, unit, "GLAT_ARRAY=",glat_array

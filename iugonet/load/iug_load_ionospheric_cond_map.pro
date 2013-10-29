@@ -90,10 +90,10 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
      num_height = 1
   endelse
 
-  height_array=fltarr(num_height)
+  height_array = fltarr(num_height)
 
-  for i=0L,num_height-1 do begin
-     height_array(i)=height_bottom+height_step*i
+  for i=0L, num_height-1 do begin
+     height_array(i) = height_bottom+height_step * i
   endfor
 ;
 ; Calculation based on Kenichi Maeda's equation
@@ -222,7 +222,7 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
   glat_array4plot(n_elements(glat_array4plot)-1) = glat_array4plot(n_elements(glat_array4plot)-1) - 0.1 ; +90 to +89
 
 
-; ploting
+; plotting
   for m=0L, 5 do begin          ; for sigma_0, sigma_1, sigma_2, sigma_xx, sigma_yy, sigma_xy
 
      if ltut eq 0 then begin
@@ -240,22 +240,22 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
         str_height = string(height_array(i), format='(i4.4)')
 
         if m eq 0 then begin
-           str_title = 'Ionospheric Conductivity, sigma_0, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
+           str_title = 'Ionospheric Conductivity, sigma_0, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', ('+str_height+' km)'
            str_sigma_type = 'sigma_0'
         endif else if m eq 1 then begin
-           str_title = 'Ionospheric Conductivity, sigma_1, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
+           str_title = 'Ionospheric Conductivity, sigma_1, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', ('+str_height+' km)'
            str_sigma_type = 'sigma_1'
         endif else if m eq 2 then begin
-           str_title = 'Ionospheric Conductivity, sigma_2, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
+           str_title = 'Ionospheric Conductivity, sigma_2, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', ('+str_height+' km)'
            str_sigma_type = 'sigma_2'
         endif else if m eq 3 then begin
-           str_title = 'Ionospheric Conductivity, sigma_xx, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
+           str_title = 'Ionospheric Conductivity, sigma_xx, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', ('+str_height+' km)'
            str_sigma_type = 'sigma_xx'
         endif else if m eq 4 then begin
-           str_title = 'Ionospheric Conductivity, sigma_yy, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
+           str_title = 'Ionospheric Conductivity, sigma_yy, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', ('+str_height+' km)'
            str_sigma_type = 'sigma_yy'
         endif else if m eq 5 then begin
-           str_title = 'Ionospheric Conductivity, sigma_xy, '+str_yyyy+'-'+str_mmdd+'-'+str_ltut+str_time+', height='+str_height
+           str_title = 'Ionospheric Conductivity, sigma_xy, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', ('+str_height+' km)'
            str_sigma_type = 'sigma_xy'
         endif
         
@@ -290,7 +290,7 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
         set_plot, 'ps'
         str_height = string(height_array[i], format='(i4.4)')
 
-        device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_ltut+str_time+'_'+str_height+'_'+str_sigma_type+'.eps', /color, /encapsulated
+        device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_time+str_ltut+'_'+str_height+'_'+str_sigma_type+'.eps', /color, /encapsulated
 
 ;        
         map_set, /isotropic, /cylindrical, 0, 0, title = str_title, position=[0.07,0.05,0.87,0.85]
@@ -314,7 +314,6 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
         printf, unit, "GLON_ARRAY=",glon_array
         printf, unit, "GLAT_ARRAY=",glat_array
         free_lun, unit
-
 
      endfor
   endfor
