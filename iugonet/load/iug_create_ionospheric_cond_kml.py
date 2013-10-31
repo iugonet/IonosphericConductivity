@@ -20,29 +20,40 @@ def prettify(elem):
     reparsed = minidom.parseString(rough_string)
     return reparsed.toprettyxml(indent="  ")
 
-class Hoge:
-    
-    def __init__(self, yyyy, mmdd, ltut, atime):
+class IonosphericCond:
+
+    def __init__(self, sigma_0, sigma_1, sigma_2, sigma_xx, sigma_yy, sigma_xy, height, glat, glon, yyyy, mmdd, ltut, atime, algorithm):
+        self.sigma_0 = sigma_0
+        self.sigma_1 = sigma_1
+        self.sigma_2 = sigma_2
+        self.sigma_xx = sigma_xx
+        self.sigma_yy = sigma_yy
+        self.sigma_xy = sigma_xy
+        self.height = height
+        self.glat = glat
+        self.glon = glon
         self.yyyy = yyyy
         self.mmdd = mmdd
         self.ltut = ltut
         self.atime = atime
+        self.algorithm = algorithm
 
 def get_file_names():
     conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/ionospheric_cond.db')
     sql = "select distinct yyyy,mmdd,ltut,atime,algorithm from ionospheric_cond;"
     cursor = conn.execute(sql)
     result = cursor.fetchall()
-
-    hogeList = []
+    
+    ionosphericCondList = []
 
     for row in result:
-        hogeList.append(Hoge(row[0], row[1], row[2], row[3]))
+        ionosphericCondList.append(IonosphericHoge('','','','','','','','','',row[0], row[1], row[2], row[3],''))
 
+    print ionosphericCondList
     cursor.close()
-    conn.close;
+    conn.close
 
-    return hogeList
+    return ionosphericCondList
 
 def get_max():
     conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/ionospheric_cond.db')
@@ -77,13 +88,32 @@ def get_max():
     c = conn.execute(sql)
     for row in c:
         print row
-        
+
     conn.close
 
+def retrieveData(value):
+    conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/ionospheric_cond.db')
+    sql = "select * from ionospheric_cond where yyyy="+str(value.yyyy)+" and mmdd="+str(value.mmdd)+" and ltut="+str(value.ltut)+" and atime="+str(value.atime)+";"
+    cursor = conn.execute(sql)
+    result = cursor.fetchall()
+
+    hoge2List = []
+
+    for row in result:
+        print row
+        hoge2List.append(Hoge2(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13]))
+
+    print "HOGEGE"
+    print len(hoge2List)
+
+    cursor.close()
+    conn.close;
+
+    return hoge2List
+
+
 def generateKml(value):
-    print value.yyyy, value.mmdd, value.ltut, value.atime
-
-
+    result = retrieveData(value)
 #    get_max()
 
     kml = etree.Element('kml')
@@ -126,19 +156,23 @@ def main():
 #    for row in conn.execute(sql):
 #        print row['sigma_0'], row['sigma_1'], row['sigma_2'], row['sigma_xx'], row['sigma_yy'], row['sigma_xy'], row['height'], row['glat'], row['glon'], row['yyyy'], row['mmdd'], row['ltut'], row['atime'], row['algorithm']
 #        conn.close()
-    hogeList = get_file_names()
-    for value in hogeList:
+    tmp_dir = '/tmp/'
+
+    ionosphericCondList = get_file_names()
+    for value in ionosphericCondList:
         if value.ltut == 0:
             str_ltut = 'LT'
         elif value.ltut ==1:
             str_ltut = 'UT'
 
-        filename = 'tomogra_'+str(value.yyyy)+str(value.mmdd).rjust(4,"0")+'_'+str(value.atime)+str_ltut+'.kml'
+        list = ['sigma_0', 'sigma_1', 'sigma_2','sigma_xx','sigma_yy','sigma_xy']
 
-        f = open(filename, 'w')
-        str_kml = generateKml(value)
-        f.write(str_kml)
-        f.close()
+        for var in list:
+            filename = tmp_dir+'tomogra_'+str(value.yyyy)+str(value.mmdd).rjust(4,"0")+'_'+str(value.atime)+str_ltut+'_'+var+'.kml'
+            f = open(filename, 'w')
+            str_kml = generateKml(value)
+            f.write(str_kml)
+            f.close()
 
 if __name__ == '__main__':
     main()
