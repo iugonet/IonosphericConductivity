@@ -47,7 +47,7 @@ def get_file_names():
     ionosphericCondList = []
 
     for row in result:
-        ionosphericCondList.append(IonosphericHoge('','','','','','','','','',row[0], row[1], row[2], row[3],''))
+        ionosphericCondList.append(IonosphericCond('','','','','','','','','',row[0], row[1], row[2], row[3],''))
 
     print ionosphericCondList
     cursor.close()
@@ -55,66 +55,29 @@ def get_file_names():
 
     return ionosphericCondList
 
-def get_max():
-    conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/ionospheric_cond.db')
-
-    sql = "select max(sigma_0) from ionospheric_cond;"
-    c = conn.execute(sql)
-#    conn.row_factory = sqlite3.Row
-    for row in c:
-        print row
-#
-    sql = "select max(sigma_1) from ionospheric_cond;"
-    c = conn.execute(sql)
-    for row in c:
-        print row
-#
-    sql = "select max(sigma_2) from ionospheric_cond;"
-    c = conn.execute(sql)
-    for row in c:
-        print row
-#
-    sql = "select max(sigma_xx) from ionospheric_cond;"
-    c = conn.execute(sql)
-    for row in c:
-        print row
-#
-    sql = "select max(sigma_yy) from ionospheric_cond;"
-    c = conn.execute(sql)
-    for row in c:
-        print row
-#
-    sql = "select max(sigma_xy) from ionospheric_cond;"
-    c = conn.execute(sql)
-    for row in c:
-        print row
-
-    conn.close
-
 def retrieveData(value):
     conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/ionospheric_cond.db')
     sql = "select * from ionospheric_cond where yyyy="+str(value.yyyy)+" and mmdd="+str(value.mmdd)+" and ltut="+str(value.ltut)+" and atime="+str(value.atime)+";"
     cursor = conn.execute(sql)
     result = cursor.fetchall()
 
-    hoge2List = []
+    ionosphericCondList = []
 
     for row in result:
         print row
-        hoge2List.append(Hoge2(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13]))
+        ionosphericCondList.append(IonosphericCond(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13]))
 
     print "HOGEGE"
-    print len(hoge2List)
+    print len(ionosphericCondList)
 
     cursor.close()
     conn.close;
 
-    return hoge2List
+    return ionosphericCondList
 
 
 def generateKml(value):
     result = retrieveData(value)
-#    get_max()
 
     kml = etree.Element('kml')
     kml.set('xmlns','http://www.opengis.net/kml/2.2')
@@ -148,17 +111,10 @@ def generateKml(value):
     return prettify(kml)
 
 def main():
-#    conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/ionospheric_cond.db')
-
-#   sql = "select * from ionospheric_cond;"
-#    conn.execute(sql)
-#    conn.row_factory= sqlite3.Row
-#    for row in conn.execute(sql):
-#        print row['sigma_0'], row['sigma_1'], row['sigma_2'], row['sigma_xx'], row['sigma_yy'], row['sigma_xy'], row['height'], row['glat'], row['glon'], row['yyyy'], row['mmdd'], row['ltut'], row['atime'], row['algorithm']
-#        conn.close()
     tmp_dir = '/tmp/'
 
     ionosphericCondList = get_file_names()
+
     for value in ionosphericCondList:
         if value.ltut == 0:
             str_ltut = 'LT'
