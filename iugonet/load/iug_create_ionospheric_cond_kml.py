@@ -7,6 +7,7 @@
 
 import os
 import sqlite3
+import math
 from lxml import etree
 from pykml.parser import Schema
 from pykml.factory import KML_ElementMaker as KML
@@ -38,7 +39,69 @@ class IonosphericCond:
         self.atime = atime
         self.algorithm = algorithm
 
-def get_file_names():
+def getColor(sigmaFlag, value):
+
+    if sigmaFlag == 0:
+        max = 1e3
+        min = 1e1
+    elif sigmaFlag == 1:
+        max = 1e3
+        min = 1e1
+    elif sigmaFlag == 2:
+        max = 1e3
+        min = 1e1
+    elif sigmaFlag == 3:
+        max = 1e3
+        min = 1e1
+    elif sigmaFlag == 4:
+        max = 1e3
+        min = 1e1
+    elif sigmaFlag == 5:
+        max = 1e3
+        min = 1e1
+
+    color = ""
+
+    if  (math.log10(max) - math.log10(min))/12 * 0 < math.log10(value) and \
+            math.log10(value) < (math.log10(max) - math.log10(min))/12 * 1:
+        color = "ffff0040"
+    elif  (math.log10(max) - math.log10(min))/12 * 1 < math.log10(value) and \
+            math.log10(value) < (math.log10(max) - math.log10(min))/12 * 2:
+        color = "ffff0040"
+    elif  (math.log10(max) - math.log10(min))/12 * 2 < math.log10(value) and \
+            math.log10(value) < (math.log10(max) - math.log10(min))/12 * 3:
+        color = "ffff0040"
+    elif  (math.log10(max) - math.log10(min))/12 * 3 < math.log10(value) and \
+            math.log10(value) < (math.log10(max) - math.log10(min))/12 * 4:
+        color = "ffff0040"
+    elif  (math.log10(max) - math.log10(min))/12 * 4 < math.log10(value) and \
+            math.log10(value) < (math.log10(max) - math.log10(min))/12 * 5:
+        color = "ffff0040"
+    elif  (math.log10(max) - math.log10(min))/12 * 5 < math.log10(value) and \
+            math.log10(value) < (math.log10(max) - math.log10(min))/12 * 6:
+        color = "ffff0040"
+    elif  (math.log10(max) - math.log10(min))/12 * 6 < math.log10(value) and \
+            math.log10(value) < (math.log10(max) - math.log10(min))/12 * 7:
+        color = "ffff0040"
+    elif  (math.log10(max) - math.log10(min))/12 * 7 < math.log10(value) and \
+            math.log10(value) < (math.log10(max) - math.log10(min))/12 * 8:
+        color = "ffff0040"
+    elif  (math.log10(max) - math.log10(min))/12 * 8 < math.log10(value) and \
+            math.log10(value) < (math.log10(max) - math.log10(min))/12 * 9:
+        color = "ffff0040"
+    elif  (math.log10(max) - math.log10(min))/12 * 9 < math.log10(value) and \
+            math.log10(value) < (math.log10(max) - math.log10(min))/12 * 10:
+        color = "ffff0040"
+    elif  (math.log10(max) - math.log10(min))/12 * 10 < math.log10(value) and \
+            math.log10(value) < (math.log10(max) - math.log10(min))/12 * 11:
+        color = "ffff0040"
+    elif  (math.log10(max) - math.log10(min))/12 * 11 < math.log10(value) and \
+            math.log10(value) < (math.log10(max) - math.log10(min))/12 * 12:
+        color = "ffff0040"
+
+    return color
+
+def getFilenames():
     conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/ionospheric_cond.db')
     sql = "select distinct yyyy,mmdd,ltut,atime,algorithm from ionospheric_cond;"
     cursor = conn.execute(sql)
@@ -47,28 +110,23 @@ def get_file_names():
     ionosphericCondList = []
 
     for row in result:
-        ionosphericCondList.append(IonosphericCond('','','','','','','','','',row[0], row[1], row[2], row[3],''))
+        ionosphericCondList.append(IonosphericCond('','','','','','','','','',row[0], row[1], row[2], row[3],row[4]))
 
-    print ionosphericCondList
     cursor.close()
     conn.close
 
     return ionosphericCondList
 
-def retrieveData(value):
+def getData(value):
     conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/ionospheric_cond.db')
-    sql = "select * from ionospheric_cond where yyyy="+str(value.yyyy)+" and mmdd="+str(value.mmdd)+" and ltut="+str(value.ltut)+" and atime="+str(value.atime)+";"
+    sql = "select * from ionospheric_cond where yyyy="+str(value.yyyy)+" and mmdd="+str(value.mmdd)+" and ltut="+str(value.ltut)+" and atime="+str(value.atime)+" and algorithm="+str(value.algorithm)+";"
     cursor = conn.execute(sql)
     result = cursor.fetchall()
 
     ionosphericCondList = []
 
     for row in result:
-        print row
         ionosphericCondList.append(IonosphericCond(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13]))
-
-    print "HOGEGE"
-    print len(ionosphericCondList)
 
     cursor.close()
     conn.close;
@@ -77,43 +135,51 @@ def retrieveData(value):
 
 
 def generateKml(value):
-    result = retrieveData(value)
 
-    kml = etree.Element('kml')
-    kml.set('xmlns','http://www.opengis.net/kml/2.2')
+    ionosphericCondList = getData(value)
+#
+#
+#
+    for value in ionosphericCondList:
+        kml = etree.Element('kml')
+        kml.set('xmlns','http://www.opengis.net/kml/2.2')
                                   
-    document = etree.SubElement(kml, 'Document')
-    folder1 = etree.SubElement(document, 'Folder')
-    name1 = etree.SubElement(folder1, 'name')
-    name1.text = ' Alt.:'+'km, range='+'km '
-    folder2 = etree.SubElement(folder1, 'Folder')
-    name2 = etree.SubElement(folder2, 'name')
-    name2.text = ' Lat:'+'deg.'+' Lon:'+'deg.'
-    timestamp = etree.SubElement(folder2, 'TimeStamp')
-    when = etree.SubElement(timestamp, 'when')
-    placemark = etree.SubElement(folder2, 'Placemark')
-    name3 = etree.SubElement(placemark, 'name')
-    name3.text = 'Polygon'
-    style = etree.SubElement(placemark, 'Style')
-    polystyle = etree.SubElement(style, 'PolyStyle')
-    color = etree.SubElement(polystyle, 'color')
-    color.text = 'ffff0040'
-    outline = etree.SubElement(polystyle, 'outline')
-    outline.text = '0'
-    polygon = etree.SubElement(placemark, 'Polygon')
-    altitudeMode = etree.SubElement(polygon, 'altitudeMode')
-    altitudeMode.text = 'absolute'
-    outerBoundaryIs = etree.SubElement(polygon, 'outerBoundaryIs')
-    linearRing = etree.SubElement(outerBoundaryIs, 'LinearRing')
-    coordinates = etree.SubElement(linearRing, 'coordinates')
-    coordinates.text = '\n122.100,25.0500,81000.0\n122.100,25.9500,81000.0\n123.900,25.9000,81000.0\n123.900,25.0500,81000.0'
-    
+        document = etree.SubElement(kml, 'Document')
+        folder1 = etree.SubElement(document, 'Folder')
+        name1 = etree.SubElement(folder1, 'name')
+        name1.text = ' Alt.:'+str(value.height)+'km'
+        folder2 = etree.SubElement(folder1, 'Folder')
+        name2 = etree.SubElement(folder2, 'name')
+        name2.text = ' Lat:'+str(value.glat)+'deg.'+' Lon:'+str(value.glon)+'deg.'
+        timestamp = etree.SubElement(folder2, 'TimeStamp')
+        when = etree.SubElement(timestamp, 'when')
+        placemark = etree.SubElement(folder2, 'Placemark')
+        name3 = etree.SubElement(placemark, 'name')
+        name3.text = 'Polygon'
+        style = etree.SubElement(placemark, 'Style')
+        polystyle = etree.SubElement(style, 'PolyStyle')
+        color = etree.SubElement(polystyle, 'color')
+        color.text = getColor(1,1)
+        outline = etree.SubElement(polystyle, 'outline')
+        outline.text = '0'
+
+        polygon = etree.SubElement(placemark, 'Polygon')
+        altitudeMode = etree.SubElement(polygon, 'altitudeMode')
+        altitudeMode.text = 'absolute'
+        outerBoundaryIs = etree.SubElement(polygon, 'outerBoundaryIs')
+        linearRing = etree.SubElement(outerBoundaryIs, 'LinearRing')
+        coordinates = etree.SubElement(linearRing, 'coordinates')
+        coordinates.text = '\n'+str(value.glon)+','+str(value.glat)+','+','+str(value.height)+'\n'\
+            +str(value.glon)+','+str(value.glat)+','+','+str(value.height)+'\n'\
+            +str(value.glon)+','+str(value.glat)+','+','+str(value.height)+'\n'\
+            +str(value.glon)+','+str(value.glat)+','+','+str(value.height)
+
     return prettify(kml)
 
 def main():
     tmp_dir = '/tmp/'
 
-    ionosphericCondList = get_file_names()
+    ionosphericCondList = getFilenames()
 
     for value in ionosphericCondList:
         if value.ltut == 0:
@@ -121,10 +187,15 @@ def main():
         elif value.ltut ==1:
             str_ltut = 'UT'
 
+        if value.algorithm == 1:
+            str_algorithm = 'MAEDA'
+        elif value.algorithm == 2:
+            str_algorithm = 'RICHMOND'
+
         list = ['sigma_0', 'sigma_1', 'sigma_2','sigma_xx','sigma_yy','sigma_xy']
 
         for var in list:
-            filename = tmp_dir+'tomogra_'+str(value.yyyy)+str(value.mmdd).rjust(4,"0")+'_'+str(value.atime)+str_ltut+'_'+var+'.kml'
+            filename = tmp_dir+'tomogra_'+str(value.yyyy)+str(value.mmdd).rjust(4,"0")+'_'+str(value.atime)+str_ltut+'_'+var+'_'+str_algorithm+'.kml'
             f = open(filename, 'w')
             str_kml = generateKml(value)
             f.write(str_kml)
