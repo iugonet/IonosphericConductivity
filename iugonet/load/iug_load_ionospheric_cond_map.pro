@@ -240,22 +240,22 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
         str_height = string(height_array(i), format='(i4.4)')
 
         if m eq 0 then begin
-           str_title = 'Ionospheric Conductivity, sigma_0, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
+           str_title = 'Ionospheric Conductivity, !4r!X!L0!n, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
            str_sigma_type = 'sigma_0'
         endif else if m eq 1 then begin
-           str_title = 'Ionospheric Conductivity, sigma_1, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
+           str_title = 'Ionospheric Conductivity, !4r!X!L1!n, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
            str_sigma_type = 'sigma_1'
         endif else if m eq 2 then begin
-           str_title = 'Ionospheric Conductivity, sigma_2, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
+           str_title = 'Ionospheric Conductivity, !4r!X!L2!n, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
            str_sigma_type = 'sigma_2'
         endif else if m eq 3 then begin
-           str_title = 'Ionospheric Conductivity, sigma_xx, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
+           str_title = 'Ionospheric Conductivity, !4r!X!Lxx!n, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
            str_sigma_type = 'sigma_xx'
         endif else if m eq 4 then begin
-           str_title = 'Ionospheric Conductivity, sigma_yy, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
+           str_title = 'Ionospheric Conductivity, !4r!X!Lyy!n, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
            str_sigma_type = 'sigma_yy'
         endif else if m eq 5 then begin
-           str_title = 'Ionospheric Conductivity, sigma_xy, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
+           str_title = 'Ionospheric Conductivity, !4r!X!Lxy!n, !C'+str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
            str_sigma_type = 'sigma_xy'
         endif
         
@@ -295,14 +295,21 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
 ;        
         map_set, /isotropic, /cylindrical, 0, 0, title = str_title, position=[0.07,0.05,0.87,0.85]
 
-        nlevels = 24
+        nlevels = 100
         loadct, 33, ncolors=nlevels, bottom=1
         transparency = 50
 
-        contour, alog10(result_plot), glon_array, glat_array4plot, /overplot, /cell_fill, nlevels=nlevels, c_colors=IndGen(nlevels), position=[0.0,0.0,0.93,0.93]
+        print, alog10(result_plot)
+        print, alog10(1e-8)
+        print, alog10(1e+2)
+
+        contour, alog10(result_plot), glon_array, glat_array4plot, /overplot, /cell_fill, nlevels=nlevels, c_colors=indgen(nlevels), position=[0.0,0.0,0.93,0.93], min_value=alog10(1e-8), max_value=alog10(1e+2)
 ;, zaxis=1, xstyle=1
 ; color bar
-        colorbar, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90], range=[1e-10,1e1], bottom=1, divisions=4, vertical="vertical", right="right", format='(e8.1)'
+;        colorbar, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90],
+;        range=[1e-10,1e1], bottom=1, divisions=4,
+;        vertical="vertical", right="right", format='(e8.1)'
+        colorbar, bottom=1, division=10, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90], format='(e8.1)', range=[1e1, 1e5], right='right', vertical='vertical',ticknames=['1e-8','1e-7','1e-6','1e-5','1e-4','1e-3','1e-2','1e-1','1e+0','1e+1','1e+2'], title='[S/m]'
         map_grid, latdel=10, londel=10, color=240
         map_continents
 

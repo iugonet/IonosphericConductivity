@@ -1,4 +1,4 @@
-; docformat = 'IDL'
+; Docformat = 'IDL'
 
 ;+
 ;
@@ -209,15 +209,13 @@ pro iug_load_ionospheric_cond_map_height_integrated, yyyy=yyyy, mmdd=mmdd, ltut=
 ;
      map_set, /isotropic, /cylindrical, 0, 0, title = str_title, position=[0.07,0.05,0.87,0.85]
 
-     nlevels = 24
+     nlevels = 100
      loadct, 33, ncolors=nlevels, bottom=1
      transparency = 50
 
      contour, alog10(result_plot_height_integrated), glon_array, glat_array4plot, $
-              /overplot, /cell_fill, nlevels=nlevels, c_colors=IndGen(nlevels), position=[0.0,0.0,0.93,0.93]
-;, zaxis=1, xstyle=1
-; color bar
-     colorbar, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90], range=[1e-10,1e1], bottom=1, divisions=4, vertical="vertical", right="right", format='(e8.1)'
+              /overplot, /cell_fill, nlevels=nlevels, c_colors=indgen(nlevels), position=[0.0,0.0,0.93,0.93]
+     colorbar, bottom=1, divisions=4, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90], format='(e8.1)', range=[1e1, 1e5], right='right', vertical='vertical',ticknames=['1e+1','1e+2','1e+3','1e+4','1e+5'], title='[S]'
      map_grid, latdel=10, londel=10, color=240
      map_continents
 
