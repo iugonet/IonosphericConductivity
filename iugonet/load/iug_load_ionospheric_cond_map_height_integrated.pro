@@ -214,8 +214,8 @@ pro iug_load_ionospheric_cond_map_height_integrated, yyyy=yyyy, mmdd=mmdd, ltut=
      transparency = 50
 
      contour, alog10(result_plot_height_integrated), glon_array, glat_array4plot, $
-              /overplot, /cell_fill, nlevels=nlevels, c_colors=indgen(nlevels), position=[0.0,0.0,0.93,0.93]
-     colorbar, bottom=1, divisions=4, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90], format='(e8.1)', range=[1e1, 1e5], right='right', vertical='vertical',ticknames=['1e+1','1e+2','1e+3','1e+4','1e+5'], title='[S]'
+              /overplot, /cell_fill, nlevels=nlevels, c_colors=indgen(nlevels), position=[0.0,0.0,0.93,0.93], zrange=[alog10(1e+0), alog10(1e+4)]
+     colorbar, bottom=1, divisions=4, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90], format='(e8.1)', range=[alog10(1e+1), alog10(1e+5)], right='right', vertical='vertical',ticknames=['1e+1','1e+2','1e+3','1e+4','1e+5'], title='[S]'
      map_grid, latdel=10, londel=10, color=240
      map_continents
 

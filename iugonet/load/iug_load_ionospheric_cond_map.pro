@@ -299,17 +299,13 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
         loadct, 33, ncolors=nlevels, bottom=1
         transparency = 50
 
-        print, alog10(result_plot)
-        print, alog10(1e-8)
-        print, alog10(1e+2)
-
-        contour, alog10(result_plot), glon_array, glat_array4plot, /overplot, /cell_fill, nlevels=nlevels, c_colors=indgen(nlevels), position=[0.0,0.0,0.93,0.93], min_value=alog10(1e-8), max_value=alog10(1e+2)
+        contour, alog10(result_plot), glon_array, glat_array4plot, /overplot, /cell_fill, nlevels=nlevels, c_colors=indgen(nlevels), position=[0.0,0.0,0.93,0.93], zrange=[alog10(1e-8), alog10(1e+2)]
 ;, zaxis=1, xstyle=1
 ; color bar
 ;        colorbar, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90],
 ;        range=[1e-10,1e1], bottom=1, divisions=4,
 ;        vertical="vertical", right="right", format='(e8.1)'
-        colorbar, bottom=1, division=10, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90], format='(e8.1)', range=[1e1, 1e5], right='right', vertical='vertical',ticknames=['1e-8','1e-7','1e-6','1e-5','1e-4','1e-3','1e-2','1e-1','1e+0','1e+1','1e+2'], title='[S/m]'
+        colorbar, bottom=1, division=10, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90], format='(e8.1)', range=[alog10(1e-8), alog10(1e+2)], right='right', vertical='vertical',ticknames=['1e-8','1e-7','1e-6','1e-5','1e-4','1e-3','1e-2','1e-1','1e+0','1e+1','1e+2'], title='[S/m]'
         map_grid, latdel=10, londel=10, color=240
         map_continents
 
