@@ -223,7 +223,7 @@ pro iug_load_ionospheric_cond_map_height_integrated, yyyy=yyyy, mmdd=mmdd, ltut=
      set_plot, 'x'
 ; txt
      openw, unit, tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_time+str_ltut+'_'+str_height+'_'+str_sigma_type+'.txt', /get_lun
-     printf, unit, result_plot_height_integrated
+     printf, unit, result_plot_height_integrated, format='(e8.1)'
      printf, unit, "GLON_ARRAY=",glon_array
      printf, unit, "GLAT_ARRAY=",glat_array
      free_lun, unit

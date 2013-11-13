@@ -316,8 +316,8 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
         device, /close
         set_plot, 'x'
 ; txt
-        openw, unit, tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_ltut+str_time+'_'+str_height+'_'+str_sigma_type+'.txt', /get_lun
-        printf, unit, result_plot
+        openw, unit, tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_time+str_ltut+'_'+str_height+'_'+str_sigma_type+'.txt', /get_lun
+        printf, unit, result_plot, format='(e8.1)'
         printf, unit, "GLON_ARRAY=",glon_array
         printf, unit, "GLAT_ARRAY=",glat_array
         free_lun, unit
