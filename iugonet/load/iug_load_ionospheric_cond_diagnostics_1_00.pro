@@ -46,9 +46,9 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   oplot,takeda2,height,linestyle=1,color=2
   xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*18.,"  solid line - by Koyama",color=0
   xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*17.,"dotted line - by Takeda",color=0
-  xyouts,1.E0,height_bottom+(height_top-height_bottom)/20.*10.,"sigma0",color=0
-  xyouts,1.E-4,height_bottom+(height_top-height_bottom)/20.*10.,"sigma1",color=6
-  xyouts,1.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"sigma2",color=2
+  xyouts,1.E0,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L0!n",color=0
+  xyouts,1.E-4,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L1!n",color=6
+  xyouts,1.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L2!n",color=2
   device, /close
   set_plot, 'x'
 
@@ -122,9 +122,9 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   oplot,takeda2,height,linestyle=1,color=2
   xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*18.,"  solid line - by Koyama",color=0
   xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*17.,"dotted line - by Takeda",color=0
-  xyouts,1.E0,height_bottom+(height_top-height_bottom)/20.*10.,"sigma0",color=0
-  xyouts,1.E-4,height_bottom+(height_top-height_bottom)/20.*10.,"sigma1",color=6
-  xyouts,1.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"sigma2",color=2
+  xyouts,1.E0,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L0!n",color=0
+  xyouts,1.E-4,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L1!n",color=6
+  xyouts,1.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L2!n",color=2
 
   device, /close
   set_plot, 'x'
@@ -192,9 +192,9 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   oplot,takeda2,height,linestyle=1,color=2
   xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*18.,"  solid line - by Koyama",color=0
   xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*17.,"dotted line - by Takeda",color=0
-  xyouts,1.E0,height_bottom+(height_top-height_bottom)/20.*10.,"sigma0",color=0
-  xyouts,1.E-4,height_bottom+(height_top-height_bottom)/20.*10.,"sigma1",color=6
-  xyouts,1.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"sigma2",color=2
+  xyouts,1.E0,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L0!n",color=0
+  xyouts,1.E-4,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L1!n",color=6
+  xyouts,1.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L2!n",color=2
 
   device, /close
   set_plot, 'x'
@@ -262,9 +262,9 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   oplot,takeda2,height,linestyle=1,color=2
   xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*18.,"  solid line - by Koyama",color=0
   xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*17.,"dotted line - by Takeda",color=0
-  xyouts,1.E0,height_bottom+(height_top-height_bottom)/20.*10.,"sigma0",color=0
-  xyouts,1.E-4,height_bottom+(height_top-height_bottom)/20.*10.,"sigma1",color=6
-  xyouts,1.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"sigma2",color=2
+  xyouts,1.E0,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L0!n",color=0
+  xyouts,1.E-4,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L1!n",color=6
+  xyouts,1.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L2!n",color=2
 
   device, /close
   set_plot, 'x'
