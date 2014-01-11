@@ -32,7 +32,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_01
   device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_01_result1.ps',/color
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy,mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
-  plot, result[*,0]/result[*,0], result[*,6], xtitle="/sigma0", ytitle="Altitude (km)",xrange=[1.E-10,1.E1], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 2000/01/01, LT0"
+  plot, result[*,0]/result[*,0], result[*,6], xtitle="!4r!X!Lx!n/!4r!X!L0!n", ytitle="Altitude (km)",xrange=[1.E-10,1.E1], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 2000/01/01, LT0"
   oplot, result[*,1]/result[*,0], result[*,6], linestyle=0, color=6
   oplot, result[*,2]/result[*,0], result[*,6], linestyle=0, color=2
 
@@ -46,9 +46,9 @@ pro iug_load_ionospheric_cond_diagnostics_1_01
   oplot,takeda2/takeda0,height,linestyle=1,color=2
   xyouts,1.E-5,height_bottom+(height_top-height_bottom)/20.*18.,"  solid line - by Koyama",color=0
   xyouts,1.E-5,height_bottom+(height_top-height_bottom)/20.*17.,"dotted line - by Takeda",color=0
-  xyouts,2.E0,height_bottom+(height_top-height_bottom)/20.*10.,"sigma0",color=0
-  xyouts,5.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"sigma1",color=6
-  xyouts,5.E-8,height_bottom+(height_top-height_bottom)/20.*10.,"sigma2",color=2
+  xyouts,2.E0,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L0!n",color=0
+  xyouts,5.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L1!n",color=6
+  xyouts,5.E-8,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L2!n",color=2
   device,/close
   set_plot,'x'
 
@@ -109,7 +109,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_01
   device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_01_result2.ps', /color
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
-  plot, result[*,0]/result[*,0], result[*,6], xtitle="/sigma0", ytitle="Altitude (km)",xrange=[1.E-10,1.E1], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 2000/01/01, LT12"
+  plot, result[*,0]/result[*,0], result[*,6], xtitle="!4r!X!Lx!n/!4r!X!L0!n", ytitle="Altitude (km)",xrange=[1.E-10,1.E1], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 2000/01/01, LT12"
   oplot, result[*,1]/result[*,0], result[*,6], linestyle=0, color=6
   oplot, result[*,2]/result[*,0], result[*,6], linestyle=0, color=2
 
@@ -123,9 +123,9 @@ pro iug_load_ionospheric_cond_diagnostics_1_01
   oplot,takeda2/takeda0,height,linestyle=1,color=2
   xyouts,1.E-5,height_bottom+(height_top-height_bottom)/20.*18.,"  solid line - by Koyama",color=0
   xyouts,1.E-5,height_bottom+(height_top-height_bottom)/20.*17.,"dotted line - by Takeda",color=0
-  xyouts,2.E0,height_bottom+(height_top-height_bottom)/20.*10.,"sigma0",color=0
-  xyouts,5.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"sigma1",color=6
-  xyouts,5.E-8,height_bottom+(height_top-height_bottom)/20.*10.,"sigma2",color=2
+  xyouts,2.E0,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L0!n",color=0
+  xyouts,5.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L1!n",color=6
+  xyouts,5.E-8,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L2!n",color=2
 
   device,/close
   set_plot,'x'
@@ -180,7 +180,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_01
   device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_01_result3.ps', /color
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
-  plot, result[*,0]/result[*,0], result[*,6], xtitle="/sigma0", ytitle="Altitude (km)",xrange=[1.E-10,1.E1], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 1992/01/01, LT0"
+  plot, result[*,0]/result[*,0], result[*,6], xtitle="!4r!X!Lx!n/!4r!X!L0!n", ytitle="Altitude (km)",xrange=[1.E-10,1.E1], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 1992/01/01, LT0"
   oplot, result[*,1]/result[*,0], result[*,6], linestyle=0, color=6
   oplot, result[*,2]/result[*,0], result[*,6], linestyle=0, color=2
 
@@ -193,9 +193,9 @@ pro iug_load_ionospheric_cond_diagnostics_1_01
   oplot,takeda2/takeda0,height,linestyle=1,color=2
   xyouts,1.E-5,height_bottom+(height_top-height_bottom)/20.*18.,"  solid line - by Koyama",color=0
   xyouts,1.E-5,height_bottom+(height_top-height_bottom)/20.*17.,"dotted line - by Takeda",color=0
-  xyouts,2.E0,height_bottom+(height_top-height_bottom)/20.*10.,"sigma0",color=0
-  xyouts,5.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"sigma1",color=6
-  xyouts,5.E-8,height_bottom+(height_top-height_bottom)/20.*10.,"sigma2",color=2
+  xyouts,2.E0,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L0!n",color=0
+  xyouts,5.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L1!n",color=6
+  xyouts,5.E-8,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L2!n",color=2
 
   device,/close
   set_plot,'x'
@@ -250,7 +250,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_01
   device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_01_result4.ps', /color
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
-  plot, result[*,0]/result[*,0], result[*,6], xtitle="/sigma0", ytitle="Altitude (km)",xrange=[1.E-10,1.E1], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 1992/01/01, LT12"
+  plot, result[*,0]/result[*,0], result[*,6], xtitle="!4r!X!Lx!n/!4r!X!L0!n", ytitle="Altitude (km)",xrange=[1.E-10,1.E1], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 1992/01/01, LT12"
   oplot, result[*,1]/result[*,0], result[*,6], linestyle=0, color=6
   oplot, result[*,2]/result[*,0], result[*,6], linestyle=0, color=2
   height=[100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300,310,320,330,340,350,360,370,380,390,400]
@@ -262,9 +262,9 @@ pro iug_load_ionospheric_cond_diagnostics_1_01
   oplot,takeda2/takeda0,height,linestyle=1,color=2
   xyouts,1.E-5,height_bottom+(height_top-height_bottom)/20.*18.,"  solid line - by Koyama",color=0
   xyouts,1.E-5,height_bottom+(height_top-height_bottom)/20.*17.,"dotted line - by Takeda",color=0
-  xyouts,2.E0,height_bottom+(height_top-height_bottom)/20.*10.,"sigma0",color=0
-  xyouts,5.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"sigma1",color=6
-  xyouts,5.E-8,height_bottom+(height_top-height_bottom)/20.*10.,"sigma2",color=2
+  xyouts,2.E0,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L0!n",color=0
+  xyouts,5.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L1!n",color=6
+  xyouts,5.E-8,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L2!n",color=2
 
   device,/close
   set_plot,'x'
