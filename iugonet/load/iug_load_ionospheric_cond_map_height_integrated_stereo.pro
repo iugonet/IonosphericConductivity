@@ -155,27 +155,27 @@ if look_at_glon lt -180 or look_at_glat gt 180 then begin
      if m eq 0 then begin
         str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
         str_sigma_type = 'sigma_0'
-        str_ytitle = 'Height Integrated Ionospheric Conductivity !4r!X!L0!n [S]'
+        str_ytitle = 'Height Integrated Ionospheric Conductivity !4r!X!L0!n (S)'
      endif else if m eq 1 then begin
         str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
         str_sigma_type = 'sigma_1'
-        str_ytitle = 'Height Integrated Ionospheric Conductivity !4r!X!L1!n [S]'
+        str_ytitle = 'Height Integrated Ionospheric Conductivity !4r!X!L1!n (S)'
      endif else if m eq 2 then begin
         str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
         str_sigma_type = 'sigma_2'
-        str_ytitle = 'Height Integrated Ionospheric Conductivity !4r!X!L2!n [S]'
+        str_ytitle = 'Height Integrated Ionospheric Conductivity !4r!X!L2!n (S)'
      endif else if m eq 3 then begin
         str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
         str_sigma_type = 'sigma_xx'
-        str_ytitle = 'Height Integrated Ionospheric Conductivity !4r!X!Lxx!n [S]'
+        str_ytitle = 'Height Integrated Ionospheric Conductivity !4r!X!Lxx!n (S)'
      endif else if m eq 4 then begin
         str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
         str_sigma_type = 'sigma_yy'
-        str_ytitle = 'Height Integrated Ionospheric Conductivity !4r!X!Lyy!n [S]'
+        str_ytitle = 'Height Integrated Ionospheric Conductivity !4r!X!Lyy!n (S)'
      endif else if m eq 5 then begin
         str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
         str_sigma_type = 'sigma_xy'
-        str_ytitle = 'Height Integrated Ionospheric Conductivity !4r!X!Lxy!n [S]'
+        str_ytitle = 'Height Integrated Ionospheric Conductivity !4r!X!Lxy!n (S)'
      endif
 
      result_plot_height_integrated = fltarr(n_elements(glon_array), n_elements(glat_array))

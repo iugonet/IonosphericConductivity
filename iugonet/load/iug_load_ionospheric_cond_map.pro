@@ -242,27 +242,27 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
         if m eq 0 then begin
            str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
            str_sigma_type = 'sigma_0'
-           str_ytitle = 'Ionospheric Conductivity, !4r!X!L0!n [S/m]'
+           str_ytitle = 'Ionospheric Conductivity, !4r!X!L0!n (S/m)'
         endif else if m eq 1 then begin
            str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
            str_sigma_type = 'sigma_1'
-           str_ytitle = 'Ionospheric Conductivity, !4r!X!L1!n [S/m]'
+           str_ytitle = 'Ionospheric Conductivity, !4r!X!L1!n (S/m)'
         endif else if m eq 2 then begin
            str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
            str_sigma_type = 'sigma_2'
-           str_ytitle = 'Ionospheric Conductivity, !4r!X!L2!n [S/m]'
+           str_ytitle = 'Ionospheric Conductivity, !4r!X!L2!n (S/m)'
         endif else if m eq 3 then begin
            str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
            str_sigma_type = 'sigma_xx'
-           str_ytitle = 'Ionospheric Conductivity !4r!X!Lxx!n [S/m]'
+           str_ytitle = 'Ionospheric Conductivity !4r!X!Lxx!n (S/m)'
         endif else if m eq 4 then begin
            str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
            str_sigma_type = 'sigma_yy'
-           str_ytitle = 'Ionospheric Conductivity !4r!X!Lyy!n [S/m]'
+           str_ytitle = 'Ionospheric Conductivity !4r!X!Lyy!n (S/m)'
         endif else if m eq 5 then begin
            str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
            str_sigma_type = 'sigma_xy'
-           str_ytitle = 'Ionospheric Conductivity !4r!X!Lxy!n [S/m]'
+           str_ytitle = 'Ionospheric Conductivity !4r!X!Lxy!n (S/m)'
         endif
         
         result_plot = fltarr(n_elements(glon_array), n_elements(glat_array) )

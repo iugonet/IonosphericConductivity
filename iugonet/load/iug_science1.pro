@@ -38,13 +38,13 @@ for i=0L, nsites-1 do begin
    endif
    print,"FILENAME=",filename
    device,filename=filename,/color
-   plot,result[1,*],result[0,*],xtitle="Conductivity(S/m)",ytitle="Altitude (km)",xrange=[1E-8,1E2],yrange=[height_bottom,height_top],/xlog, linestyle=0, color=0                                      
+   plot,result[1,*],result[0,*],xtitle="Conductivity (S/m)",ytitle="Altitude (km)",xrange=[1E-8,1E2],yrange=[height_bottom,height_top],/xlog, linestyle=0, color=0                                      
    oplot,result[2,*],result[0,*],linestyle=0, color=6
    oplot,result[3,*],result[0,*],linestyle=0, color=2
 
-   xyouts,1,height_bottom+(height_top-height_bottom)/20*3,"sigma0",color=0
-   xyouts,1,height_bottom+(height_top-height_bottom)/20*2,"sigma1",color=6
-   xyouts,1,height_bottom+(height_top-height_bottom)/20*1,"sigma2",color=2
+   xyouts,1,height_bottom+(height_top-height_bottom)/20*3,"!4r!X!L0!n",color=0
+   xyouts,1,height_bottom+(height_top-height_bottom)/20*2,"!4r!X!L1!n",color=6
+   xyouts,1,height_bottom+(height_top-height_bottom)/20*1,"!4r!X!L2!n",color=2
    set_plot,'x'
 
 ; height integrated conductivity
