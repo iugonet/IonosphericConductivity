@@ -6,6 +6,7 @@
 #
 
 import os
+import sys
 import sqlite3
 import math
 from lxml import etree
@@ -101,21 +102,20 @@ def getColor(sigmaFlag, value):
 
     return color
 
-def getFilenames():
+def getUniqueFilenames():
     conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/ionospheric_cond.db')
     sql = "select distinct yyyy,mmdd,ltut,atime,algorithm from ionospheric_cond;"
     cursor = conn.execute(sql)
     result = cursor.fetchall()
-    
-    ionosphericCondList = []
-
-    for row in result:
-        ionosphericCondList.append(IonosphericCond('','','','','','','','','',row[0], row[1], row[2], row[3],row[4]))
-
     cursor.close()
     conn.close
 
-    return ionosphericCondList
+#    ionosphericCondList = []
+    
+#    for row in result:
+#        ionosphericCondList.append(IonosphericCond('','','','','','','','','',row[0], row[1], row[2], row[3],row[4]))
+
+    return result
 
 def getData(value):
     conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/ionospheric_cond.db')
@@ -137,6 +137,8 @@ def getData(value):
 def generateKml(value):
 
     ionosphericCondList = getData(value)
+    print ionosphericCondList.height
+    sys.exit()
 #
 #
 #
@@ -179,9 +181,9 @@ def generateKml(value):
 def main():
     tmp_dir = '/tmp/'
 
-    ionosphericCondList = getFilenames()
+    uniqueFilenamesList = getUniqueFilenames()
 
-    for value in ionosphericCondList:
+    for value in uniqueFilenamesList:
         if value.ltut == 0:
             str_ltut = 'LT'
         elif value.ltut ==1:
@@ -192,11 +194,12 @@ def main():
         elif value.algorithm == 2:
             str_algorithm = 'RICHMOND'
 
-        list = ['sigma_0', 'sigma_1', 'sigma_2','sigma_xx','sigma_yy','sigma_xy']
+#
 
+        list = ['sigma_0', 'sigma_1', 'sigma_2','sigma_xx','sigma_yy','sigma_xy']
         for var in list:
-            filename = tmp_dir+'tomogra_'+str(value.yyyy)+str(value.mmdd).rjust(4,"0")+'_'+str(value.atime)+str_ltut+'_'+var+'_'+str_algorithm+'.kml'
-            f = open(filename, 'w')
+            uniqueFilename = tmp_dir+'tomogra_'+str(value.yyyy)+str(value.mmdd).rjust(4,"0")+'_'+str(value.atime)+str_ltut+'_'+var+'_'+str_algorithm+'.kml'
+            f = open(uniqueFilename, 'w')
             str_kml = generateKml(value)
             f.write(str_kml)
             f.close()
