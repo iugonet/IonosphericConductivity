@@ -87,7 +87,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_07
   endfor
 ;
   set_plot,'ps'
-  device,filename = tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_07.eps', /color, 
+  device,filename = tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_07.eps', /color, /encapsulated
 
   plot,gamma_o2[*],actual_h[*],xtitle="TEMPERATURES (Ti+Tn) K",ytitle="COLLISION FREQUENCY RATE COEFFICIENT (cm^3 Hz)",xrange=[300,3300],yrange=[1E-10,1E-8],/ylog,linestyle=0,color=0,title="Charge exchange collision frequencies for the atmospheric gases"
 

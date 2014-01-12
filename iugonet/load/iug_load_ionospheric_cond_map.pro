@@ -296,23 +296,24 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
         set_plot, 'ps'
         str_height = string(height_array[i], format='(i4.4)')
 
-        device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_time+str_ltut+'_'+str_height+'_'+str_sigma_type+'.eps', /color, /encapsulated
+        device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_time+str_ltut+'_'+str_height+'_'+str_sigma_type+'.eps', /color, /encapsulated, ysize=9
 
-;        
-        map_set, /isotropic, /cylindrical, 0, 0, title = str_title, position=[0.07,0.05,0.87,0.85]
+;
+        map_set, /isotropic, /cylindrical, 0, 0, position=[0.06,0.10,0.86, 0.90], title = str_title
 
         nlevels = 100
         loadct, 33, ncolors=nlevels, bottom=1
         transparency = 50
 
-        contour, alog10(result_plot), glon_array, glat_array4plot, /overplot, /cell_fill, nlevels=nlevels, c_colors=indgen(nlevels), position=[0.0,0.0,0.93,0.93], zrange=[alog10(1e-8), alog10(1e+2)]
-;, zaxis=1, xstyle=1
-; color bar
-;        colorbar, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90],
-;        range=[1e-10,1e1], bottom=1, divisions=4,
-;        vertical="vertical", right="right", format='(e8.1)'
-        colorbar, bottom=1, division=10, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90], format='(e8.1)', range=[alog10(1e-8), alog10(1e+2)], right='right', vertical='vertical',ticknames=['1e-8','1e-7','1e-6','1e-5','1e-4','1e-3','1e-2','1e-1','1e+0','1e+1','1e+2'], title=str_ytitle
-        map_grid, latdel=10, londel=10, color=240
+;        !x.title = 'Longitude ('+string(176b)+')'
+;        !y.title = 'Latitude ('+string(176b)+')'
+        contour, alog10(result_plot), glon_array, glat_array4plot, title='hoge', xtitle="hoge", ytitle="HOGE", /overplot, /cell_fill, nlevels=nlevels, c_colors=indgen(nlevels), position=[0.0,0.0,0.93,0.93], zrange=[alog10(1e-8), alog10(1e+2)]
+        colorbar, bottom=1, division=10, ncolors=nlevels, position=[0.11, 0.88, 0.89, 0.90], format='(e8.1)', range=[alog10(1e-8), alog10(1e+2)], right='right', vertical='vertical',ticknames=['1e-8','1e-7','1e-6','1e-5','1e-4','1e-3','1e-2','1e-1','1e+0','1e+1','1e+2'], title=str_ytitle
+        lats = [-90,-60,-30,0,30,60,90]
+        latnames = ['','-60'+string(176b)+'S','-30'+string(176b)+'S','0'+string(176b),'30'+string(176b)+'N','60'+string(176b)+'N','']
+        lons = [-180,-120,-60,0,60,120,180]
+        lonnames = ['','-120'+string(176b)+'W','-60'+string(176b)+'W','0'+string(176b),'60'+string(176b)+'E','120'+string(176b)+'E','']
+        map_grid, latdel=30, londel=30, color=0, charsize=1.0, lats=lats, lons=lons, label=1, latnames=latnames, lonnames=lonnames
         map_continents
 
         device, /close

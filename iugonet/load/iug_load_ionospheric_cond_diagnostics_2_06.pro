@@ -61,7 +61,7 @@ pro iug_load_ionospheric_cond_diagnostics_2_06
   endfor
 
   set_plot, 'ps'
-  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_2_06.ps', /color
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_2_06.eps', /color, /encapsulated
 
   plot,result[*,1],result[*,6],xtitle="Pedersen Conductivities (S/m)", $
        ytitle="Altitude (km)",yrange=[0,400],xrange=[1E-8,1E-3],/xlog, $

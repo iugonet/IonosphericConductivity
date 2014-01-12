@@ -29,7 +29,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   algorithm=1
 
   set_plot, 'ps'
-  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result1.ps', /color
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result1.eps', /color, /encapsulated
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy,mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
   plot, result[*,0], result[*,6], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 2000/01/01, LT0"
@@ -106,7 +106,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   algorithm=1
 
   set_plot, 'ps'
-  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result2.ps',/color
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result2.eps',/color, /encapsulated
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
   plot, result[*,0], result[*,6], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 2000/01/01, LT12"
@@ -176,7 +176,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   algorithm=1
 
   set_plot, 'ps'
-  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result3.ps',/color
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result3.eps',/color, /encapsulated
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
   plot, result[*,0], result[*,6], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 1992/01/01, LT0"
@@ -246,7 +246,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_00
   algorithm=1
 
   set_plot, 'ps'
-  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result4.ps',/color
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result4.eps',/color, /encapsulated
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
   plot, result[*,0], result[*,6], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 1992/01/01, LT12"

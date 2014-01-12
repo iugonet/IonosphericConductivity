@@ -61,7 +61,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_08
   endfor
 
   set_plot, 'ps'
-  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_08.ps', /color
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_08.eps', /color, /encapsulated
 
   plot,f[1:11],actual_n2[1:11],xtitle="TEMPERATURES (Ti+Tn) K",ytitle="COLLISION FREQUENCY (cm^3 Hz)",xrange=[300,10000],yrange=[1E-10,1E-8],/ylog,linestyle=0,color=0,title="Charge exchange collision frequencies"
   oplot,f[*],actual_o2[*],linestyle=0,color=0

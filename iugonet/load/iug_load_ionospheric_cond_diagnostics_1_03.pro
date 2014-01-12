@@ -36,7 +36,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_03
   num_e = [1E2,2.5E2,5E2,7.5E2,1E3,2.5E3,5.0E3,7.5E3,1E4,2.5E4,5.0E4,7.5E4,1E5,2.5E5,5.0E5,7.5E5,1E6,2.5E6,5.0E6]
 
   set_plot, 'ps'
-  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03.ps', /color
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_03.eps', /color, /encapsulated
 
   nu_ei600 = fltarr(n_elements(num_e))
   nu_ei800 = fltarr(n_elements(num_e))

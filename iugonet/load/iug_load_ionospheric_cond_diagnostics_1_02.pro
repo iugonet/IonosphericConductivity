@@ -70,7 +70,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_02
 
 ;
   set_plot,'ps'
-  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_02.ps', /color
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_02.eps', /color, /encapsulated
   
   plot, te_array[*], nu_e_n2[*], xtitle="Electron Temperature (K)", ytitle="Collision Frequency (Hz)", linestyle=0,xrange=[100,3000], yrange=[1E-9,1E-6], /ylog, color=0, title="Electron Temperature - Collision Frequency, n(*)=1"
   oplot, te_array[*], nu_e_o2[*], linestyle=0, color=0

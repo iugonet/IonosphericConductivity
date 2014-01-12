@@ -36,7 +36,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_05
   temperature = [100,400,900,1600,2500,3600,4900]
 
   set_plot, 'ps'
-  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_05.ps',/color
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_05.eps',/color, /encapsulated
 
   debye_length_ne1e2 = fltarr(n_elements(temperature))
   debye_length_ne1e4 = fltarr(n_elements(temperature))
