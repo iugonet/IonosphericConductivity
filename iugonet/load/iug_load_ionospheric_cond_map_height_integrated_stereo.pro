@@ -155,15 +155,15 @@ if look_at_glon lt -180 or look_at_glat gt 180 then begin
      if m eq 0 then begin
         str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
         str_sigma_type = 'sigma_0'
-        str_ytitle = 'Height Integrated Ionospheric Conductivity !4r!X!L0!n (S)'
+        str_ytitle = 'Height-integrated Conductivity !4R!X!L0!n (S)'
      endif else if m eq 1 then begin
         str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
         str_sigma_type = 'sigma_1'
-        str_ytitle = 'Height Integrated Ionospheric Conductivity !4r!X!L1!n (S)'
+        str_ytitle = 'Height-integrated Conductivity !4R!X!L1!n (S)'
      endif else if m eq 2 then begin
         str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
         str_sigma_type = 'sigma_2'
-        str_ytitle = 'Height Integrated Ionospheric Conductivity !4r!X!L2!n (S)'
+        str_ytitle = 'Height-integrated Conductivity !4R!X!L2!n (S)'
      endif else if m eq 3 then begin
         str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
         str_sigma_type = 'sigma_xx'
@@ -222,18 +222,24 @@ if look_at_glon lt -180 or look_at_glat gt 180 then begin
 ;
      set_plot, 'ps'
 
-     device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_time+str_ltut+'_'+str_height+'_'+str_sigma_type+'.eps', /color, /encapsulated
+     device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_time+str_ltut+'_'+str_height+'_'+str_sigma_type+'.eps', /color, /encapsulated, xsize=11
 
-     map_set, /STEREO, look_at_glat, look_at_glon, /ISOTROPIC, /HORIZON, E_HORIZON={FILL:0}, TITLE=str_title
+     map_set, /STEREO, look_at_glat, look_at_glon, /ISOTROPIC, /HORIZON, E_HORIZON={FILL:0}, TITLE=str_title, position=[0.0,0.1,0.8,0.9]
 
      nlevels = 100
      loadct, 33, ncolors=nlevels, bottom=1
      transparency = 50
 
-     contour, alog10(result_plot_height_integrated), glon_array, glat_array4plot, $
-              /overplot, /cell_fill, nlevels=nlevels, c_colors=indgen(nlevels), position=[0.0,0.0,0.93,0.93], zrange=[alog10(1e+0), alog10(1e+4)]
-     colorbar, bottom=1, divisions=4, ncolors=nlevels, position=[0.18, 0.88, 0.73, 0.90], format='(e8.1)', range=[alog10(1e+1), alog10(1e+5)], right='right', vertical='vertical',ticknames=['1e+1','1e+2','1e+3','1e+4','1e+5'], title=str_ytitle
-     map_grid, latdel=10, londel=10, color=0, LABEL=3
+     contour, alog10(result_plot_height_integrated), glon_array, $
+              glat_array4plot, /overplot, /cell_fill, nlevels=nlevels, $
+              c_colors=indgen(nlevels), position=[0.0,0.0,0.93,0.93], $
+              zrange=[alog10(1e+0), alog10(1e+4)]
+     colorbar, bottom=1, divisions=4, ncolors=nlevels, position=[0.1, 0.79, 0.90, 0.81], format='(e8.1)', range=[alog10(1e+1), alog10(1e+5)], right='right', vertical='vertical',ticknames=['1e+1','1e+2','1e+3','1e+4','1e+5'], title=str_ytitle
+     lats = [-90,-75,-60,-45,-30,-15,0,15,30,45,60,75,90]
+     latnames = ['','','-60'+string(176b)+'S','-45'+string(176b)+'S','-30'+string(176b)+'S','-15'+string(176b)+'S','0'+string(176b),'15'+string(176b)+'N','30'+string(176b)+'N','45'+string(176b)+'N','60'+string(176b)+'N','','']
+     lons = [-180,-120,-60,0,60,120,180]
+     lonnames = ['','-120'+string(176b)+'W','-60'+string(176b)+'W','0'+string(176b),'60'+string(176b)+'E','120'+string(176b)+'E','']
+     map_grid, latdel=15, londel=30, color=0, charsize=1.0, lats=lats, lons=lons, label=1, latnames=latnames, lonnames=lonnames, lonalign=-0.5
      map_continents, /STEREOGRAPHIC, /ORTHOGRAPHIC
 
      device, /close

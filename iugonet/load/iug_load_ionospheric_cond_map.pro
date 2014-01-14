@@ -299,14 +299,12 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
         device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_time+str_ltut+'_'+str_height+'_'+str_sigma_type+'.eps', /color, /encapsulated, ysize=9
 
 ;
-        map_set, /isotropic, /cylindrical, 0, 0, position=[0.06,0.10,0.86, 0.90], title = str_title
+        map_set, /isotropic, /cylindrical, 0, 0, position=[0.06,0.10,0.86,0.90], title = str_title
 
         nlevels = 100
         loadct, 33, ncolors=nlevels, bottom=1
         transparency = 50
 
-;        !x.title = 'Longitude ('+string(176b)+')'
-;        !y.title = 'Latitude ('+string(176b)+')'
         contour, alog10(result_plot), glon_array, glat_array4plot, title='hoge', xtitle="hoge", ytitle="HOGE", /overplot, /cell_fill, nlevels=nlevels, c_colors=indgen(nlevels), position=[0.0,0.0,0.93,0.93], zrange=[alog10(1e-8), alog10(1e+2)]
         colorbar, bottom=1, division=10, ncolors=nlevels, position=[0.11, 0.88, 0.89, 0.90], format='(e8.1)', range=[alog10(1e-8), alog10(1e+2)], right='right', vertical='vertical',ticknames=['1e-8','1e-7','1e-6','1e-5','1e-4','1e-3','1e-2','1e-1','1e+0','1e+1','1e+2'], title=str_ytitle
         lats = [-90,-60,-30,0,30,60,90]
