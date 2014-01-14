@@ -50,7 +50,7 @@ pro iug_load_iri2012, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, glat=glat, glo
   dd = strmid(mmdd,2,2)
   
   iug_create_query_iri2012, jmag=1, lat=glat, lon=glon, yyyy=yyyy, mm=mm, dd=dd, ltut=ltut, atime=time, height=height
-  spawn, 'sqlite3 ${UDASPLUS_HOME}/iugonet/load/iri2012.db < '+tmp_dir+'iri2012.sql'
+  spawn, 'sqlite3 ${UDASEXTRA_HOME}/iugonet/load/iri2012.db < '+tmp_dir+'iri2012.sql'
   query_result = file_info(tmp_dir+'iri2012.result')
 
   if query_result.size eq 0 then begin ; calculate by using model

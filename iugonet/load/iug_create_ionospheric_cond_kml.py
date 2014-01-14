@@ -103,7 +103,7 @@ def getColor(sigmaFlag, value):
     return color
 
 def getUniqueFilenames():
-    conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/ionospheric_cond.db')
+    conn = sqlite3.connect(os.environ['UDASEXTRA_HOME']+'/iugonet/load/ionospheric_cond.db')
     sql = "select distinct yyyy,mmdd,ltut,atime,algorithm from ionospheric_cond;"
     cursor = conn.execute(sql)
     result = cursor.fetchall()
@@ -118,7 +118,7 @@ def getUniqueFilenames():
     return result
 
 def getData(value):
-    conn = sqlite3.connect(os.environ['UDASPLUS_HOME']+'/iugonet/load/ionospheric_cond.db')
+    conn = sqlite3.connect(os.environ['UDASEXTRA_HOME']+'/iugonet/load/ionospheric_cond.db')
     sql = "select * from ionospheric_cond where yyyy="+str(value.yyyy)+" and mmdd="+str(value.mmdd)+" and ltut="+str(value.ltut)+" and atime="+str(value.atime)+" and algorithm="+str(value.algorithm)+";"
     cursor = conn.execute(sql)
     result = cursor.fetchall()

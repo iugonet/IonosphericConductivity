@@ -33,6 +33,6 @@ pro iug_insert_iri2012,jmag=jmag,lat=lat,lon=lon,yyyy=yyyy,mm=mm,dd=dd,ltut=ltut
 
   free_lun, unit
 
-  spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/iri2012.db < '+tmp_dir+'iri2012_insert.sql'
+  spawn,'sqlite3 ${UDASEXTRA_HOME}/iugonet/load/iri2012.db < '+tmp_dir+'iri2012_insert.sql'
 
 end

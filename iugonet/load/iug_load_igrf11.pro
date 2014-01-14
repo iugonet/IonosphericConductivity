@@ -46,7 +46,7 @@ pro iug_load_igrf11, yyyy=yyyy, $
 
 ;;;
   iug_create_query_igrf11,coordinate_system=1,yyyy=yyyy,glat=glat,glon=glon,height=height
-  spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/igrf11.db < '+tmp_dir+'igrf11.sql'
+  spawn,'sqlite3 ${UDASEXTRA_HOME}/iugonet/load/igrf11.db < '+tmp_dir+'igrf11.sql'
   query_result=file_info(tmp_dir+'igrf11.result')
 
   if query_result.size eq 0 then begin                ; calculate by using model

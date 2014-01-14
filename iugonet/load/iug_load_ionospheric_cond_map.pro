@@ -115,7 +115,7 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
   iug_create_query_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
                                          height_bottom=height_bottom, heigit_top=height_top, height_step=height_step, $
                                          reso_lat=reso_lat, reso_lon=reso_lon, algorithm=algorithm
-  spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db < '+tmp_dir+'ionospheric_cond_map_query.sql'
+  spawn,'sqlite3 ${UDASEXTRA_HOME}/iugonet/load/ionospheric_cond.db < '+tmp_dir+'ionospheric_cond_map_query.sql'
 
   infile = tmp_dir+'ionospheric_cond_map.result'
   query_result=file_info(infile)
@@ -181,7 +181,7 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
   iug_create_query_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
                                          height_bottom=height_bottom, heigit_top=height_top, height_step=height_step, $
                                          reso_lat=reso_lat, reso_lon=reso_lon, algorithm=algorithm
-  spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/ionospheric_cond.db < '+tmp_dir+'ionospheric_cond_map_query.sql'
+  spawn,'sqlite3 ${UDASEXTRA_HOME}/iugonet/load/ionospheric_cond.db < '+tmp_dir+'ionospheric_cond_map_query.sql'
 
   infile = tmp_dir+'ionospheric_cond_map.result'
   query_result=file_info(infile)

@@ -19,8 +19,8 @@
 
 pro iug_load_igrf11_array_diagnostics
   ; initialize
-  spawn,'mv ${UDASPLUS_HOME}/iugonet/load/igrf11.db ${UDASPLUS_HOME}/iugonet/load/igrf11.db.tmp' ; escape for testing
-  spawn,'sqlite3 ${UDASPLUS_HOME}/iugonet/load/igrf11.db < ${UDASPLUS_HOME}/iugonet/load/igrf11_init.sql'
+  spawn,'mv ${UDASEXTRA_HOME}/iugonet/load/igrf11.db ${UDASEXTRA_HOME}/iugonet/load/igrf11.db.tmp' ; escape for testing
+  spawn,'sqlite3 ${UDASEXTRA_HOME}/iugonet/load/igrf11.db < ${UDASEXTRA_HOME}/iugonet/load/igrf11_init.sql'
 
   ; main
   height_bottom=100
@@ -44,7 +44,7 @@ pro iug_load_igrf11_array_diagnostics
   print,'29682',result_f
 
   ; finalize
-  spawn,'rm ${UDASPLUS_HOME}/iugonet/load/igrf11.db'
-  spawn,'mv ${UDASPLUS_HOME}/iugonet/load/igrf11.db.tmp ${UDASPLUS_HOME}/iugonet/load/igrf11.db'
+  spawn,'rm ${UDASEXTRA_HOME}/iugonet/load/igrf11.db'
+  spawn,'mv ${UDASEXTRA_HOME}/iugonet/load/igrf11.db.tmp ${UDASEXTRA_HOME}/iugonet/load/igrf11.db'
 
 end
