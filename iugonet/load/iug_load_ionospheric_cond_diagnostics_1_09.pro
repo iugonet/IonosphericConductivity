@@ -167,7 +167,7 @@ pro iug_load_ionospheric_cond_diagnostics_1_09
   endfor
 
   set_plot, 'ps'
-  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_09.ps', /color
+  device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_09.eps', /color, /encapsulated
 
   plot,result[1,*],result[0,*],xtitle="Collision Frequencies and Gyrofrequencies (Hz)",ytitle="Altitude (km)",yrange=[0,400],xrange=[1E-2,1E8],/xlog,linestyle=0,color=0, title="GLAT=44.6, GLON=2.2, Solar-minimum conditions (Sa=75) on March 21"
   oplot, result[2,*],result[0,*],linestyle=0,color=6
