@@ -176,13 +176,13 @@ pro iug_load_ionospheric_cond_diagnostics_1_09
   oplot, nu_in_exchange,result[0,*],linestyle=2,color=7 ; nu_in_exchange
   oplot, result[4,*],result[0,*],linestyle=0,color=1
   oplot, result[5,*],result[0,*],linestyle=0,color=3
-  xyouts,5.E2,370,"omega_i",color=0
-  xyouts,2.E5,370,"omega_e",color=6
-  xyouts,2.E-1,270,"nu_in",color=2
-  xyouts,1.E0,260,"nu_in_reso",color=2
-  xyouts,2.E-1,120,"nu_in_exchange",color=2
-  xyouts,2.E1,210,"nu_en",color=1
-  xyouts,5.E2,220,"nu_en+nu_ei",color=3
+  xyouts,5.E2,370,"!4x!X!Li!n",color=0
+  xyouts,1.E6,370,"!4x!X!Le!n",color=6
+  xyouts,2.E-1,270,"!4m!X!Lin!n",color=2
+  xyouts,2.E0,260,"!4m!X!Lin,reso!n",color=2
+  xyouts,2.E-1,120,"!4m!X!Lin,exchange!n",color=2
+  xyouts,7.E1,210,"!4m!X!Len!n",color=1
+  xyouts,5.E2,220,"!4m!X!Len!n+!4m!X!Lei!n",color=3
 
   device, /close
   set_plot, 'x'
