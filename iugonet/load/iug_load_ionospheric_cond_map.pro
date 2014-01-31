@@ -308,9 +308,9 @@ pro iug_load_ionospheric_cond_map, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, $
         contour, alog10(result_plot), glon_array, glat_array4plot, title='hoge', xtitle="hoge", ytitle="HOGE", /overplot, /cell_fill, nlevels=nlevels, c_colors=indgen(nlevels), position=[0.0,0.0,0.93,0.93], zrange=[alog10(1e-8), alog10(1e+2)]
         colorbar, bottom=1, division=10, ncolors=nlevels, position=[0.11, 0.88, 0.89, 0.90], format='(e8.1)', range=[alog10(1e-8), alog10(1e+2)], right='right', vertical='vertical',ticknames=['1e-8','1e-7','1e-6','1e-5','1e-4','1e-3','1e-2','1e-1','1e+0','1e+1','1e+2'], title=str_ytitle
         lats = [-90,-60,-30,0,30,60,90]
-        latnames = ['','-60'+string(176b)+'S','-30'+string(176b)+'S','0'+string(176b),'30'+string(176b)+'N','60'+string(176b)+'N','']
+        latnames = ['','60'+string(176b)+'S','30'+string(176b)+'S','0'+string(176b),'30'+string(176b)+'N','60'+string(176b)+'N','']
         lons = [-180,-120,-60,0,60,120,180]
-        lonnames = ['','-120'+string(176b)+'W','-60'+string(176b)+'W','0'+string(176b),'60'+string(176b)+'E','120'+string(176b)+'E','']
+        lonnames = ['','120'+string(176b)+'W','60'+string(176b)+'W','0'+string(176b),'60'+string(176b)+'E','120'+string(176b)+'E','']
         map_grid, latdel=30, londel=30, color=0, charsize=1.0, lats=lats, lons=lons, label=1, latnames=latnames, lonnames=lonnames
         map_continents
 

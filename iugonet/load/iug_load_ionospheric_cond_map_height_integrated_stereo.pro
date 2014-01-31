@@ -236,9 +236,9 @@ if look_at_glon lt -180 or look_at_glat gt 180 then begin
               zrange=[alog10(1e+0), alog10(1e+4)]
      colorbar, bottom=1, divisions=4, ncolors=nlevels, position=[0.1, 0.79, 0.90, 0.81], format='(e8.1)', range=[alog10(1e+1), alog10(1e+5)], right='right', vertical='vertical',ticknames=['1e+1','1e+2','1e+3','1e+4','1e+5'], title=str_ytitle
      lats = [-90,-75,-60,-45,-30,-15,0,15,30,45,60,75,90]
-     latnames = ['','','-60'+string(176b)+'S','-45'+string(176b)+'S','-30'+string(176b)+'S','-15'+string(176b)+'S','0'+string(176b),'15'+string(176b)+'N','30'+string(176b)+'N','45'+string(176b)+'N','60'+string(176b)+'N','','']
+     latnames = ['','','60'+string(176b)+'S','45'+string(176b)+'S','30'+string(176b)+'S','15'+string(176b)+'S','0'+string(176b),'15'+string(176b)+'N','30'+string(176b)+'N','45'+string(176b)+'N','60'+string(176b)+'N','','']
      lons = [-180,-120,-60,0,60,120,180]
-     lonnames = ['','-120'+string(176b)+'W','-60'+string(176b)+'W','0'+string(176b),'60'+string(176b)+'E','120'+string(176b)+'E','']
+     lonnames = ['','120'+string(176b)+'W','60'+string(176b)+'W','0'+string(176b),'60'+string(176b)+'E','120'+string(176b)+'E','']
      map_grid, latdel=15, londel=30, color=0, charsize=1.0, lats=lats, lons=lons, label=1, latnames=latnames, lonnames=lonnames, lonalign=-0.5
      map_continents, /STEREOGRAPHIC, /ORTHOGRAPHIC
 
