@@ -32,7 +32,7 @@ pro iug_load_ionospheric_cond_paper_fig1
   device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result1.ps', /color
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy,mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
-  plot, result[*,0], result[*,6], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 2000/01/01, LT0"
+  plot, result[*,0], result[*,6], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 2000-01-01T00:00Z"
   oplot, result[*,1], result[*,6], linestyle=0, color=6
   oplot, result[*,2], result[*,6], linestyle=0, color=2
 
@@ -109,7 +109,7 @@ pro iug_load_ionospheric_cond_paper_fig1
   device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result2.ps',/color
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
-  plot, result[*,0], result[*,6], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 2000/01/01, LT12"
+  plot, result[*,0], result[*,6], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 2000-01-01T12:00Z"
   oplot, result[*,1], result[*,6], linestyle=0, color=6
   oplot, result[*,2], result[*,6], linestyle=0, color=2
 
@@ -120,8 +120,8 @@ pro iug_load_ionospheric_cond_paper_fig1
 ;  oplot,takeda0,height,linestyle=1,color=0
 ;  oplot,takeda1,height,linestyle=1,color=6
 ;  oplot,takeda2,height,linestyle=1,color=2
-  xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*18.,"  solid line - by Koyama",color=0
-  xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*17.,"dotted line - by Takeda",color=0
+;  xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*18.,"  solid line - by Koyama",color=0
+;  xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*17.,"dotted line - by Takeda",color=0
   xyouts,1.E0,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L0!n",color=0
   xyouts,1.E-4,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L1!n",color=6
   xyouts,1.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L2!n",color=2
@@ -179,7 +179,7 @@ pro iug_load_ionospheric_cond_paper_fig1
   device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result3.ps',/color
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
-  plot, result[*,0], result[*,6], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 1992/01/01, LT0"
+  plot, result[*,0], result[*,6], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 1992-01-01T00:00Z"
   oplot, result[*,1], result[*,6], linestyle=0, color=6
   oplot, result[*,2], result[*,6], linestyle=0, color=2
 
@@ -190,8 +190,8 @@ pro iug_load_ionospheric_cond_paper_fig1
 ;  oplot,takeda0,height,linestyle=1,color=0
 ;  oplot,takeda1,height,linestyle=1,color=6
 ;  oplot,takeda2,height,linestyle=1,color=2
-  xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*18.,"  solid line - by Koyama",color=0
-  xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*17.,"dotted line - by Takeda",color=0
+;  xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*18.,"  solid line - by Koyama",color=0
+;  xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*17.,"dotted line - by Takeda",color=0
   xyouts,1.E0,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L0!n",color=0
   xyouts,1.E-4,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L1!n",color=6
   xyouts,1.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L2!n",color=2
@@ -249,7 +249,7 @@ pro iug_load_ionospheric_cond_paper_fig1
   device, filename=tmp_dir+'iug_load_ionospheric_cond_diagnostics_1_00_result4.ps',/color
 
   iug_load_ionospheric_cond, height_bottom=height_bottom, height_top=height_top,height_step=height_step, glat=glat, glon=glon, yyyy=yyyy, mmdd=mmdd, ltut=ltut, time=time, algorithm=algorithm, result=result
-  plot, result[*,0], result[*,6], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 1992/01/01, LT12"
+  plot, result[*,0], result[*,6], xtitle="Conductivity (S/m)", ytitle="Altitude (km)",xrange=[1.E-8,1.E2], yrange=[height_bottom,height_top], /xlog, linestyle=0, color=0,title="GLAT=0, GLON=0, 1992-01-01T12:00Z"
   oplot, result[*,1], result[*,6], linestyle=0, color=6
   oplot, result[*,2], result[*,6], linestyle=0, color=2
 
@@ -260,8 +260,8 @@ pro iug_load_ionospheric_cond_paper_fig1
 ;  oplot,takeda0,height,linestyle=1,color=0
 ;  oplot,takeda1,height,linestyle=1,color=6
 ;  oplot,takeda2,height,linestyle=1,color=2
-  xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*18.,"  solid line - by Koyama",color=0
-  xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*17.,"dotted line - by Takeda",color=0
+;  xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*18.,"  solid line - by Koyama",color=0
+;  xyouts,1.E-3,height_bottom+(height_top-height_bottom)/20.*17.,"dotted line - by Takeda",color=0
   xyouts,1.E0,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L0!n",color=0
   xyouts,1.E-4,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L1!n",color=6
   xyouts,1.E-6,height_bottom+(height_top-height_bottom)/20.*10.,"!4r!X!L2!n",color=2
