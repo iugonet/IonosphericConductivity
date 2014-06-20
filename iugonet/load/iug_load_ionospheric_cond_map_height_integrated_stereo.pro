@@ -145,35 +145,37 @@ if look_at_glon lt -180 or look_at_glat gt 180 then begin
      if ltut eq 0 then begin
         str_ltut='LT'
      endif else begin
-        str_ltut='UT'
+        str_ltut='00Z'
      endelse
 
      str_yyyy = string(yyyy, format='(i4.4)')
      str_mmdd = string(mmdd, format='(i4.4)')
+     str_mm = strmid(str_mmdd, 0, 2)
+     str_dd = strmid(str_mmdd, 2, 2)
      str_time = string(time, format='(i2.2)')
 
      if m eq 0 then begin
-        str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
+        str_title = str_yyyy+'-'+str_mm+'-'+str_dd+'T'+str_time+':'+str_ltut+', '+str_height+' km'
         str_sigma_type = 'sigma_0'
         str_ytitle = 'Height-integrated Conductivity !4R!X!L0!n (S)'
      endif else if m eq 1 then begin
-        str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
+        str_title = str_yyyy+'-'+str_mm+'-'+str_dd+'T'+str_time+':'+str_ltut+', '+str_height+' km'
         str_sigma_type = 'sigma_1'
         str_ytitle = 'Height-integrated Conductivity !4R!X!L1!n (S)'
      endif else if m eq 2 then begin
-        str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
+        str_title = str_yyyy+'-'+str_mm+'-'+str_dd+'T'+str_time+':'+str_ltut+', '+str_height+' km'
         str_sigma_type = 'sigma_2'
         str_ytitle = 'Height-integrated Conductivity !4R!X!L2!n (S)'
      endif else if m eq 3 then begin
-        str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
+        str_title = str_yyyy+'-'+str_mm+'-'+str_dd+'T'+str_time+':'+str_ltut+', '+str_height+' km'
         str_sigma_type = 'sigma_xx'
         str_ytitle = 'Height Integrated Ionospheric Conductivity !4r!X!Lxx!n (S)'
      endif else if m eq 4 then begin
-        str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
+        str_title = str_yyyy+'-'+str_mm+'-'+str_dd+'T'+str_time+':'+str_ltut+', '+str_height+' km'
         str_sigma_type = 'sigma_yy'
         str_ytitle = 'Height Integrated Ionospheric Conductivity !4r!X!Lyy!n (S)'
      endif else if m eq 5 then begin
-        str_title = str_yyyy+'-'+str_mmdd+'-'+str_time+str_ltut+', '+str_height+' km'
+        str_title = str_yyyy+'-'+str_mm+'-'+str_dd+'T'+str_time+':'+str_ltut+', '+str_height+' km'
         str_sigma_type = 'sigma_xy'
         str_ytitle = 'Height Integrated Ionospheric Conductivity !4r!X!Lxy!n (S)'
      endif
@@ -222,7 +224,8 @@ if look_at_glon lt -180 or look_at_glat gt 180 then begin
 ;
      set_plot, 'ps'
 
-     device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_time+str_ltut+'_'+str_height+'_'+str_sigma_type+'.eps', /color, /encapsulated, xsize=11
+     set_resolution=[1024,768]
+     device, filename=tmp_dir+'ionospheric_cond_map_'+str_yyyy+'-'+str_mm+'-'+str_dd+'T'+str_time+'_'+str_ltut+'_'+str_height+'_'+str_sigma_type+'.eps', /color, /encapsulated, xsize=11
 
      map_set, /STEREO, look_at_glat, look_at_glon, /ISOTROPIC, /HORIZON, E_HORIZON={FILL:0}, TITLE=str_title, position=[0.0,0.1,0.8,0.9]
 
@@ -242,10 +245,15 @@ if look_at_glon lt -180 or look_at_glat gt 180 then begin
      map_grid, latdel=15, londel=30, color=0, charsize=1.0, lats=lats, lons=lons, label=1, latnames=latnames, lonnames=lonnames, lonalign=-0.5
      map_continents, /STEREOGRAPHIC, /ORTHOGRAPHIC
 
+;
+     xyouts, 0, 0, '0'+string(176b), color=0
+     xyouts, -60, 0, '60'+string(176b)+'W', color=0
+     xyouts, 60, 0, '60'+string(176b)+'E', color=0
+;
      device, /close
      set_plot, 'x'
 ; txt
-     openw, unit, tmp_dir+'ionospheric_cond_map_'+str_yyyy+'_'+str_mmdd+'_'+str_time+str_ltut+'_'+str_height+'_'+str_sigma_type+'.txt', /get_lun
+     openw, unit, tmp_dir+'ionospheric_cond_map_'+str_yyyy+'-'+str_mm+'-'+str_dd+'T'+str_time+'_'+str_ltut+'_'+str_height+'_'+str_sigma_type+'.txt', /get_lun
      printf, unit, result_plot_height_integrated, format='(e8.1)'
      printf, unit, "GLON_ARRAY=",glon_array
      printf, unit, "GLAT_ARRAY=",glat_array
