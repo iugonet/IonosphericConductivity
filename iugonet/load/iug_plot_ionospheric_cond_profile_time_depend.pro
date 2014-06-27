@@ -127,7 +127,7 @@ pro iug_plot_ionospheric_cond_profile_time_depend, height_bottom=height_bottom, 
      endif
 
      set_plot, 'ps'
-     device, filename=tmp_dir+'ionospheric_cond_profile_time_depend_'+str_yyyy+'-'+str_mm+'-'+str_dd+'T'+str_ltut+'_'+str_sigma+'.eps',/encapsulated
+     device, filename=tmp_dir+'ionospheric_cond_profile_time_depend_'+str_yyyy+'-'+str_mm+'-'+str_dd+'_'+str_ltut+'_'+str_sigma+'.eps',/encapsulated
 
      surface, dist(100), /nodata, /save,$
               xrange=[100,300], yrange=[0,23], zrange=[1.E-3,1.E1], $
